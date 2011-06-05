@@ -18,6 +18,7 @@ public class ConveyorBeltManager extends ParallelPortManager {
 	public static final String RUNNING = "RUNNING";
 	public static final String VELOCITY = "VELOCITY";
 	public static final String CAPACITY = "CAPACITY";
+	public static final String QUANTITY = "QUANTITY";
 	
 	
 	
@@ -27,10 +28,10 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		try{
 			this.setBitGroup(ConveyorBeltManager.SENSOR_FINISH, 0, 0);
 			this.setBitGroup(ConveyorBeltManager.SENSOR_INITIAL, 1, 1);
-			this.setBitGroup(ConveyorBeltManager.CAPACITY, 4, 9);
-			this.setBitGroup(ConveyorBeltManager.VELOCITY, 10, 15);
 			this.setBitGroup(ConveyorBeltManager.RUNNING, 2, 2);
-			this.setBitGroup("PING3", 3, 3);
+			this.setBitGroup(ConveyorBeltManager.VELOCITY, 3, 5);
+			this.setBitGroup(ConveyorBeltManager.CAPACITY, 6, 10);
+			this.setBitGroup(ConveyorBeltManager.QUANTITY, 11,15);
 			//continue
 		}catch (ParallelPortException e) {
 			System.out.println(e.getMessage());

@@ -23,6 +23,10 @@ public class ParallelPortState implements Cloneable{
 		_modifiedBit = modifiedBit;
 	}
 
+	public ParallelPortState(){
+		
+	}
+	
 	/**
 	 * We make the Constructor private, this class is not intended to be instantiated with a constructor;
 	 */
