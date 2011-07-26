@@ -70,7 +70,6 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortObserve
 
 	@Override
 	public void update(ParallelPortState state) {
-		// TODO Auto-generated method stub
 		manager.setState(state);
 	}
 	

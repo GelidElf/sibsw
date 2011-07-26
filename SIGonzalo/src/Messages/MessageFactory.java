@@ -25,6 +25,12 @@ public class MessageFactory {
 	
 	}
 	
+	public class SlaveAutomaton3MessageFactory{
+		public static final String ID = "Slave3";
+		
+		public static final String FAILURE_PERCENTAGE = "FAILURE_PERCENTAGE";
+		public static final String ACTIVATION_TIME = "ACTIVATION_TIME";
+	}
 	
 	
 	public static Message createMessage(String ID){
