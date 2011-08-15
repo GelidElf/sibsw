@@ -1,8 +1,15 @@
 package Messages;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -15,6 +22,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import File.ConfigurationFileReader;
 import Messages.MessageFactory.MasterAtomataMessageFactory;
 
 public class CommunicationManager {
@@ -22,11 +30,13 @@ public class CommunicationManager {
 	private ServerSocket _serverSocket = null;
 	private Socket _socket = null;
 	private HashMap <String,Comm> _comms = null;
-
-
-	public CommunicationManager(boolean isMaster) {
-		
-		if (isMaster){
+	private Inbox _inbox = null;
+	private boolean _isMaster = false;
+	
+	public CommunicationManager(boolean isMaster,String ID) {
+		_isMaster = isMaster;
+		_inbox = new Inbox();
+		if (_isMaster){
 			try {
 				_comms = new HashMap<String,Comm>(4);
 				_serverSocket = new ServerSocket();
@@ -48,7 +58,7 @@ public class CommunicationManager {
 				multicastSocket.send(packet);
 				
 				while (_comms.size() < 4){
-					Comm c = new Comm(_serverSocket.accept());
+					Comm c = new Comm(_serverSocket.accept(), this, _inbox);
 					String s = c.getOwner();
 					_comms.put(s, c);
 					_comms.get(_comms.size()-1).run();
@@ -86,7 +96,7 @@ public class CommunicationManager {
 				
 				_socket = new Socket();
 				_socket.bind(new InetSocketAddress(serverPort));
-				_comms.put("unknown",new Comm(_socket));
+				_comms.put("unknown",new Comm(_socket,ID));
 				_comms.get(_comms.size()-1).run();
 				
 			} catch (IOException e) {
@@ -99,8 +109,58 @@ public class CommunicationManager {
 		}
 	}
 	
+	public CommunicationManager(boolean isMaster, String fileName, String ID) {
+		_isMaster = isMaster;
+		_inbox = new Inbox();
+		
+		if (_isMaster){
+			try {
+				_comms = new HashMap<String,Comm>(4);
+				_serverSocket = new ServerSocket();
+				_serverSocket.bind(new InetSocketAddress(40000));
+				
+				while (_comms.size() < 4){
+					Comm c = new Comm(_serverSocket.accept(), this, _inbox);
+					String s = c.getOwner();
+					_comms.put(s, c);
+					_comms.get(_comms.size()-1).run();
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}else{
+			String address = "255.255.255.255";
+			int serverPort = -1;
+			ConfigurationFileReader cfr = new ConfigurationFileReader(fileName);
+			address = cfr.get("address");
+			serverPort = Integer.parseInt(cfr.get("port"));
+			try {
+				_comms = new HashMap<String,Comm>(1);
+			
+				_socket = new Socket();
+				_socket.bind(new InetSocketAddress(InetAddress.getByName(address),serverPort));
+				_comms.put("unknown",new Comm(_socket,ID));
+				_comms.get(_comms.size()-1).run();
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public void sendMessage(Message message){
-		_comms.get(message.getOwner()).writeMessage(message);
+		if (_isMaster){
+			if (message.get_destination().equals(MasterAtomataMessageFactory.ID))
+				_inbox.add(message);
+			else
+				_comms.get(message.get_destination()).writeMessage(message);
+		}else{
+			_comms.get("unknown").writeMessage(message);
+		}
 	}
 	
 	public Inbox getInbox(String commName){
@@ -110,10 +170,6 @@ public class CommunicationManager {
 			return null;
 		else
 		return _comms.get(commName).getInbox();
-	}
-	
-	public Inbox getInbox(){
-		return _comms.get("unknown").getInbox();
 	}
 	
 }

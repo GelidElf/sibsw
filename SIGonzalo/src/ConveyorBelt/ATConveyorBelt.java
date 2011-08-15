@@ -28,7 +28,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 	}
 	
 	public void run(){
-		Message mes = commManager.getInbox().getMessage();
+		Message mes = commManager.getInbox("unknown").getMessage();
 		String speed = mes.getAttributeValue(SlaveAutomaton1MessageFactory.SPEED);
 		String capacity = mes.getAttributeValue(SlaveAutomaton1MessageFactory.CAPACITY);
 		try {

@@ -8,7 +8,7 @@ public class MessageFactory {
 		
 		public static final String ID = "Master";
 		
-		public static final String BROADCAST_MESSAGE = ID+SEPARATOR+"BROADCAST_MESSAGE";
+		public static final String BROADCAST_MESSAGE = ID + SEPARATOR + "BROADCAST_MESSAGE";
 		
 		
 		
@@ -18,16 +18,15 @@ public class MessageFactory {
 	
 	public class SlaveAutomaton1MessageFactory{
 		
-		public static final String ID = "Slave1";
-		
+		public static final String ID = "Slave1";		
 		public static final String SPEED = "SPEED";
 		public static final String CAPACITY = "CAPACITY";
 	
 	}
 	
 	public class SlaveAutomaton3MessageFactory{
-		public static final String ID = "Slave3";
 		
+		public static final String ID = "Slave3";		
 		public static final String FAILURE_PERCENTAGE = "FAILURE_PERCENTAGE";
 		public static final String ACTIVATION_TIME = "ACTIVATION_TIME";
 	}

@@ -7,6 +7,16 @@ public class Message implements Serializable {
 
 	private ArrayList<Attribute> _contents = null;
 	private String _ID = null;
+	private String _destination = null;
+	
+	public String get_destination() {
+		return _destination;
+	}
+
+	public void set_destination(String destination) {
+		_destination = destination;
+	}
+
 	private Boolean _priority = null;
 
 	public Message(String ID){

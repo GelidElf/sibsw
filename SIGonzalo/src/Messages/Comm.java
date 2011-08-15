@@ -11,8 +11,9 @@ public class Comm extends Thread{
 	private ObjectOutputStream  _oos = null;
 	private ObjectInputStream  _ois = null;
 	private Inbox _inbox = null;
+	private CommunicationManager _cm = null;
 	
-	public Comm (Socket socket, Inbox inbox){
+	public Comm (Socket socket, CommunicationManager cm, Inbox inbox){
 		_socket = socket;
 		try {
 			_oos = new ObjectOutputStream(_socket.getOutputStream());
@@ -25,13 +26,16 @@ public class Comm extends Thread{
 			_inbox = new Inbox();
 		else
 			_inbox = inbox;
+		_cm = cm;
 	}
 	
-	public Comm (Socket socket){
+	public Comm (Socket socket, String name){
 		_socket = socket;
 		try {
 			_oos = new ObjectOutputStream(_socket.getOutputStream());
 			_ois = new ObjectInputStream(_socket.getInputStream());
+			Message m = MessageFactory.createMessage(name);
+			writeMessage(m);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,7 +47,7 @@ public class Comm extends Thread{
 	public void run (){
 		while(true){
 			try {
-				_inbox.add((Message)_ois.readObject());
+				_cm.sendMessage((Message)_ois.readObject());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,5 +89,5 @@ public class Comm extends Thread{
 	public Inbox getInbox(){
 		return _inbox;
 	}
-	
+
 }

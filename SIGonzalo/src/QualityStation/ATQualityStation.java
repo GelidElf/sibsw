@@ -16,11 +16,11 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 	private QualityStationManager _manager = null;
 	private AutomataStateQS currentState = null;
 	private Random rand = new Random(System.currentTimeMillis());
-	private CommunicationManager commManager= null;
+	//private CommunicationManager commManager= null;
 	
 	public ATQualityStation(){
 		_manager = new QualityStationManager();
-		commManager = new CommunicationManager(false);
+		//commManager = new CommunicationManager(false,);
 	}
 	
 	@Override
@@ -29,7 +29,7 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 	}
 
 	public void run(){
-		Message mes = commManager.getInbox().getMessage();
+		//Message mes = commManager.getInbox("unknown").getMessage();
 		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
 		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
 		try {
