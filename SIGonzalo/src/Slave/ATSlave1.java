@@ -1,8 +1,11 @@
 package Slave;
 
+
+import AssembyStation.AssemblyStation;
+import ConveyorBelt.ATConveyorBelt;
+import Robot.Robot;
 import Slave.States.AutomataStateSlave;
 import Slave.States.Idle;
-import ConveyorBelt.ATConveyorBelt;
 
 public class ATSlave1{
 	

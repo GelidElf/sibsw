@@ -19,7 +19,8 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 	
 	public ATConveyorBelt(){
 		_manager = new ConveyorBeltManager();
-		commManager = new CommunicationManager(false);
+		//TODO: hay que quitar este commManager
+		commManager = new CommunicationManager(false,"ATCB");
 	}
 
 	@Override
@@ -59,6 +60,19 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 			
 			currentState = currentState.estop();
 		}
+	}
+	
+	public boolean isReady(){
+		boolean op = false;
+		try {
+			if(_manager.getValueByName(ConveyorBeltManager.SENSOR_FINISH)==1){
+				op = true;
+			}
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return op;
 	}
 	
 	public static void main (String[] args){
