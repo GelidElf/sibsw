@@ -29,7 +29,7 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 	}
 
 	public void run(){
-		//Message mes = commManager.getInbox("unknown").getMessage();
+		Message mes = commManager.getInbox("unknown").getMessage();
 		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
 		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
 		try {
