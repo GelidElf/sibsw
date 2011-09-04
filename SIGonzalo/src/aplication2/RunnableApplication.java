@@ -1,7 +1,7 @@
 /**
  * 
  */
-package Aplication;
+package aplication2;
 
 import File.ConfigurationFileReader;
 

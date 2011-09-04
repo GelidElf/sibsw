@@ -9,7 +9,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
-import Aplication.Configuration;
+import aplication2.Configuration;
+
 
 public class ConfigurationFileReader {
 

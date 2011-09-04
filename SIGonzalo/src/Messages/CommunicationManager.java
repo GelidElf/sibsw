@@ -1,15 +1,8 @@
-package Messages;
+	package Messages;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
@@ -19,8 +12,9 @@ import java.net.InetSocketAddress;
 import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
+
+import aplication2.Configuration;
 
 import File.ConfigurationFileReader;
 import Messages.MessageFactory.MasterAtomataMessageFactory;
@@ -109,7 +103,7 @@ public class CommunicationManager {
 		}
 	}
 	
-	public CommunicationManager(boolean isMaster, String fileName, String ID) {
+	public CommunicationManager(boolean isMaster, String ID, Configuration conf) {
 		_isMaster = isMaster;
 		_inbox = new Inbox();
 		
@@ -117,7 +111,7 @@ public class CommunicationManager {
 			try {
 				_comms = new HashMap<String,Comm>(4);
 				_serverSocket = new ServerSocket();
-				_serverSocket.bind(new InetSocketAddress(40000));
+				_serverSocket.bind(new InetSocketAddress(Integer.parseInt(conf.serverPort)));
 				
 				while (_comms.size() < 4){
 					Comm c = new Comm(_serverSocket.accept(), this, _inbox);
@@ -132,16 +126,11 @@ public class CommunicationManager {
 			}
 			
 		}else{
-			String address = "255.255.255.255";
-			int serverPort = -1;
-			ConfigurationFileReader cfr = new ConfigurationFileReader(fileName);
-			address = cfr.get("address");
-			serverPort = Integer.parseInt(cfr.get("port"));
 			try {
 				_comms = new HashMap<String,Comm>(1);
 			
 				_socket = new Socket();
-				_socket.bind(new InetSocketAddress(InetAddress.getByName(address),serverPort));
+				_socket.bind(new InetSocketAddress(InetAddress.getByName(conf.address),Integer.parseInt(conf.port)));
 				_comms.put("unknown",new Comm(_socket,ID));
 				_comms.get(_comms.size()-1).run();
 				

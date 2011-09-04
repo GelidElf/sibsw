@@ -1,4 +1,4 @@
-package Aplication;
+package aplication2;
 
 public class Configuration {
 

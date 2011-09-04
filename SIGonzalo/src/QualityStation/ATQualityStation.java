@@ -63,6 +63,10 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 		}
 	}
 	
+	public QualityStationManager getManager(){
+		return _manager;
+	}
+	
 	public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATQualityStation atcb = new ATQualityStation();

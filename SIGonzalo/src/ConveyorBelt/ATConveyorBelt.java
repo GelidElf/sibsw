@@ -75,6 +75,10 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		return op;
 	}
 	
+	public ConveyorBeltManager getManager(){
+		return _manager;
+	}
+	
 	public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATConveyorBelt atcb = new ATConveyorBelt();

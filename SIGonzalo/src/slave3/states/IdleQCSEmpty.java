@@ -2,13 +2,13 @@ package slave3.states;
 
 import slave3.ATslave3;
 
-public class Started extends Slave3State {
-
+public class IdleQCSEmpty extends Slave3State {
+	
 	static Slave3State instance = null;
 	
 	public static Slave3State getInstance(){
 		if (instance == null){
-			instance = new Started();
+			instance = new IdleQCSEmpty();
 		}
 		return instance;
 	}
@@ -20,8 +20,17 @@ public class Started extends Slave3State {
 	}
 
 	@Override
-	public Slave3State Start() {
+	public Slave3State EStop() {
 		// TODO Auto-generated method stub
-		return IdleQCSEmpty.getInstance();
+		return StopIdleQCSEmpty.getInstance();
 	}
+
+
+	@Override
+	public Slave3State LoadQCS() {
+		// TODO Auto-generated method stub
+		return QCSWorking.getInstance();
+	}
+
+
 }

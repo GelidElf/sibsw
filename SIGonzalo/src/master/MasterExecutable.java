@@ -1,6 +1,6 @@
 package master;
 
-import Aplication.RunnableApplication;
+import aplication2.RunnableApplication;
 
 public class MasterExecutable extends RunnableApplication{
 
