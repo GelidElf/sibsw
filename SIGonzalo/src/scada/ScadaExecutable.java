@@ -1,6 +1,6 @@
 package scada;
 
-import aplication2.RunnableApplication;
+import core.aplication.RunnableApplication;
 
 public class ScadaExecutable extends RunnableApplication {
 

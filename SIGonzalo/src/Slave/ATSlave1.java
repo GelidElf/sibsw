@@ -1,9 +1,9 @@
 package Slave;
 
 
-import AssembyStation.AssemblyStation;
-import ConveyorBelt.ATConveyorBelt;
-import Robot.Robot;
+import core.sections.AssembyStation.AssemblyStation;
+import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.Robot.Robot;
 import Slave.States.AutomataStateSlave;
 import Slave.States.Idle;
 

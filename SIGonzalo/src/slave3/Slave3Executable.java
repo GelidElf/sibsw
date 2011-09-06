@@ -1,10 +1,10 @@
 package slave3;
-import aplication2.RunnableApplication;
-import ConveyorBelt.ATConveyorBelt;
-import ConveyorBelt.ConveyorBeltSimulator;
-import ParallelPort.ParallelPortState;
-import QualityStation.ATQualityStation;
-import QualityStation.QualityStationSimulator;
+import core.aplication.RunnableApplication;
+import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltSimulator;
+import core.sections.ParallelPort.ParallelPortState;
+import core.sections.QualityStation.ATQualityStation;
+import core.sections.QualityStation.QualityStationSimulator;
 
 
 public class Slave3Executable extends RunnableApplication {
