@@ -1,29 +1,24 @@
 package slave3.states;
 
-import slave3.ATslave3;
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 
 public class CBReady extends Slave3State {
-	static Slave3State instance = null;
-	
-	public static Slave3State getInstance(){
-		if (instance == null){
-			instance = new CBReady();
-		}
-		return instance;
-	}
+	private static final long serialVersionUID = -8465714678878030143L;
 
 	@Override
-	public void execute(ATslave3 master) {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
-
 	}
 	
-	public Slave3State Estop(){
-		return StopCBReady.getInstance();
+	@Override
+	public AutomataState EStop(){
+		return createState("StopCBReady",this);
 	}
 	
-	public Slave3State R2Idle(){
-		return IdleQCSEmpty.getInstance();
+	@Override
+	public AutomataState R2Idle(){
+		return createState("IdleQCSEmpty",this);
 	}
 
 }

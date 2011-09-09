@@ -1,35 +1,24 @@
 package slave3.states;
 
-import slave3.ATslave3;
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 
 public class IdleQCSEmpty extends Slave3State {
-	
-	static Slave3State instance = null;
-	
-	public static Slave3State getInstance(){
-		if (instance == null){
-			instance = new IdleQCSEmpty();
-		}
-		return instance;
+	private static final long serialVersionUID = 6497044596704079337L;
+
+	@Override
+	public void execute(AutomataContainer master) {
+		// TODO Auto-generated method stub
 	}
 
 	@Override
-	public void execute(ATslave3 master) {
-		// TODO Auto-generated method stub
-
+	public AutomataState EStop() {
+		return createState("StopIdleQCSEmpty",this);
 	}
 
 	@Override
-	public Slave3State EStop() {
-		// TODO Auto-generated method stub
-		return StopIdleQCSEmpty.getInstance();
-	}
-
-
-	@Override
-	public Slave3State LoadQCS() {
-		// TODO Auto-generated method stub
-		return QCSWorking.getInstance();
+	public AutomataState LoadQCS() {
+		return createState("QCSWorking",this);
 	}
 
 

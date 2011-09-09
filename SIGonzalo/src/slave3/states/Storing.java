@@ -1,32 +1,25 @@
 package slave3.states;
 
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 import slave3.ATslave3;
 
 public class Storing extends Slave3State {
 	
-	public static Slave3State getInstance(){
-		if (instance == null){
-			instance = new Storing();
-		}
-		return instance;
-	}
-
 	@Override
-	public void execute(ATslave3 master) {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Slave3State EStop() {
-		// TODO Auto-generated method stub
-		return StopStoring.getInstance();
+	public AutomataState EStop() {
+		return  createState("StopStoring",this);
 	}
 	
 	@Override
-	public Slave3State NotFull() {
-		// TODO Auto-generated method stub
-		return CBReady.getInstance();
+	public AutomataState NotFull() {
+		return createState("CBReady", this);
 	}
 
 }

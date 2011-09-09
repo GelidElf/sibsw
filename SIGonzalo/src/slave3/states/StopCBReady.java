@@ -1,6 +1,7 @@
 package slave3.states;
 
-import slave3.ATslave3;
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 
 public class StopCBReady extends Slave3State {
 	
@@ -14,15 +15,14 @@ public class StopCBReady extends Slave3State {
 	}
 
 	@Override
-	public void execute(ATslave3 master) {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Slave3State Restart() {
-		// TODO Auto-generated method stub
-		return CBReady.getInstance();
+	public AutomataState Restart() {
+		return createState("CBReady",this);
 	}
 
 }

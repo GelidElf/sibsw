@@ -1,27 +1,19 @@
 package slave3.states;
 
-import slave3.ATslave3;
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 
 public class Started extends Slave3State {
-
-	static Slave3State instance = null;
-	
-	public static Slave3State getInstance(){
-		if (instance == null){
-			instance = new Started();
-		}
-		return instance;
-	}
+	private static final long serialVersionUID = -1329748406408094832L;
 
 	@Override
-	public void execute(ATslave3 master) {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Slave3State Start() {
-		// TODO Auto-generated method stub
-		return IdleQCSEmpty.getInstance();
+	public AutomataState Start() {
+		return createState("IdleQCSEmpty",this);
 	}
 }

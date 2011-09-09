@@ -5,52 +5,53 @@ import java.util.ArrayList;
 
 public class Message implements Serializable {
 
-	private ArrayList<Attribute> _contents = null;
-	private String _ID = null;
-	private String _destination = null;
+	private static final long serialVersionUID = -8585464412008833912L;
+	private ArrayList<Attribute> contents = null;
+	private String messageId = null;
+	private String destination = null;
 	
 	public String get_destination() {
-		return _destination;
+		return destination;
 	}
 
 	public void set_destination(String destination) {
-		_destination = destination;
+		this.destination = destination;
 	}
 
-	private Boolean _priority = null;
+	private Boolean urgent = null;
 
 	public Message(String ID){
-		_ID = ID;
-		_priority = false;
+		messageId = ID;
+		urgent = false;
 	}
 	
 	public void addAttribute(Attribute att){
-		if (_contents == null)
-			_contents = new ArrayList<Attribute>();
-		_contents.add(att);
+		if (contents == null)
+			contents = new ArrayList<Attribute>();
+		contents.add(att);
 	}
 	
 	public void addAttribute (String name, String value){
-		if (_contents == null)
-			_contents = new ArrayList<Attribute>();
-		_contents.add(new Attribute(name, value));	
+		if (contents == null)
+			contents = new ArrayList<Attribute>();
+		contents.add(new Attribute(name, value));	
 	}
 	
 	public String getID(){
-		return _ID;
+		return messageId;
 		
 	}
 	
 	public String getOwner(){
-		return _ID.substring(0,_ID.indexOf(MessageFactory.SEPARATOR));
+		return messageId.substring(0,messageId.indexOf(MessageFactory.SEPARATOR));
 	}
 	
 	public Attribute getAttribute(int i){
-		return _contents.get(i);
+		return contents.get(i);
 	}
 	
 	public String getAttributeValue(String key){
-		for (Attribute att:_contents){
+		for (Attribute att:contents){
 			if (att.getName().equals(key))
 				return att.getValue();
 		}
@@ -58,7 +59,7 @@ public class Message implements Serializable {
 	}
 	
 	public Attribute getAttribute (String key){
-		for (Attribute att:_contents){
+		for (Attribute att:contents){
 			if (att.getName().equals(key))
 				return att;
 		}
@@ -66,12 +67,16 @@ public class Message implements Serializable {
 		
 	}
 	
-	public Boolean getPriority(){
-		return _priority;
+	public Boolean isUrgent(){
+		return urgent;
 	}
 	
-	public void setPriority(){
-		_priority = true;
+	public void setUrgent(){
+		urgent = true;
+	}
+	
+	public void unsetUrgent(){
+		urgent = false;
 	}
 	
 }

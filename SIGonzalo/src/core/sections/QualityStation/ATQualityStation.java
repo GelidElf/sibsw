@@ -29,17 +29,17 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 	}
 
 	public void run(){
-		Message mes = commManager.getInbox("unknown").getMessage();
-		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
-		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
-		try {
-			_manager.setValueByName(QualityStationManager.FAILURE_PERCENTAGE, Integer.parseInt(failurePercentage));
-			_manager.setValueByName(QualityStationManager.ACTIVATION_TIME, Integer.parseInt(activationTime));
-		} catch (NumberFormatException e1) {
-			e1.printStackTrace();
-		} catch (ParallelPortException e1) {
-			e1.printStackTrace();
-		}
+//		Message mes = commManager.getInbox("unknown").getMessage();
+//		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
+//		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
+//		try {
+//			_manager.setValueByName(QualityStationManager.FAILURE_PERCENTAGE, Integer.parseInt(failurePercentage));
+//			_manager.setValueByName(QualityStationManager.ACTIVATION_TIME, Integer.parseInt(activationTime));
+//		} catch (NumberFormatException e1) {
+//			e1.printStackTrace();
+//		} catch (ParallelPortException e1) {
+//			e1.printStackTrace();
+//		}
 		
 		while(true){
 			if(currentState == null){

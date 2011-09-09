@@ -1,37 +1,30 @@
 package slave3.states;
 
-import slave3.ATslave3;
+import core.model.AutomataContainer;
+import core.model.AutomataState;
 
 public class QCSWorking extends Slave3State {
-	public static Slave3State getInstance(){
-		if (instance == null){
-			instance = new QCSWorking();
-		}
-		return instance;
-	}
+	private static final long serialVersionUID = 3620690225049452264L;
 
 	@Override
-	public void execute(ATslave3 master) {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public Slave3State EStop() {
-		// TODO Auto-generated method stub
-		return StopQCSWorking.getInstance();
+	public AutomataState EStop() {
+		return createState("StopQCSWorking",this);
 	}
 	
 	@Override
-	public Slave3State Valid() {
-		// TODO Auto-generated method stub
-		return Storing.getInstance();
+	public AutomataState Valid() {
+		return createState("Storing",this);
 	}
 	
 	@Override
-	public Slave3State Invalid() {
-		// TODO Auto-generated method stub
-		return Trashing.getInstance();
+	public AutomataState Invalid() {
+		return createState("Trashing",this);
 	}
 
 }

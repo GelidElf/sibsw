@@ -2,20 +2,19 @@ package slave3;
 
 import core.aplication.Configuration;
 import core.messages.CommunicationManager;
+import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.QualityStation.ATQualityStation;
 
-public class ATslave3 extends Thread {
+public class ATslave3 extends AutomataContainer {
 
-	
 	private ATConveyorBelt conveyorBelt;
 	private ATQualityStation qualityStation;
 	private CommunicationManager commManager;
-	private Configuration conf;
 	
 	
 	public ATslave3(Configuration conf){
-		this.conf = conf;
+		super(conf);
 		commManager = new CommunicationManager(false, "Slave3",this.conf);
 	}
 	

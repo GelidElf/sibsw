@@ -15,9 +15,10 @@ public class Inbox {
 	}
 	
 	public synchronized void add(Message message){
-		_inbox.add(message);
-		if (message.getPriority())
+		if (message.isUrgent())
 			_priorityInbox.add(message);
+		else
+			_inbox.add(message);
 		
 	}
 	

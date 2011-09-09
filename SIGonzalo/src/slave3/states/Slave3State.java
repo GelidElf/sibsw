@@ -1,43 +1,37 @@
 package slave3.states;
 
-import java.io.Serializable;
+import core.model.AutomataState;
 
-import slave3.ATslave3;
-
-public abstract class Slave3State implements Serializable {
+public abstract class Slave3State extends AutomataState {
 	
-	static Slave3State instance = null;
-	
-	public abstract void execute(ATslave3 master);
-
-	public Slave3State Start(){
+	public AutomataState Start(){
 		return this;
 	}
-	public Slave3State EStop(){
+	public AutomataState EStop(){
 		return this;
 	}
-	public Slave3State NStop(){
+	public AutomataState NStop(){
 		return this;
 	}
-	public Slave3State R2Idle(){
+	public AutomataState R2Idle(){
 		return this;
 	}
-	public Slave3State LoadQCS(){
+	public AutomataState LoadQCS(){
 		return this;
 	}
-	public Slave3State Invalid(){
+	public AutomataState Invalid(){
 		return this;
 	}
-	public Slave3State Valid(){
+	public AutomataState Valid(){
 		return this;
 	}
-	public Slave3State NotFull(){
+	public AutomataState NotFull(){
 		return this;
 	}
-	public Slave3State Full(){
+	public AutomataState Full(){
 		return this;
 	}
-	public Slave3State Restart(){
+	public AutomataState Restart(){
 		return this;
 	}
 	
