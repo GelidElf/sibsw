@@ -10,8 +10,7 @@ import core.sections.QualityStation.QualityStationSimulator;
 public class Slave3Executable extends RunnableApplication {
 
 	public static void main (String []args){
-		fileName = "slave3.ini";
-		initialize(args);
+		initialize(args,"slave3.ini");
 		
 		ATslave3 slave3 = new ATslave3(configuration);
 		

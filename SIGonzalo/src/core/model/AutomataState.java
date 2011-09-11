@@ -50,7 +50,6 @@ public abstract class AutomataState implements Serializable {
 	private static AutomataState copyAtributeValues(Class <? extends AutomataState> stateClass, 
 			AutomataState oldState, 
 			AutomataState newState) {
-		ArrayList<Method> methods = new ArrayList<Method>(Arrays.asList(stateClass.getDeclaredMethods()));
 		HashMap<String, Method> getterMethods = getGetterMethods(stateClass);
 		Method getterMethod; 
 		for (Field f:stateClass.getDeclaredFields()){

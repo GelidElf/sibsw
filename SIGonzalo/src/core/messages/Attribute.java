@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Attribute implements Serializable{
 
+	private static final long serialVersionUID = 4891814832682990272L;
 	private String _name = null;
 	private String _value = null;
 	

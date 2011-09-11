@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class Comm extends Thread{
+public class ConnectionManager extends Thread{
 
 	private Socket _socket = null;
 	private ObjectOutputStream  _oos = null;
@@ -13,15 +13,9 @@ public class Comm extends Thread{
 	private Inbox _inbox = null;
 	private CommunicationManager _cm = null;
 	
-	public Comm (Socket socket, CommunicationManager cm, Inbox inbox){
+	public ConnectionManager (Socket socket, CommunicationManager cm, Inbox inbox){
 		_socket = socket;
-		try {
-			_oos = new ObjectOutputStream(_socket.getOutputStream());
-			_ois = new ObjectInputStream(_socket.getInputStream());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		createInputAndOutputStreamsFromSocket();
 		if (_inbox == null)
 			_inbox = new Inbox();
 		else
@@ -29,19 +23,28 @@ public class Comm extends Thread{
 		_cm = cm;
 	}
 	
-	public Comm (Socket socket, String name){
+	public ConnectionManager (Socket socket, CommunicationManager cm){
 		_socket = socket;
+		createInputAndOutputStreamsFromSocket();
+		_inbox = new Inbox();
+		_cm = cm;
+	}
+	
+	public ConnectionManager (Socket socket, String name){
+		_socket = socket;
+		createInputAndOutputStreamsFromSocket();
+		_inbox = new Inbox();
+
+	}
+
+	private void createInputAndOutputStreamsFromSocket() {
 		try {
 			_oos = new ObjectOutputStream(_socket.getOutputStream());
 			_ois = new ObjectInputStream(_socket.getInputStream());
-			Message m = MessageFactory.createMessage(name);
-			writeMessage(m);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			System.out.println("Error creating input and output streams from socket: "+e.getMessage());
 			e.printStackTrace();
 		}
-		_inbox = new Inbox();
-
 	}
 	
 	public void run (){

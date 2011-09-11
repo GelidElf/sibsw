@@ -2,12 +2,9 @@ package core.file;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
 
 import core.aplication.Configuration;
 
@@ -20,7 +17,6 @@ public class ConfigurationFileReader {
 
 	public ConfigurationFileReader(String fileName) {
 		contents = new HashMap<String, String>();
-		File file = new File(fileName);
 		conf = new Configuration();
 		try{
 
@@ -36,11 +32,11 @@ public class ConfigurationFileReader {
 
 			in.close();
 		}catch (Exception e){
-			System.err.println("Error durante la lectura del fichero de configuracion \""+fileName+"\": " + e.getMessage());
+			System.err.println("Error: Unable to parse configuration file \""+fileName+"\": " + e.getMessage());
 		}
 	}
 
-	private void parseLine (String linea) throws Exception{
+	private void parseLine (String linea){
 		Class <Configuration> configurationClass = Configuration.class;
 		
 		String attribute = null;
@@ -51,7 +47,20 @@ public class ConfigurationFileReader {
 		if (linea.charAt(linea.length()-1) ==';')
 			lastValueCharacterPosition--;
 		value = linea.substring(linea.indexOf(':')+1, lastValueCharacterPosition);
-		configurationClass.getField(attribute).set(conf, value);
+		try {
+			configurationClass.getField(attribute).set(conf, value);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchFieldException e) {
+			System.out.println(String.format("Warning: Property %s does not exist.",attribute));
+			e.printStackTrace();
+		}
 	}
 
 	public String get (String key){

@@ -8,5 +8,5 @@ public abstract class resendCriteria {
 		this.destination = destination;
 	}
 	
-	public abstract String evaluate();
+	public abstract boolean evaluate();
 }

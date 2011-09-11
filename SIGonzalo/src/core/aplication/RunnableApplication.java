@@ -4,6 +4,8 @@
 package core.aplication;
 
 import core.file.ConfigurationFileReader;
+import core.utilities.args.Args;
+import core.utilities.args.ArgsException;
 
 /**
  * @author gonzalo
@@ -11,40 +13,42 @@ import core.file.ConfigurationFileReader;
  */
 public class RunnableApplication {
 
-	public static String fileName = "conf.ini";
 	public static Configuration configuration = null;
+	private static final String usage = "a,f*";
 	
-	public static void initialize (String[] args){
-		
+	public static void initialize (String[] args,String configurationFilePath){
 		configuration = new Configuration();
-		//First we check that we received the correct amount of paramenters
-		if ((args.length % 2) != 0)
-			System.out.println("Error: Incorrect number of parameters: "+ args.length);
-		else if (args.length > 1){
-			int argumentIndex = 1;
-			while (argumentIndex < args.length){
-				argumentIndex+=processOption(args,argumentIndex);
-			}
-		}else if (args.length == 0){
-			loadConfigurationFile();
-		}
+		setConfigurationFileName(configurationFilePath);
+		processArguments(args);
 	}
 	
-	private static int processOption (String[] args, int position){
-		String option = args[position];
-		if (position >= args.length)
-			System.out.println("Error: insuficcient number of parameters");
-		String optionText = args[position++];
-		if (option.equals("-f")){
-			fileName = optionText;
-			loadConfigurationFile();
-			return 2;
-		}
-		return 1;
+	private static void processArguments(String [] args){
+		try { 
+			Args arg = new Args(usage, args); 
+			boolean autoDiscovery = arg.getBoolean('a');
+			if (autoDiscovery){
+				configuration.autoDiscovery = "yes";
+				System.out.println("Using Autodiscovery.");
+			}else{
+				String confFileName = arg.getString('f');
+				if(!confFileName.equals("")){
+					configuration.configurationFileName = confFileName;
+				}
+				System.out.println("Loading configuration from "+configuration.configurationFileName);	
+				loadConfigurationFile();
+			}
+		} catch (ArgsException e) { 
+			System.out.printf("Argument error: %s\n", e.errorMessage()); 
+		} 
 	}
 	
 	private static void loadConfigurationFile(){
-		ConfigurationFileReader fileReader = new ConfigurationFileReader(fileName);
+		ConfigurationFileReader fileReader = new ConfigurationFileReader(configuration.configurationFileName);
 		 configuration = fileReader.readConfiguration();
 	}
+	
+	protected static void setConfigurationFileName(String confFileName){
+		configuration.configurationFileName = confFileName;
+	}
+	
 }
