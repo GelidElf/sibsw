@@ -3,11 +3,13 @@ package Slave;
 
 import core.sections.AssembyStation.AssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltSimulator;
+import core.sections.ParallelPort.ParallelPortState;
 import core.sections.Robot.Robot;
 import Slave.States.AutomataStateSlave;
 import Slave.States.Idle;
 
-public class ATSlave1{
+public class ATSlave1 extends Thread{
 	
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -24,8 +26,26 @@ public class ATSlave1{
 
 
 	public ATSlave1(){
+		System.out.println("lanzo simulación en robot");
+		/* Iniciamos robot*/
+		robot = new Robot();
+		
+		assemblyStation = new AssemblyStation();
+		assemblyStation.setEmpty(true);
+		assemblyStation.setGearNeeded(true);
+		assemblyStation.setAxisNeeded(true);
+		assemblyStation.start();
+		
+		ParallelPortState state = new ParallelPortState();
 		gearBelt = new ATConveyorBelt();
+		gearBelt.getManager().setState(state);
+		
+	
+		ParallelPortState state2 = new ParallelPortState();
 		axisBelt = new ATConveyorBelt();
+		axisBelt.getManager().setState(state2);
+		axisBelt.start();
+		
 	}
 	
 	
@@ -34,9 +54,17 @@ public class ATSlave1{
 	 */
 	public void start(){
 		setInitialSettings("Mensaje(s) leido del buzón con los parámetros");
+		gearBelt.start();
+		robot.start();
 		setCurrentState(new Idle());
 		while(true){
 			currentState.execute(this);
+			try {
+				sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
@@ -95,5 +123,11 @@ public class ATSlave1{
 
 	public void setRobot(Robot robot) {
 		this.robot = robot;
+	}
+	
+	public static void main (String args[]){
+		ATSlave1 slave = new ATSlave1();
+		System.out.println("ARRRRRRRANCO!");
+		slave.start();
 	}
 }

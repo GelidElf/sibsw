@@ -6,8 +6,8 @@ public class AxisLoading implements AutomataStateSlave{
 
 	@Override
 	public void execute(ATSlave1 master) {
-		// TODO Auto-generated method stub
-		
+		master.getRobot().setAxisReady(true);
+		master.setCurrentState(new AxisUnload());
 	}
 	
 }

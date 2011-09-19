@@ -126,7 +126,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		return _manager;
 	}
 	
-	public static void main (String[] args){
+	/*public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATConveyorBelt atcb = new ATConveyorBelt();
 		atcb._manager.setState(state);
@@ -138,6 +138,6 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		System.out.println("hilos lanzados3");
 
 		
-	}
+	}*/
 	
 }

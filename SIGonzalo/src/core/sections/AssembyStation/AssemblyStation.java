@@ -1,11 +1,35 @@
 package core.sections.AssembyStation;
 
-public class AssemblyStation {
+import core.sections.AssembyStation.States.AssemblyStationState;
+import core.sections.AssembyStation.States.Idle;
+
+public class AssemblyStation extends Thread{
 	
 	private boolean gearNeeded;
 	private boolean axisNeeded;
 	private boolean complete;
 	private boolean empty;
+	private AssemblyStationState currentState;
+	
+	public AssemblyStation(){
+		gearNeeded = true;
+		axisNeeded = true;
+		complete = false;
+		empty = true;
+	}
+	
+	public void run(){
+		currentState = new Idle();
+		while(true){
+			currentState.execute(this);
+			try {
+				sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	public boolean isGearNeeded() {
 		return gearNeeded;
 	}

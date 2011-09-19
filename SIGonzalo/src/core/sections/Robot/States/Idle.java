@@ -9,23 +9,37 @@ public class Idle implements AutomataStateRobot {
 	@Override
 	public void execute(Robot robot) {
 		if(robot.isUnloadAs()){
-			robot.getSimulator().start();
+			RobotSimulator simulator = new RobotSimulator();
+			simulator.start();
+			try {
+				simulator.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			robot.setUnloadAs(false);
 		}else if(robot.isGearReady()){
 			RobotSimulator simulator = new RobotSimulator();
 			simulator.start();
 			try {
-				robot.getSimulator().join();
+				simulator.join();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			robot.setGearReady(false);
-			robot.setDone(true);
-			System.out.println("gear picked and deposited...");
+			System.out.println("Gear picked and deposited...");
 		}else if(robot.isAxisReady()){
-			robot.getSimulator().start();
+			RobotSimulator simulator = new RobotSimulator();
+			simulator.start();
+			try {
+				simulator.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			robot.setAxisReady(false);
+			System.out.println("Axis picked and deposited...");
 		}else{
 			//doing nothing
 		}
