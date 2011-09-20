@@ -15,7 +15,7 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 
 	private QualityStationManager _manager = null;
 	private AutomataStateQS currentState = null;
-	private Random rand = new Random(System.currentTimeMillis());
+	//private Random rand = new Random(System.currentTimeMillis());
 	//private CommunicationManager commManager= null;
 	
 	public ATQualityStation(){
@@ -73,8 +73,8 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 		atcb._manager.setState(state);
 		QualityStationSimulator cbs = new QualityStationSimulator();
 		cbs.getManager().setState(state);
-		atcb.run();
-		cbs.run();
+		atcb.start();
+		cbs.start();
 	}
 	
 }

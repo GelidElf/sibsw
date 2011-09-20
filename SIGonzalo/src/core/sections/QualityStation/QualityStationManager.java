@@ -16,8 +16,8 @@ public class QualityStationManager extends ParallelPortManager{
 		//We should set a name for all the pins, just in case
 		try{
 			this.setBitGroup(QualityStationManager.SENSOR, 0, 0);
-			this.setBitGroup(QualityStationManager.SENSOR, 1, 1);
-			this.setBitGroup(QualityStationManager.SENSOR, 2, 2);
+			this.setBitGroup(QualityStationManager.ENABLED, 1, 1);
+			this.setBitGroup(QualityStationManager.RESULT, 2, 2);
 			this.setBitGroup(QualityStationManager.FAILURE_PERCENTAGE, 3, 9);
 			this.setBitGroup(QualityStationManager.ACTIVATION_TIME, 10, 15);
 			//continue
