@@ -25,6 +25,11 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortObserve
 		this.capacity = capacity;
 	}
 
+	public ConveyorBeltSimulator(){
+		manager = new ConveyorBeltManager();
+		contents = new ArrayList<Integer>();
+	}
+	
 	public ConveyorBeltSimulator(ConveyorBeltManager m){
 		manager = m;
 		contents = new ArrayList<Integer>();
@@ -135,6 +140,11 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortObserve
 	
 	public ConveyorBeltManager getManager(){
 		return manager;
+	}
+
+	@Override
+	public void setParallelPortState(ParallelPortState state) {
+		manager.setState(state);
 	}
 
 }

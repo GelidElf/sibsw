@@ -12,9 +12,14 @@ public class SingleInboxConnectionManager extends CommunicationManager{
 	private Socket socket;
 	private String address;
 	private int serverPort;
+	private String applicationID;
+	private Configuration conf;
 	
 	public SingleInboxConnectionManager(String ID, Configuration conf) {
-		super(ID, conf);
+		this.applicationID = ID;
+		this.conf = conf;
+		initializeVariables();
+		initialize();
 	}
 
 	@Override
@@ -22,7 +27,6 @@ public class SingleInboxConnectionManager extends CommunicationManager{
 		return connection.getInbox();
 	}
 
-	@Override
 	protected void initialize() {
 		tryToConnectToServer();
 		connection.run();
@@ -38,11 +42,10 @@ public class SingleInboxConnectionManager extends CommunicationManager{
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,serverPort,e.getMessage()));
 			e.printStackTrace();
 		}
-		connection=new ConnectionManager(socket,ID);
+		connection=new ConnectionManager(socket,applicationID);
 	}
 
 
-	@Override
 	protected void initializeVariables() {
 		loadConfiguration();
 	}

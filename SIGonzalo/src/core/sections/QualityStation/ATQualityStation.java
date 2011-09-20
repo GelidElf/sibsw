@@ -2,14 +2,11 @@ package core.sections.QualityStation;
 
 import java.util.Random;
 
-import core.messages.CommunicationManager;
-import core.messages.Message;
-import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
-import core.messages.MessageFactory.SlaveAutomaton3MessageFactory;
 import core.sections.ParallelPort.ParallelPortObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
-import core.sections.QualityStation.States.*;
+import core.sections.QualityStation.States.AutomataStateQS;
+import core.sections.QualityStation.States.Idle;
 
 public class ATQualityStation extends Thread implements ParallelPortObserver{
 
@@ -75,6 +72,11 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 		cbs.getManager().setState(state);
 		atcb.start();
 		cbs.start();
+	}
+
+	@Override
+	public void setParallelPortState(ParallelPortState state) {
+		_manager.setState(state);
 	}
 	
 }

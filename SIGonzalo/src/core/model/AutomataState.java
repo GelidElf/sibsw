@@ -12,13 +12,13 @@ import java.util.HashMap;
 public abstract class AutomataState implements Serializable {
 
 	private static String nombreGrupo = "";
-	
+
 	private static final long serialVersionUID = 1764660909489565734L;
-	
+
 	private static HashMap <String, AutomataState> instances = new HashMap<String, AutomataState>();
-	
+
 	public abstract void execute(AutomataContainer master);
-	
+
 	public static AutomataState createState(String name, AutomataState currentState) {
 		AutomataState nextState = null;
 		String identificator = stateIdentificator(name);
@@ -32,21 +32,22 @@ public abstract class AutomataState implements Serializable {
 				nextState = (AutomataState) parametrizedConstructor.newInstance(currentState);
 				instances.put(identificator,nextState);
 			}
-			nextState = copyAtributeValues(c,currentState,nextState);
+			if (currentState != null)
+				nextState = copyAtributeValues(c,currentState,nextState);
 		}catch (ClassNotFoundException e){
-			
+
 		}catch (IllegalAccessException e){
-			
+
 		}catch (InstantiationException e){
-			
+
 		}catch (NoSuchMethodException e){
-			
+
 		}catch (InvocationTargetException e){
-			
+
 		}
 		return nextState;
 	}
-	
+
 	private static AutomataState copyAtributeValues(Class <? extends AutomataState> stateClass, 
 			AutomataState oldState, 
 			AutomataState newState) {
@@ -69,7 +70,7 @@ public abstract class AutomataState implements Serializable {
 		}
 		return newState;
 	}
-	
+
 	private static HashMap <String, Method> getGetterMethods(Class <? extends AutomataState> stateClass){
 		HashMap<String, Method> methods = new HashMap<String, Method>();
 		ArrayList<Method> allMethods = new ArrayList<Method>(Arrays.asList(stateClass.getDeclaredMethods()));
@@ -87,5 +88,5 @@ public abstract class AutomataState implements Serializable {
 	private static String stateIdentificator(String stateName){
 		return nombreGrupo+"."+stateName;
 	}
-	
+
 }

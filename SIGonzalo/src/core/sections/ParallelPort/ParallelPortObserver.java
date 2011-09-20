@@ -9,4 +9,5 @@ public interface ParallelPortObserver {
 
 	public abstract void update(ParallelPortState state);
 	
+	public abstract void setParallelPortState(ParallelPortState state);
 }

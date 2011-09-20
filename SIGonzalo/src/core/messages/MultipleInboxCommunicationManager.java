@@ -1,6 +1,7 @@
 package core.messages;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,21 +12,23 @@ import core.aplication.Configuration;
 public class MultipleInboxCommunicationManager extends CommunicationManager{
 
 	private HashMap<String, ConnectionManager> connections = new HashMap<String, ConnectionManager>();
-	private int numberOfInboxes;
+	private int numberOfIncoming;
+	private String applicationID;
+	private Configuration conf;
+	private int serverPort;
+	private ServerSocket serverSocket;
 	
-	public MultipleInboxCommunicationManager(String ID, Configuration conf, int numberOfInboxes) {
-		super(ID, conf);
-		this.numberOfInboxes = numberOfInboxes;
-		// TODO Auto-generated constructor stub
+	public MultipleInboxCommunicationManager(String ID, Configuration conf, int numberOfIncoming) {
+		applicationID = ID;
+		this.conf = conf;
+		this.numberOfIncoming = numberOfIncoming;
 	}
 
-	@Override
 	protected void initialize() {
 		try {
 			loadConfigurationFromFonfiguration();
 			setUpVariablesForMaster();
 			waitForSocketsToConnect();
-
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -37,7 +40,7 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 	}
 
 	private void setUpVariablesForMaster(){
-		connections = new HashMap<String,ConnectionManager>(numberOfInboxes);
+		connections = new HashMap<String,ConnectionManager>(numberOfIncoming);
 		try {
 			serverSocket = new ServerSocket();
 			serverSocket.bind(new InetSocketAddress(serverPort));
@@ -47,7 +50,7 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 	}
 
 	private void waitForSocketsToConnect() throws IOException {
-		while (connections.size() < numberOfInboxes){
+		while (connections.size() < numberOfIncoming){
 			Socket newSocket = serverSocket.accept();
 			ConnectionManager c = new ConnectionManager(newSocket, this);
 			String s = c.getOwner();
@@ -55,13 +58,7 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 			connections.get(connections.size()-1).run();
 		}
 	}
-
-	@Override
-	protected void initializeVariables() {
-		// TODO Auto-generated method stub
-		
-	}
-
+	
 	@Override
 	public Inbox getInboxByName(String commName) {
 		// TODO Auto-generated method stub
@@ -74,6 +71,19 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 		
 	}
 
+	public void createClientConnectionTo(String address, int port){
+		ConnectionManager connection = null;
+		Socket socket = new Socket();
+		InetAddress remoteAddress = null;
+		try {
+			remoteAddress = InetAddress.getByName(address);
+			socket.bind(new InetSocketAddress(remoteAddress,port));
+		} catch (Exception e) {
+			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));
+			e.printStackTrace();
+		}
+		connection=new ConnectionManager(socket,applicationID);
+	}
 	
 	
 }

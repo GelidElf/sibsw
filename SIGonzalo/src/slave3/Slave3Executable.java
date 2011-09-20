@@ -13,27 +13,34 @@ public class Slave3Executable extends RunnableApplication {
 		initialize(args,"slave3.ini");
 		
 		ATslave3 slave3 = new ATslave3(configuration);
-		
+		createAndSetQualityStation(slave3);
+		createAndSetConveyorBelt(slave3);
+
+		slave3.run();
+	}
+
+	private static void createAndSetQualityStation(ATslave3 slave3) {
 		ParallelPortState QCSstate = new ParallelPortState();
 		ATQualityStation atQCS = new ATQualityStation();
-		atQCS.getManager().setState(QCSstate);
+		atQCS.setParallelPortState(QCSstate);
 		slave3.setATQualityStation(atQCS);
 		QualityStationSimulator QCSS = new QualityStationSimulator();
-		QCSS.getManager().setState(QCSstate);
-		atQCS.run();
+		QCSS.setParallelPortState(QCSstate);
 		QCSS.run();
-		
-		
+		atQCS.run();
+	}
+
+	private static void createAndSetConveyorBelt(ATslave3 slave3) {
 		ParallelPortState CBstate = new ParallelPortState();
 		ATConveyorBelt atcb = new ATConveyorBelt();
-		atcb.getManager().setState(CBstate);
+		atcb.setParallelPortState(CBstate);
 		slave3.setATConveyorbelt(atcb);
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator();
-		cbs.getManager().setState(CBstate);
-		atcb.run();
+		cbs.setParallelPortState(CBstate);
 		cbs.run();
-		
-		
-		
+		atcb.run();
 	}
+	
+	
+	
 }

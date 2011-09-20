@@ -31,7 +31,7 @@ public class QualityStationSimulator  extends Thread implements ParallelPortObse
 			try {
 				failurePercentage = _manager.getValueByName(QualityStationManager.FAILURE_PERCENTAGE);
 				if (_manager.getValueByName(QualityStationManager.ENABLED) == 1){
-					result = (_random.nextInt(100) >= failurePercentage)?1:0;
+					result = (_random.nextInt(100)>=failurePercentage)?1:0;
 					sleep(_manager.getValueByName(_manager.ACTIVATION_TIME)*1000);
 				}
 				_manager.setValueByName(QualityStationManager.RESULT,result);
@@ -48,8 +48,12 @@ public class QualityStationSimulator  extends Thread implements ParallelPortObse
 	}
 
 	public ParallelPortManager getManager() {
-		// TODO Auto-generated method stub
 		return _manager;
+	}
+
+	@Override
+	public void setParallelPortState(ParallelPortState state) {
+		_manager.setState(state);
 	}
 	
 }

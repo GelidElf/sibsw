@@ -11,27 +11,27 @@ import core.sections.ParallelPort.Utils.ParallelPortException;
 
 
 public class ATConveyorBelt extends Thread implements ParallelPortObserver{
-	
+
 	private ConveyorBeltManager _manager = null;
 	private AutomataStateCB currentState = null;
 	private Random rand = new Random(System.currentTimeMillis());
 	private CommunicationManager commManager= null;
 	private ConveyorBeltSimulator cbs;
-	
-	
+
+
 	public ATConveyorBelt(){
 		_manager = new ConveyorBeltManager();
 		//TODO: hay que quitar este commManager
-	//	commManager = new CommunicationManager(false,"ATCB");
+		//	commManager = new CommunicationManager(false,"ATCB");
 	}
 
 	@Override
 	public void update(ParallelPortState state) {
 		_manager.setState(state);		
 	}
-	
+
 	public void run(){
-		
+
 		//Message mes = commManager.getInboxByName("unknown").getMessage();
 		String speed = "5";//mes.getAttributeValue(SlaveAutomaton1MessageFactory.SPEED);
 		String capacity = "5";//mes.getAttributeValue(SlaveAutomaton1MessageFactory.CAPACITY);
@@ -65,7 +65,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 				if(_manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL) == 0){
 					if (rand.nextBoolean()){
 						_manager.setValueByName(ConveyorBeltManager.SENSOR_INITIAL, 1);
-					//	System.out.println("sensor = 1");
+						//	System.out.println("sensor = 1");
 					}else{
 						try {
 							/* NOS TENEMOS QUE DORMIR EL MISMO TIEMPO QUE EL SIMULADOR, si no, en cuanto el simulador se duerma,
@@ -89,17 +89,32 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}*/
-					
+
 				}
 			} catch (ParallelPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			currentState = currentState.estop();
 		}
 	}
-	
+
+	public void setupParametersFromMessage(Message mes) {
+		String speed = mes.getAttributeValue(SlaveAutomaton1MessageFactory.SPEED);
+		String capacity = mes.getAttributeValue(SlaveAutomaton1MessageFactory.CAPACITY);
+		try {
+			_manager.setValueByName(ConveyorBeltManager.VELOCITY, Integer.parseInt(speed));
+			_manager.setValueByName(ConveyorBeltManager.CAPACITY, Integer.parseInt(capacity));
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ParallelPortException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
 	public void piecePicked(){
 		try {
 			_manager.setBitGroupValue(ConveyorBeltManager.SENSOR_FINISH, 0);
@@ -108,7 +123,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public boolean isReady(){
 		boolean op = false;
 		try {
@@ -121,12 +136,16 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		}
 		return op;
 	}
-	
+
 	public ConveyorBeltManager getManager(){
 		return _manager;
 	}
-	
-	/*public static void main (String[] args){
+
+	public static void initializeAndConfigure(){
+
+	}
+
+	public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATConveyorBelt atcb = new ATConveyorBelt();
 		atcb._manager.setState(state);
@@ -136,8 +155,13 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		System.out.println("hilos lanzados2");
 		atcb.start();
 		System.out.println("hilos lanzados3");
+		cbs.start();
+	}
 
-		
-	}*/
-	
+
+	@Override
+	public void setParallelPortState(ParallelPortState state) {
+		// TODO Auto-generated method stub
+
+	}
 }

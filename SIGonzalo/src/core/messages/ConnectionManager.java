@@ -50,6 +50,7 @@ public class ConnectionManager extends Thread{
 	public void run (){
 		while(true){
 			try {
+				
 				_cm.sendMessage((Message)_ois.readObject());
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

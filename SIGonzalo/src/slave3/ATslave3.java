@@ -4,6 +4,7 @@ import core.aplication.Configuration;
 import core.messages.CommunicationManager;
 import core.messages.SingleInboxConnectionManager;
 import core.model.AutomataContainer;
+import core.model.AutomataState;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.QualityStation.ATQualityStation;
 
@@ -17,6 +18,7 @@ public class ATslave3 extends AutomataContainer {
 	public ATslave3(Configuration conf){
 		super(conf);
 		commManager = new SingleInboxConnectionManager("Slave3",conf);
+		currentState = AutomataState.createState("Started", currentState);
 	}
 	
 	
@@ -28,6 +30,12 @@ public class ATslave3 extends AutomataContainer {
 		qualityStation = qcs;
 	}
 	
+	@Override
+	public void run() {
+		super.run();
+		conveyorBelt.run();
+		qualityStation.run();
+	}
 	
 	
 }
