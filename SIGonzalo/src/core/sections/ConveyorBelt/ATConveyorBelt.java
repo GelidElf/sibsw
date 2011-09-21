@@ -4,6 +4,7 @@ import java.util.Random;
 import core.messages.CommunicationManager;
 import core.messages.Message;
 import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
+import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ConveyorBelt.States.Idle;
 import core.sections.ParallelPort.*;
@@ -17,10 +18,12 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 	private Random rand = new Random(System.currentTimeMillis());
 	private CommunicationManager commManager= null;
 	private ConveyorBeltSimulator cbs;
+	private AutomataContainer father = null;
 
 
-	public ATConveyorBelt(){
+	public ATConveyorBelt(AutomataContainer father){
 		_manager = new ConveyorBeltManager();
+		this.father = father;
 		//TODO: hay que quitar este commManager
 		//	commManager = new CommunicationManager(false,"ATCB");
 	}
@@ -145,7 +148,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 
 	}
 
-	public static void main (String[] args){
+	/*public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATConveyorBelt atcb = new ATConveyorBelt();
 		atcb._manager.setState(state);
@@ -156,7 +159,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		atcb.start();
 		System.out.println("hilos lanzados3");
 		cbs.start();
-	}
+	}*/
 
 
 	@Override
@@ -164,4 +167,5 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		// TODO Auto-generated method stub
 
 	}
+
 }

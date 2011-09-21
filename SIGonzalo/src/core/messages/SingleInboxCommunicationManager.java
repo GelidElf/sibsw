@@ -6,7 +6,7 @@ import java.net.Socket;
 
 import core.aplication.Configuration;
 
-public class SingleInboxConnectionManager extends CommunicationManager{
+public class SingleInboxCommunicationManager extends CommunicationManager{
 
 	private ConnectionManager connection;
 	private Socket socket;
@@ -15,7 +15,7 @@ public class SingleInboxConnectionManager extends CommunicationManager{
 	private String applicationID;
 	private Configuration conf;
 	
-	public SingleInboxConnectionManager(String ID, Configuration conf) {
+	public SingleInboxCommunicationManager(String ID, Configuration conf) {
 		this.applicationID = ID;
 		this.conf = conf;
 		initializeVariables();
@@ -59,5 +59,15 @@ public class SingleInboxConnectionManager extends CommunicationManager{
 	public void sendMessage(Message message) {
 		connection.writeMessage(message);
 	}
+
+	public Inbox getInboxByName() {
+		return connection.getInbox();
+	}
+
+	public Message readMessage() {
+		return connection.readMessage();
+		
+	}
+	
 	
 }

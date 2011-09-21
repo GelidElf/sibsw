@@ -78,5 +78,9 @@ public class Message implements Serializable {
 	public void unsetUrgent(){
 		urgent = false;
 	}
+
+	public ArrayList<Attribute> getAttributes() {
+		return contents;		
+	}
 	
 }

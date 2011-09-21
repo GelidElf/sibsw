@@ -94,4 +94,8 @@ public class ConnectionManager extends Thread{
 		return _inbox;
 	}
 
+	public Message readMessage() {
+		return _inbox.getMessage();		
+	}
+
 }

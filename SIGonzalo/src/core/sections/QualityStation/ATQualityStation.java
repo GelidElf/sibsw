@@ -2,6 +2,11 @@ package core.sections.QualityStation;
 
 import java.util.Random;
 
+import core.messages.Message;
+import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
+import core.messages.MessageFactory.SlaveAutomaton3MessageFactory;
+import core.model.AutomataContainer;
+import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ParallelPort.ParallelPortObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
@@ -12,11 +17,13 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 
 	private QualityStationManager _manager = null;
 	private AutomataStateQS currentState = null;
+	private AutomataContainer father = null;
 	//private Random rand = new Random(System.currentTimeMillis());
 	//private CommunicationManager commManager= null;
 	
-	public ATQualityStation(){
+	public ATQualityStation(AutomataContainer father){
 		_manager = new QualityStationManager();
+		this.father = father;
 		//commManager = new CommunicationManager(false,);
 	}
 	
@@ -64,7 +71,7 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 		return _manager;
 	}
 	
-	public static void main (String[] args){
+	/*public static void main (String[] args){
 		ParallelPortState state = new ParallelPortState();
 		ATQualityStation atcb = new ATQualityStation();
 		atcb._manager.setState(state);
@@ -72,11 +79,26 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 		cbs.getManager().setState(state);
 		atcb.start();
 		cbs.start();
-	}
+	}*/
 
 	@Override
 	public void setParallelPortState(ParallelPortState state) {
 		_manager.setState(state);
+	}
+	
+	public void setupParametersFromMessage(Message mes) {
+		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
+		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
+		try {
+			_manager.setValueByName(QualityStationManager.ACTIVATION_TIME, Integer.parseInt(activationTime));
+			_manager.setValueByName(QualityStationManager.FAILURE_PERCENTAGE, Integer.parseInt(failurePercentage));
+		} catch (NumberFormatException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ParallelPortException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 	
 }
