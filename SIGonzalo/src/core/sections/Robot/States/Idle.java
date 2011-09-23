@@ -41,7 +41,7 @@ public class Idle implements AutomataStateRobot {
 			robot.setAxisReady(false);
 			System.out.println("Axis picked and deposited...");
 		}else{
-			//doing nothing
+			System.out.print("");
 		}
 
 	}

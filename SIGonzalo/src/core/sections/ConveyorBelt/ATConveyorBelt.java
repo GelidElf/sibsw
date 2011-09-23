@@ -28,6 +28,9 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		//	commManager = new CommunicationManager(false,"ATCB");
 	}
 
+	public ATConveyorBelt(){
+		_manager = new ConveyorBeltManager();
+	}
 	@Override
 	public void update(ParallelPortState state) {
 		_manager.setState(state);		
