@@ -130,6 +130,7 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 		}
 	}
 
+	//Method to check if the piece is ready to pick up
 	public boolean isReady(){
 		boolean op = false;
 		try {
@@ -141,6 +142,17 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver{
 			e.printStackTrace();
 		}
 		return op;
+	}
+	
+	//Method to check if the first position of the CB is empty
+	public boolean isFirstPositionEmpty() throws ParallelPortException{
+		boolean empty  = false;
+		if(_manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL)== 0){
+			empty = true;
+		}else{
+			empty = false;
+		}
+		return empty;
 	}
 
 	public ConveyorBeltManager getManager(){

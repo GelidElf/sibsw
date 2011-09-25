@@ -21,5 +21,10 @@ public class Storing extends Slave3State {
 	public AutomataState NotFull() {
 		return createState("CBReady", this);
 	}
+	
+	@Override
+	public AutomataState Full() {
+		return createState("Storing", this);
+	}
 
 }

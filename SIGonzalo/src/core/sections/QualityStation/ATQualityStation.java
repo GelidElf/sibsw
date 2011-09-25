@@ -2,6 +2,8 @@ package core.sections.QualityStation;
 
 import java.util.Random;
 
+import slave3.states.Slave3State;
+
 import core.messages.Message;
 import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
 import core.messages.MessageFactory.SlaveAutomaton3MessageFactory;
@@ -31,20 +33,8 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 	public void update(ParallelPortState state) {
 		_manager.setState(state);	
 	}
-
+	
 	public void run(){
-//		Message mes = commManager.getInbox("unknown").getMessage();
-//		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
-//		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
-//		try {
-//			_manager.setValueByName(QualityStationManager.FAILURE_PERCENTAGE, Integer.parseInt(failurePercentage));
-//			_manager.setValueByName(QualityStationManager.ACTIVATION_TIME, Integer.parseInt(activationTime));
-//		} catch (NumberFormatException e1) {
-//			e1.printStackTrace();
-//		} catch (ParallelPortException e1) {
-//			e1.printStackTrace();
-//		}
-		
 		while(true){
 			if(currentState == null){
 				currentState = Idle.getInstance();
@@ -54,8 +44,12 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 					if(_manager.getValueByName(QualityStationManager.ENABLED) == 0){
 						if(_manager.getValueByName(QualityStationManager.RESULT) == 1){
 							currentState = currentState.valid();
+							Message message = new Message("QCS.AssemblyValid");
+							father.injectMessage(message);
 						}else{
 							currentState = currentState.invalid();
+							Message message = new Message("QCS.AssemblyInvalid");
+							father.injectMessage(message);
 						}
 					}
 				} catch (ParallelPortException e) {
@@ -100,5 +94,7 @@ public class ATQualityStation extends Thread implements ParallelPortObserver{
 			e1.printStackTrace();
 		}
 	}
+	
+	
 	
 }

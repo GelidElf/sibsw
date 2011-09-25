@@ -155,7 +155,7 @@ public class ParallelPortManager {
 		_connectorNames.get(name).setValue(value);
 	}
 	
-	public synchronized int getBitGroupValue(ParallelPortState state,String name){
+	public synchronized int getBitGroupValue(String name){
 		return _connectorNames.get(name).intValue();
 	}
 	
