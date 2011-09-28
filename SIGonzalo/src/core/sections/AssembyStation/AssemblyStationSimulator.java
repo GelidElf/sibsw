@@ -1,11 +1,5 @@
 package core.sections.AssembyStation;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import core.sections.ParallelPort.ParallelPortObserver;
-import core.sections.ParallelPort.ParallelPortState;
-import core.sections.ParallelPort.Utils.ParallelPortException;
 
 
 

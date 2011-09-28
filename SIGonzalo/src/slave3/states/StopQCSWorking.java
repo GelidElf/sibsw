@@ -2,10 +2,14 @@ package slave3.states;
 
 import core.model.AutomataContainer;
 import core.model.AutomataState;
-import slave3.ATslave3;
 
 public class StopQCSWorking extends Slave3State {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2632623455555324952L;
+
 	@Override
 	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub

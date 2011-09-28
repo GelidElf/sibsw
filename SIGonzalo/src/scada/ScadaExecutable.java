@@ -9,7 +9,7 @@ public class ScadaExecutable extends RunnableApplication {
 	 */
 	public static void main(String[] args) {
 		initialize(args,"scada.ini");
-		Scada scada = new Scada(configuration);
+		new Scada(configuration);
 	}
 
 }

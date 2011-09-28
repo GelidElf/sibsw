@@ -2,10 +2,14 @@ package slave3.states;
 
 import core.model.AutomataContainer;
 import core.model.AutomataState;
-import slave3.ATslave3;
 
 public class Storing extends Slave3State {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4665809406537913468L;
+
 	@Override
 	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub

@@ -5,6 +5,10 @@ import core.model.AutomataState;
 
 public class StopCBReady extends Slave3State {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4118978392298535216L;
 	static Slave3State instance = null;
 	
 	public static Slave3State getInstance(){

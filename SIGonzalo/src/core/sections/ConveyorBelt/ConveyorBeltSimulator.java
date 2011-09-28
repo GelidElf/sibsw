@@ -1,7 +1,6 @@
 package core.sections.ConveyorBelt;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import core.sections.ParallelPort.ParallelPortObserver;
 import core.sections.ParallelPort.ParallelPortState;

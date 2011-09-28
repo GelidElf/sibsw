@@ -2,10 +2,14 @@ package slave3.states;
 
 import core.model.AutomataContainer;
 import core.model.AutomataState;
-import slave3.ATslave3;
 
 public class Trashing extends Slave3State {
 
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5862049046925418350L;
 
 	@Override
 	public void execute(AutomataContainer master) {
