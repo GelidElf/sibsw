@@ -7,16 +7,17 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import core.aplication.ApplicationConfiguration;
 import core.aplication.Configuration;
 
-public class ConfigurationFileReader {
+public class ApplicationConfigurationFileReader {
 
 	private HashMap<String, String> contents = null;
-	private Configuration conf = null;
+	private ApplicationConfiguration conf = null;
 
-	public ConfigurationFileReader(String fileName) {
+	public ApplicationConfigurationFileReader(String fileName) {
 		contents = new HashMap<String, String>();
-		conf = new Configuration();
+		conf = new ApplicationConfiguration();
 		try {
 
 			FileInputStream fstream = new FileInputStream(fileName);
@@ -80,7 +81,7 @@ public class ConfigurationFileReader {
 			return null;
 	}
 
-	public Configuration readConfiguration() {
+	public ApplicationConfiguration readConfiguration() {
 		return conf;
 	}
 

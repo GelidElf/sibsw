@@ -28,7 +28,7 @@ public abstract class AutomataState implements Serializable {
 			if (as != null)
 				nextState = as;
 			else{
-				Constructor parametrizedConstructor = c.getConstructor(AutomataState.class);
+				Constructor<?> parametrizedConstructor = c.getConstructor(AutomataState.class);
 				nextState = (AutomataState) parametrizedConstructor.newInstance(currentState);
 				instances.put(identificator,nextState);
 			}

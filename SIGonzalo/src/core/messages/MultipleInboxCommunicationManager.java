@@ -1,7 +1,6 @@
 package core.messages;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,7 +8,7 @@ import java.util.HashMap;
 
 import core.aplication.Configuration;
 
-public class MultipleInboxCommunicationManager extends CommunicationManager{
+public class MultipleInboxCommunicationManager implements CommunicationManager{
 
 	private HashMap<String, ConnectionManager> connections = new HashMap<String, ConnectionManager>();
 	private int numberOfIncoming;
@@ -17,20 +16,23 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 	private Configuration conf;
 	private int serverPort;
 	private ServerSocket serverSocket;
+	private Inbox inbox;
+	private ConnectionManager connection;
 	
 	public MultipleInboxCommunicationManager(String ID, Configuration conf, int numberOfIncoming) {
 		applicationID = ID;
 		this.conf = conf;
 		this.numberOfIncoming = numberOfIncoming;
+		inbox = new Inbox();
+		initialize();
 	}
 
-	protected void initialize() {
+	private void initialize() {
 		try {
 			loadConfigurationFromFonfiguration();
 			setUpVariablesForMaster();
-			waitForSocketsToConnect();
+			waitForSocketsToConnect(numberOfIncoming);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -49,40 +51,71 @@ public class MultipleInboxCommunicationManager extends CommunicationManager{
 		}
 	}
 
-	private void waitForSocketsToConnect() throws IOException {
+	private void waitForSocketsToConnect(int numberOfIncoming) throws IOException {
 		while (connections.size() < numberOfIncoming){
+			System.out.println(String.format("Waiting for connection n1 %d", connections.size()));
 			Socket newSocket = serverSocket.accept();
-			ConnectionManager c = new ConnectionManager(newSocket, this);
-			String s = c.getOwner();
+			serverSocket.close();
+			serverSocket = new ServerSocket();
+			serverSocket.bind(new InetSocketAddress(serverPort));
+			System.out.println("new connection established");
+			ConnectionManager c = new ConnectionManager(newSocket, this, inbox);
+			String s = c.getNameOfPeer();
+			System.out.println(String.format("%s connected",s));
 			connections.put(s, c);
-			connections.get(connections.size()-1).run();
+			startConnection(connections.get(s));
 		}
+		System.out.println("All conections stablished");
+	}
+	
+	private void startConnection(ConnectionManager conn) {
+		try{
+			conn.start();
+		}catch(Exception e){
+			startConnection(conn);
+		}
+	}
+
+	@Override
+	public Inbox getInbox() {
+		return inbox;
 	}
 	
 	@Override
-	public Inbox getInboxByName(String commName) {
-		// TODO Auto-generated method stub
-		return null;
+	public Message readMessage(){
+		return inbox.getMessage();
 	}
 
 	@Override
 	public void sendMessage(Message message) {
-		// TODO Auto-generated method stub
-		
+		if (message.getDestination() != null)
+			for (ConnectionManager conn: connections.values()){
+				conn.writeMessage(message);
+			}
+		else
+			connections.get(message.getDestination()).writeMessage(message);
 	}
 
 	public void createClientConnectionTo(String address, int port){
-		ConnectionManager connection = null;
-		Socket socket = new Socket();
-		InetAddress remoteAddress = null;
+		Socket socket;
 		try {
-			remoteAddress = InetAddress.getByName(address);
-			socket.bind(new InetSocketAddress(remoteAddress,port));
+			socket = new Socket(address, serverPort);
+			connection=new ConnectionManager(socket,applicationID,inbox);
+			connection.writeMessage(new Message(applicationID+".CONNECT",null,false));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));
 			e.printStackTrace();
 		}
-		connection=new ConnectionManager(socket,applicationID);
+	}
+
+	@Override
+	public void setInbox(Inbox inbox) {
+		this.inbox = inbox;
+	}
+
+	@Override
+	public String getApplicationId() {
+		return applicationID;
 	}
 	
 	

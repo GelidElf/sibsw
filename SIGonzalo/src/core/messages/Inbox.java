@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 public class Inbox {
 
-	private LinkedList<Message> _inbox = null;
-	private LinkedList<Message> _priorityInbox = null;
+	private final LinkedList<Message> inbox = new LinkedList<Message>();
+	private final LinkedList<Message> priorityInbox = new LinkedList<Message>();
 	
 	
 	public Inbox(){}
@@ -16,19 +16,21 @@ public class Inbox {
 	
 	public synchronized void add(Message message){
 		if (message.isUrgent())
-			_priorityInbox.add(message);
+			priorityInbox.addLast(message);
 		else
-			_inbox.add(message);
+			inbox.addLast(message);
 		
 	}
 	
 	public synchronized Message getMessage(){
-		if (_priorityInbox.size() >= 0){
-			_inbox.remove(_priorityInbox.getFirst());
-			return _priorityInbox.getFirst();
-		}else{
-			return _inbox.getFirst();
+		Message message = null;
+		if (priorityInbox.size() > 0){
+			message = priorityInbox.getFirst();
 		}
+		else if (inbox.size() > 0){
+			message = inbox.getFirst();
+		}
+		return message;
 	}
 	
 	

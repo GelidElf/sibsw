@@ -17,6 +17,6 @@ public class AutomataContainer extends Thread {
 	}
 	
 	public void injectMessage(Message message){
-		commManager.getInboxByName(message.getID()).add(message);
+		commManager.getInbox().add(message);
 	}
 }

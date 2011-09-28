@@ -1,11 +1,14 @@
 	package core.messages;
 
 
-public abstract class CommunicationManager {
+public interface CommunicationManager {
 	
-	protected static final int DATAGRAM_LENGTH = 20000;
-	protected static final int DEF_SERVER_PORT = 40000;
+	public static final int DATAGRAM_LENGTH = 20000;
+	public static final int DEF_SERVER_PORT = 40000;
 	
-	public abstract void sendMessage(Message message);
-	public abstract Inbox getInboxByName(String commName);
+	public void sendMessage(Message message);
+	public Message readMessage();
+	public Inbox getInbox();
+	public void setInbox(Inbox inbox);
+	public String getApplicationId();
 }

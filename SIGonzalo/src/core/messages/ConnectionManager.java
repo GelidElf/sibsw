@@ -7,40 +7,36 @@ import java.net.Socket;
 
 public class ConnectionManager extends Thread{
 
-	private Socket _socket = null;
+	private Socket socket = null;
 	private ObjectOutputStream  _oos = null;
 	private ObjectInputStream  _ois = null;
-	private Inbox _inbox = null;
-	private CommunicationManager _cm = null;
+	private Inbox inbox = null;
+	private CommunicationManager commManager = null;
+	private String applicationId = null;
 	
 	public ConnectionManager (Socket socket, CommunicationManager cm, Inbox inbox){
-		_socket = socket;
+		this.socket = socket;
+		applicationId = cm.getApplicationId();
 		createInputAndOutputStreamsFromSocket();
-		if (_inbox == null)
-			_inbox = new Inbox();
+		if (this.inbox == null)
+			this.inbox = new Inbox();
 		else
-			_inbox = inbox;
-		_cm = cm;
+			this.inbox = inbox;
+		commManager = cm;
 	}
 	
-	public ConnectionManager (Socket socket, CommunicationManager cm){
-		_socket = socket;
+	public ConnectionManager (Socket socket, String applicationId, Inbox inbox){
+		this.socket = socket;
+		this.applicationId = applicationId;
 		createInputAndOutputStreamsFromSocket();
-		_inbox = new Inbox();
-		_cm = cm;
-	}
-	
-	public ConnectionManager (Socket socket, String name){
-		_socket = socket;
-		createInputAndOutputStreamsFromSocket();
-		_inbox = new Inbox();
+		this.inbox = inbox;
 
 	}
 
 	private void createInputAndOutputStreamsFromSocket() {
 		try {
-			_oos = new ObjectOutputStream(_socket.getOutputStream());
-			_ois = new ObjectInputStream(_socket.getInputStream());
+			_oos = new ObjectOutputStream(this.socket.getOutputStream());
+			_ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
 			System.out.println("Error creating input and output streams from socket: "+e.getMessage());
 			e.printStackTrace();
@@ -48,23 +44,27 @@ public class ConnectionManager extends Thread{
 	}
 	
 	public void run (){
-		while(true){
-			try {
-				
-				_cm.sendMessage((Message)_ois.readObject());
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		while (true){
+			Message message =readMessageFromStream(); 
+			trataMensajeRecibido(message);
+		}
+	}
+
+	private void trataMensajeRecibido(Message message) {
+		if (message.getDestination().equals(applicationId)){
+			System.out.println("RecibidoMensaje en: "+applicationId);
+			this.inbox.add(message);
+		}
+		else{
+			System.out.println(String.format("Reenviando mensaje ID:%s desde %s",message.getID(),applicationId));
+			commManager.sendMessage(message);
 		}
 	}
 	
 	public synchronized void writeMessage(Message message){
 		try {
 			_oos.writeObject(message);
+			_oos.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -75,11 +75,18 @@ public class ConnectionManager extends Thread{
 	 * Special method for naming the Communication interface in the manager so that it can send thoguth the correct 
 	 * Comm object the message
 	 */
-	public synchronized String getOwner(){
-		Message mes;
+	public synchronized String getNameOfPeer(){
+		return readMessageFromStream().getOwner();
+	}
+	
+	private Message readMessageFromStream(){
+		Object o;
 		try {
-			mes = (Message)_ois.readObject();
-			return mes.getOwner();
+			o = _ois.readObject();
+			if (o instanceof Message){
+				System.out.println(o);
+				return ((Message)o);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,11 +98,11 @@ public class ConnectionManager extends Thread{
 	}
 	
 	public Inbox getInbox(){
-		return _inbox;
+		return this.inbox;
 	}
-
+	
 	public Message readMessage() {
-		return _inbox.getMessage();		
+		return this.inbox.getMessage();		
 	}
 
 }

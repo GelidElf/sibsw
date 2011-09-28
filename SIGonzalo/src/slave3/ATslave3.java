@@ -36,7 +36,7 @@ public class ATslave3 extends AutomataContainer {
 	public void run() {
 		super.run();
 		while(true){
-			Message message = commManager.getInboxByName("Slave3").getMessage();
+			Message message = commManager.readMessage();
 			String id = message.getID();
 			String owner = message.getOwner();
 			if(id.equals("Slave3.NormalStop")){
@@ -79,19 +79,16 @@ public class ATslave3 extends AutomataContainer {
 			}
 			if(id.equals("QCS.AssemblyInvalid")){
 				currentState = (Slave3State) currentState.Invalid();
-				messageToSend = new Message("Slave3.Invalid");
-				messageToSend.set_destination("Master");
+				messageToSend = new Message("Slave3.Invalid","MASTER",false);
 				commManager.sendMessage(messageToSend);
 			}
 			if(id.equals("QCS.AssemblyValid")){
 				currentState = (Slave3State) currentState.Valid();
-				messageToSend = new Message("Slave3.Valid");
-				messageToSend.set_destination("Master");
+				messageToSend = new Message("Slave3.Valid","MASTER",false);
 				commManager.sendMessage(messageToSend);
 				try {
 					if(conveyorBelt.isFirstPositionEmpty() == true){
-						messageToSend = new Message("Slave3.CBReadyToPlaceWP");
-						messageToSend.set_destination("Master");
+						messageToSend = new Message("Slave3.CBReadyToPlaceWP","MASTER",false);
 						commManager.sendMessage(messageToSend);
 						currentState = (Slave3State) currentState.NotFull();
 						

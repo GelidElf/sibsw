@@ -10,19 +10,20 @@ public class Message implements Serializable {
 	private String messageId = null;
 	private String destination = null;
 	
-	public String get_destination() {
+	public String getDestination() {
 		return destination;
 	}
 
-	public void set_destination(String destination) {
+	public void setDestination(String destination) {
 		this.destination = destination;
 	}
 
 	private Boolean urgent = null;
 
-	public Message(String ID){
-		messageId = ID;
-		urgent = false;
+	public Message(String messageID, String destination, boolean isUrgent){
+		this.messageId = messageID;
+		this.destination = destination;
+		this.urgent = isUrgent;
 	}
 	
 	public void addAttribute(Attribute att){
@@ -43,7 +44,7 @@ public class Message implements Serializable {
 	}
 	
 	public String getOwner(){
-		return messageId.substring(0,messageId.indexOf(MessageFactory.SEPARATOR));
+		return messageId.substring(0,messageId.indexOf("."));
 	}
 	
 	public Attribute getAttribute(int i){

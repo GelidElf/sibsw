@@ -5,16 +5,16 @@ public class Configuration {
 	public String configurationFileName = "conf.ini";
 	public String autoDiscovery = "no";
 	public String address;
-	public String port;
 	public String logFile;
 	public String serverPort;
+	public String remotePort;
 	
 	public boolean getAutoDiscovery(){
 		return autoDiscovery.equals("yes");
 	}
 	
-	public int getPortAsInt(){
-		return Integer.parseInt(port);
+	public int getRemotePortAsInt(){
+		return Integer.parseInt(remotePort);
 	}
 	
 	public int getServerPortAsInt(){

@@ -13,8 +13,8 @@ public class Slave3Executable extends RunnableApplication {
 		initialize(args,"slave3.ini");
 		
 		ATslave3 slave3 = new ATslave3(configuration);
-		createAndSetQualityStation(slave3);
-		createAndSetConveyorBelt(slave3);
+//		createAndSetQualityStation(slave3);
+//		createAndSetConveyorBelt(slave3);
 
 		slave3.start();
 	}

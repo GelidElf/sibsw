@@ -6,7 +6,7 @@ public class MessageFactory {
 
 	public class MasterAtomataMessageFactory{
 		
-		public static final String ID = "Master";
+		public static final String ID = "MASTER";
 		
 		public static final String BROADCAST_MESSAGE = ID + SEPARATOR + "BROADCAST_MESSAGE";
 		
@@ -32,7 +32,7 @@ public class MessageFactory {
 	}
 	
 	
-	public static Message createMessage(String ID){
-		return new Message(ID);
+	public static Message createMessage(String ID, String messageType, String destination, boolean isUrgent){
+		return new Message(ID.concat(".").concat(messageType),destination,isUrgent);
 	}
 }
