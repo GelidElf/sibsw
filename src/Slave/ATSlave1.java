@@ -3,20 +3,22 @@ package Slave;
 
 import Slave.States.AutomataStateSlave;
 import Slave.States.Idle;
+import core.aplication.Configuration;
+import core.messages.SingleInboxCommunicationManager;
+import core.model.AutomataContainer;
 import core.sections.AssembyStation.AssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.Robot.Robot;
 
-public class ATSlave1 extends Thread{
-	
+public class ATSlave1 extends AutomataContainer{
+
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
 	private AutomataStateSlave currentState;
 	private AssemblyStation assemblyStation;
 	private Robot robot;
-	
-	
+
+
 
 
 	public AutomataStateSlave getCurrentState() {
@@ -24,34 +26,40 @@ public class ATSlave1 extends Thread{
 	}
 
 
-	public ATSlave1(){
-		System.out.println("lanzo simulación en robot");
-		/* Iniciamos robot*/
-		robot = new Robot();
-		
-		assemblyStation = new AssemblyStation();
-		assemblyStation.setEmpty(true);
-		assemblyStation.setGearNeeded(true);
-		assemblyStation.setAxisNeeded(true);
-		assemblyStation.start();
-		
-		ParallelPortState state = new ParallelPortState();
-		gearBelt = new ATConveyorBelt();
-		gearBelt.getManager().setState(state);
-		
-	
-		ParallelPortState state2 = new ParallelPortState();
-		axisBelt = new ATConveyorBelt();
-		axisBelt.getManager().setState(state2);
-		axisBelt.start();
-		
+	public ATSlave1(Configuration conf){
+		super(conf, new SingleInboxCommunicationManager("Slave3",conf));
+		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}
-	
-	
+
+	//	public ATSlave1(){
+	//		System.out.println("lanzo simulación en robot");
+	//		/* Iniciamos robot*/
+	//		robot = new Robot();
+	//
+	//		assemblyStation = new AssemblyStation();
+	//		assemblyStation.setEmpty(true);
+	//		assemblyStation.setGearNeeded(true);
+	//		assemblyStation.setAxisNeeded(true);
+	//		assemblyStation.start();
+	//
+	//		ParallelPortState state = new ParallelPortState();
+	//		gearBelt = new ATConveyorBelt(this,new ConveyorBeltManager());
+	//		gearBelt.getManager().setState(state);
+	//
+	//
+	//		ParallelPortState state2 = new ParallelPortState();
+	//		axisBelt = new ATConveyorBelt(this,new ConveyorBeltManager());
+	//		axisBelt.getManager().setState(state2);
+	//		axisBelt.start();
+	//
+	//	}
+
+
 	/*
-	 * Recibir config del buzón, 
+	 * Recibir config del buzón,
 	 */
-	public void start(){
+	@Override
+	public void run(){
 		setInitialSettings("Mensaje(s) leido del buzón con los parámetros");
 		gearBelt.start();
 		robot.start();
@@ -65,26 +73,26 @@ public class ATSlave1 extends Thread{
 				e.printStackTrace();
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	public void setInitialSettings(String settings){
-		
+
 		//TODO: po hacerlo >.<
 		//robot.setSpeed......
 		//gearBelt.setLength,speed, capacity....
 		//AS.setAssemblyDelay....
-	
+
 	}
 	public void setCurrentState(AutomataStateSlave state){
-		if(currentState==null || state == null){
+		if((currentState==null) || (state == null)){
 			currentState = new Idle();
 		}else{
 			currentState = state;
 		}
 	}
-	
+
 	public ATConveyorBelt getGearBelt() {
 		return gearBelt;
 	}
@@ -123,10 +131,10 @@ public class ATSlave1 extends Thread{
 	public void setRobot(Robot robot) {
 		this.robot = robot;
 	}
-	
-	public static void main (String args[]){
-		ATSlave1 slave = new ATSlave1();
-		System.out.println("ARRRRRRRANCO!");
-		slave.start();
-	}
+
+	//	public static void main (String args[]){
+	//		ATSlave1 slave = new ATSlave1();
+	//		System.out.println("ARRRRRRRANCO!");
+	//		slave.start();
+	//	}
 }
