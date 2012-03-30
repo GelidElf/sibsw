@@ -42,6 +42,9 @@ public class ParallelPortPinGroup implements Cloneable {
 		int result = 0;
 		int value = 0;
 		if (_manager != null) {
+			if (_start == _end) {
+				return _manager.getIntValue(_start);
+			}
 			for (int i = _start; i <= _end; i++) {
 				value = new Double(_manager.getIntValue(i)
 						* Math.pow(2, _end - i - 1)).intValue();

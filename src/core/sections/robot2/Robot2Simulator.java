@@ -1,11 +1,11 @@
 package core.sections.robot2;
 
 import core.sections.ParallelPort.ParallelPortManager;
-import core.sections.ParallelPort.ParallelPortObserver;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class Robot2Simulator extends Thread implements ParallelPortObserver {
+public class Robot2Simulator extends Thread implements ParallelPortManagerObserver {
 
 	private Robot2Manager _manager = null;
 	

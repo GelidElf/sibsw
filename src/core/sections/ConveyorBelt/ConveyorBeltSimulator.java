@@ -1,7 +1,5 @@
 package core.sections.ConveyorBelt;
 
-import core.sections.ParallelPort.ParallelPortObserver;
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 /**
@@ -9,12 +7,12 @@ import core.sections.ParallelPort.Utils.ParallelPortException;
  * @author GelidElf
  * 
  */
-public class ConveyorBeltSimulator extends Thread implements
-		ParallelPortObserver {
+public class ConveyorBeltSimulator extends Thread {
 
 	private int[] contents = null;
 	private ConveyorBeltManager manager = null;
 	private int capacity = 0;
+	private int numberOfElements = 0;
 
 	public int getCapacity() {
 		return capacity;
@@ -70,7 +68,8 @@ public class ConveyorBeltSimulator extends Thread implements
 					increaseElementCountByOne();
 				}
 				if (beltHasElements()) {
-					int velocity = manager.getSpeed();
+					int velocity = manager
+							.getValueByName(ConveyorBeltManager.SPEED);
 					if (running() && finalSensorInactive()) {
 						actualizoElElementoDeLaUltimaPosicionQueYaNoEsta();
 						System.out.println("muevo la cinta!:" + velocity);
@@ -99,14 +98,12 @@ public class ConveyorBeltSimulator extends Thread implements
 		}
 	}
 
-	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta() {
+	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta()
+			throws ParallelPortException {
 		if (positionOccupied(0)) {
-			try {
-				manager.setValueByName(ConveyorBeltManager.QUANTITY, manager
-						.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
-			} catch (ParallelPortException e1) {
-				e1.printStackTrace();
-			}
+			manager.setValueByName(ConveyorBeltManager.QUANTITY, manager
+					.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
+			numberOfElements--;
 		}
 	}
 
@@ -123,6 +120,7 @@ public class ConveyorBeltSimulator extends Thread implements
 	private void updateCapacity() throws ParallelPortException {
 		int newCapacity = manager.getValueByName(ConveyorBeltManager.CAPACITY);
 		if (newCapacity != capacity) {
+			capacity = newCapacity;
 			int residualCuantity = changeCapacity(newCapacity);
 			manager.setValueByName(ConveyorBeltManager.QUANTITY,
 					residualCuantity);
@@ -144,6 +142,7 @@ public class ConveyorBeltSimulator extends Thread implements
 	private void increaseElementCountByOne() throws ParallelPortException {
 		manager.setValueByName(ConveyorBeltManager.QUANTITY, manager
 				.getValueByName(ConveyorBeltManager.QUANTITY) + 1);
+		numberOfElements++;
 	}
 
 	private boolean initialSensorActive() throws ParallelPortException {
@@ -157,11 +156,6 @@ public class ConveyorBeltSimulator extends Thread implements
 		for (int i = 0; i < capacity; i++) {
 			contents[i] = 0;
 		}
-	}
-
-	@Override
-	public void update(ParallelPortState state) {
-		manager.setState(state);
 	}
 
 	private int changeCapacity(int capacity) {
@@ -190,11 +184,6 @@ public class ConveyorBeltSimulator extends Thread implements
 
 	public ConveyorBeltManager getManager() {
 		return manager;
-	}
-
-	@Override
-	public void setParallelPortState(ParallelPortState state) {
-		manager.setState(state);
 	}
 
 }

@@ -3,12 +3,12 @@ package core.sections.QualityStation;
 import java.util.Random;
 
 import core.sections.ParallelPort.ParallelPortManager;
-import core.sections.ParallelPort.ParallelPortObserver;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 
-public class QualityStationSimulator  extends Thread implements ParallelPortObserver{
+public class QualityStationSimulator  extends Thread implements ParallelPortManagerObserver{
 
 	private Random _random = null;
 	private QualityStationManager _manager = null;
