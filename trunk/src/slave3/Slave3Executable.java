@@ -1,6 +1,7 @@
 package slave3;
 import core.aplication.RunnableApplication;
 import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ConveyorBelt.ConveyorBeltSimulator;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.QualityStation.ATQualityStation;
@@ -11,10 +12,10 @@ public class Slave3Executable extends RunnableApplication {
 
 	public static void main (String []args){
 		initialize(args,"slave3.ini");
-		
+
 		ATslave3 slave3 = new ATslave3(configuration);
-//		createAndSetQualityStation(slave3);
-//		createAndSetConveyorBelt(slave3);
+		//		createAndSetQualityStation(slave3);
+		//		createAndSetConveyorBelt(slave3);
 
 		slave3.start();
 	}
@@ -31,16 +32,17 @@ public class Slave3Executable extends RunnableApplication {
 	}
 
 	private static void createAndSetConveyorBelt(ATslave3 slave3) {
+		ConveyorBeltManager manager = new ConveyorBeltManager();
 		ParallelPortState CBstate = new ParallelPortState();
-		ATConveyorBelt atcb = new ATConveyorBelt(slave3);
+		ATConveyorBelt atcb = new ATConveyorBelt(slave3,manager);
 		atcb.setParallelPortState(CBstate);
 		slave3.setATConveyorbelt(atcb);
-		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator();
+		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
 		cbs.setParallelPortState(CBstate);
 		cbs.start();
 		atcb.start();
 	}
-	
-	
-	
+
+
+
 }
