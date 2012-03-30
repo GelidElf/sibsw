@@ -1,11 +1,11 @@
 package core.sections.robot2;
 
 import core.model.AutomataContainer;
-import core.sections.ParallelPort.ParallelPortObserver;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.robot2.states.Robot2State;
 
-public class ATRobot2 extends Thread implements ParallelPortObserver{
+public class ATRobot2 extends Thread implements ParallelPortManagerObserver{
 	
 	private Robot2Manager _manager = null;
 	private Robot2State currentState = null;

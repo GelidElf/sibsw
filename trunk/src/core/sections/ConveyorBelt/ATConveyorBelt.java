@@ -8,11 +8,10 @@ import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ConveyorBelt.States.Idle;
-import core.sections.ParallelPort.ParallelPortObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATConveyorBelt extends Thread implements ParallelPortObserver {
+public class ATConveyorBelt extends Thread {
 
 	private ConveyorBeltManager manager = null;
 	private AutomataStateCB currentState = null;
@@ -24,11 +23,6 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver {
 	public ATConveyorBelt(AutomataContainer father, ConveyorBeltManager manager) {
 		this.manager = manager;
 		this.father = father;
-	}
-
-	@Override
-	public void update(ParallelPortState state) {
-		manager.setState(state);
 	}
 
 	@Override
@@ -188,11 +182,6 @@ public class ATConveyorBelt extends Thread implements ParallelPortObserver {
 		// ATConveyorBelt atcb = new ATConveyorBelt(null, manager);
 		// atcb.start();
 		// System.out.println("hilos lanzados2");
-	}
-
-	@Override
-	public void setParallelPortState(ParallelPortState state) {
-		manager.setState(state);
 	}
 
 }

@@ -9,13 +9,13 @@ import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
 import core.messages.MessageFactory.SlaveAutomaton3MessageFactory;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
-import core.sections.ParallelPort.ParallelPortObserver;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.QualityStation.States.AutomataStateQS;
 import core.sections.QualityStation.States.Idle;
 
-public class ATQualityStation extends Thread implements ParallelPortObserver{
+public class ATQualityStation extends Thread implements ParallelPortManagerObserver{
 
 	private QualityStationManager _manager = null;
 	private AutomataStateQS currentState = null;
