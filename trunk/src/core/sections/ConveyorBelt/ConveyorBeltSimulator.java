@@ -14,13 +14,6 @@ public class ConveyorBeltSimulator extends Thread {
 	private int capacity = 0;
 	private int numberOfElements = 0;
 
-	public int getCapacity() {
-		return capacity;
-	}
-
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
-	}
 
 	public ConveyorBeltSimulator(ConveyorBeltManager m) {
 		manager = m;

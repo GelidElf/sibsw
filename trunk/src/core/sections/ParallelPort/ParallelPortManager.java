@@ -288,4 +288,45 @@ public class ParallelPortManager {
 		}
 	}
 
+
+	/**
+	 * Returns the boolean value of the group, if this group has only one element
+	 * @param groupName the pin group name
+	 * @return TRUE if the pin group name value is 1, false if is 0
+	 * @throws ParallelPortException 
+	 */
+	public Boolean getValueByNameAsBoolean(String groupName) throws ParallelPortException{
+		if (_connectorNames.get(groupName).length() != 1){
+			throw new ParallelPortException(
+					"The pin group must have length 1 in order to obtain the boolean value");
+		}
+		int value = -1;
+		try {
+			value = getValueByName(groupName);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		if (value == 1){
+			return Boolean.TRUE;
+		}
+		if (value == 0){
+			return Boolean.FALSE;
+		}
+		return null;
+	}
+	
+	public void setValueByNameAsBoolean(String groupName,Boolean value) throws ParallelPortException{
+		if (_connectorNames.get(groupName).length() != 1){
+			throw new ParallelPortException(
+					"The pin group must have length 1 in order to sey the value as boolean");
+		}
+		int intValue = -1;
+		if (value){
+			intValue = 1;
+		}else{
+			intValue = 0;
+		}
+		setValueByName(groupName, intValue);
+	}
+	
 }
