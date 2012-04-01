@@ -8,10 +8,12 @@ import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ConveyorBelt.States.Idle;
+import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATConveyorBelt extends Thread {
+public class ATConveyorBelt extends Thread implements ParallelPortManagerObserver	 {
 
 	private ConveyorBeltManager manager = null;
 	private AutomataStateCB currentState = null;
@@ -22,65 +24,27 @@ public class ATConveyorBelt extends Thread {
 
 	public ATConveyorBelt(AutomataContainer father, ConveyorBeltManager manager) {
 		this.manager = manager;
+		manager.registerObserver(this);
 		this.father = father;
+		cbs = new ConveyorBeltSimulator(this.manager);
+		cbs.start();
+		System.out.println("AT CB Created");
 	}
 
 	@Override
 	public void run() {
 
 		// Message mes = commManager.getInboxByName("unknown").getMessage();
-		String speed = "5";// mes.getAttributeValue(SlaveAutomaton1MessageFactory.SPEED);
-		String capacity = "5";// mes.getAttributeValue(SlaveAutomaton1MessageFactory.CAPACITY);
-		try {
-			System.out.println("Pongo valores...");
-			manager.setValueByName(ConveyorBeltManager.SPEED, Integer
-					.parseInt(speed));
-			manager.setValueByName(ConveyorBeltManager.CAPACITY, Integer
-					.parseInt(capacity));
-		} catch (NumberFormatException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (ParallelPortException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		cbs = new ConveyorBeltSimulator(manager);
-		cbs.setCapacity(5);
-		cbs.start();
-		System.out.println("despues de run");
+		//setupParametersFromMessage();
+		setupMockParametersFromMessage();
 		while (true) {
 			if (currentState == null) {
 				currentState = Idle.getInstance();
-				try {
-					manager.setBitGroupValue(ConveyorBeltManager.RUNNING, 1);
-				} catch (ParallelPortException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				currentState.action(this);
+				startSimulator();
 			}
+			System.out.println("State:"+currentState.getClass().getCanonicalName());
 			try {
-				if (manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL) == 0) {
-					if (rand.nextBoolean()) {
-						manager.setValueByName(
-								ConveyorBeltManager.SENSOR_INITIAL, 1);
-						// System.out.println("sensor = 1");
-					} else {
-						try {
-							/*
-							 * NOS TENEMOS QUE DORMIR EL MISMO TIEMPO QUE EL
-							 * SIMULADOR, si no, en cuanto el simulador se
-							 * duerma, el random hace 1000000 intentos y acaba
-							 * por salir true. Esto nos lleva a que SIEMPRE
-							 * soltamos un gear/axis, o lo que es lo mismo, la
-							 * cinta siempre está llena
-							 */
-							sleep(5000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
 				if (isReady()) {
 					// quitar esto
 					// System.out.println("Estoy listo!");
@@ -98,6 +62,15 @@ public class ATConveyorBelt extends Thread {
 			}
 
 			currentState = currentState.estop();
+		}
+	}
+
+	private void startSimulator() {
+		try {
+			manager.setBitGroupValue(ConveyorBeltManager.RUNNING, 1);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -120,46 +93,37 @@ public class ATConveyorBelt extends Thread {
 		}
 	}
 
-	public void piecePicked() {
+	public void setupMockParametersFromMessage() {
+		int speed = 2;
+		int capacity = 10;
 		try {
-			manager.setBitGroupValue(ConveyorBeltManager.SENSOR_FINISH, 0);
-		} catch (ParallelPortException e) {
+			manager.setValueByName(ConveyorBeltManager.SPEED, speed);
+			manager.setValueByName(ConveyorBeltManager.CAPACITY, capacity);
+		} catch (NumberFormatException e1) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e1.printStackTrace();
+		} catch (ParallelPortException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
+	}
+	
+	public void piecePicked() {
+		manager.setSensorFinish(false);
 	}
 
 	// Method to check if the piece is ready to pick up
 	public boolean isReady() {
-		boolean op = false;
-		try {
-			if (manager.getValueByName(ConveyorBeltManager.SENSOR_FINISH) == 1) {
-				op = true;
-			}
-		} catch (ParallelPortException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return op;
+		return manager.isSensorFinish();
 	}
 
 	// Method to check if the first position of the CB is empty
-	public boolean isFirstPositionEmpty() throws ParallelPortException {
-		boolean empty = false;
-		if (manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL) == 0) {
-			empty = true;
-		} else {
-			empty = false;
-		}
-		return empty;
+	public boolean isFirstPositionEmpty(){
+		return manager.isSensorInitial();
 	}
 
 	public ConveyorBeltManager getManager() {
 		return manager;
-	}
-
-	public static void initializeAndConfigure() {
-
 	}
 
 	public static void main(String[] args) {
@@ -182,6 +146,12 @@ public class ATConveyorBelt extends Thread {
 		// ATConveyorBelt atcb = new ATConveyorBelt(null, manager);
 		// atcb.start();
 		// System.out.println("hilos lanzados2");
+	}
+
+	@Override
+	public void update(ParallelPortManager manager) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

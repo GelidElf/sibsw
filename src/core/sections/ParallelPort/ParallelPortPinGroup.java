@@ -64,7 +64,7 @@ public class ParallelPortPinGroup implements Cloneable {
 	 *             this group
 	 */
 	public void setValue(int value) throws ParallelPortException {
-		if (value > Math.pow(2, this.size())) {
+		if (value > Math.pow(2, this.length())) {
 			throw new ParallelPortException(
 					"Tried to set a value to big for the group");
 		}
@@ -76,7 +76,7 @@ public class ParallelPortPinGroup implements Cloneable {
 		}
 	}
 
-	private int size() {
+	public int length() {
 		return _end - _start + 1;
 	}
 

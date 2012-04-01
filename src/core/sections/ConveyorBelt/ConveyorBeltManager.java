@@ -38,4 +38,59 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 	}
 
+	public void setSensorInitial(Boolean value){
+		try {
+			setValueByNameAsBoolean(SENSOR_INITIAL, value);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Boolean isSensorInitial(){
+		Boolean value = null;
+		try {
+			value = getValueByNameAsBoolean(SENSOR_INITIAL);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	public void setSensorFinish(Boolean value){
+		try {
+			setValueByNameAsBoolean(SENSOR_FINISH, value);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Boolean isSensorFinish(){
+		Boolean value = null;
+		try {
+			value = getValueByNameAsBoolean(SENSOR_FINISH);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	public void setRunning(Boolean value){
+		try {
+			setValueByNameAsBoolean(RUNNING, value);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public Boolean isRunning(){
+		Boolean value = null;
+		try {
+			value = getValueByNameAsBoolean(RUNNING);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return value;
+	}
+	
+	
 }
