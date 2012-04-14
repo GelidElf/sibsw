@@ -1,68 +1,35 @@
 package core.sections.ConveyorBelt.States;
 
-public class Running implements AutomataStateCB{
+import core.model.AutomataContainer;
+
+public class Running extends AutomataStateCB{
 	
-static AutomataStateCB instance = null;
-	
-	public static AutomataStateCB getInstance(){
-		if (instance == null){
-			instance = new Running();
-		}
-		return instance;
+	private static final long serialVersionUID = -8738809400931757119L;
+
+	@Override
+	public void execute(AutomataContainer master) {
+		// TODO Auto-generated method stub
 		
 	}
 	
-	private Running(){
-		
-	}
-	
-
-	@Override
-	public AutomataStateCB estop() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB restart() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB nstop() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
 	@Override
 	public AutomataStateCB loadSensorTrue() {
-		// TODO Auto-generated method stub
-		return Running.getInstance();
+		return createState(Running.class,this);
 	}
 
 	@Override
 	public AutomataStateCB unloadSensorTrue() {
-		// TODO Auto-generated method stub
-		return IdleUnloading.getInstance();
-	}
-
-	@Override
-	public AutomataStateCB unloadSensorFalse() {
-		// TODO Auto-generated method stub
-		return this;
+		return createState(IdleUnloading.class,this);
 	}
 
 	@Override
 	public AutomataStateCB empty() {
-		// TODO Auto-generated method stub
-		return Idle.getInstance();
+		return createState(Idle.class,this);
 	}
 
 	@Override
 	public AutomataStateCB unloadSensorTrueMax() {
-		// TODO Auto-generated method stub
-		return Full.getInstance();
+		return createState(Full.class,this);
 	}
 
 }

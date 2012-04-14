@@ -1,5 +1,6 @@
 package slave3;
 
+import slave3.states.IdleQCSEmpty;
 import slave3.states.Slave3State;
 import core.aplication.Configuration;
 import core.messages.Attribute;
@@ -20,7 +21,7 @@ public class ATslave3 extends AutomataContainer {
 	
 	public ATslave3(Configuration conf){
 		super(conf, new SingleInboxCommunicationManager("Slave3",conf));
-		currentState = (Slave3State) Slave3State.createState("Idle", currentState);
+		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
 	}	
 	
 	public void setATConveyorbelt(ATConveyorBelt cb){
@@ -31,7 +32,7 @@ public class ATslave3 extends AutomataContainer {
 		qualityStation = qcs;
 	}
 	
-	@Override
+	/**@Override
 	//TODO Hacer la parte del START
 	public void run() {
 		super.run();
@@ -103,7 +104,7 @@ public class ATslave3 extends AutomataContainer {
 		
 		
 		
-	}
+	}*/
 
 
 

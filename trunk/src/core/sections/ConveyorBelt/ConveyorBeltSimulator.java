@@ -1,5 +1,6 @@
 package core.sections.ConveyorBelt;
 
+import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 /**
@@ -32,9 +33,9 @@ public class ConveyorBeltSimulator extends Thread {
 		}
 		contents[contents.length - 1] = 0;
 		try {
-			manager.setValueByName(ConveyorBeltManager.SENSOR_INITIAL,
+			manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD,
 					contents[contents.length - 1]);
-			manager.setValueByName(ConveyorBeltManager.SENSOR_FINISH,
+			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD,
 					contents[0]);
 		} catch (ParallelPortException e) {
 			// TODO Auto-generated catch block
@@ -103,7 +104,7 @@ public class ConveyorBeltSimulator extends Thread {
 	private void setElementInInitialPositionInContents()
 			throws ParallelPortException {
 		contents[contents.length - 1] = manager
-				.getValueByName(ConveyorBeltManager.SENSOR_INITIAL);
+				.getValueByName(ConveyorBeltManager.SENSOR_LOAD);
 	}
 
 	private boolean beltHasElements() {
@@ -125,7 +126,7 @@ public class ConveyorBeltSimulator extends Thread {
 	}
 
 	private boolean finalSensorInactive() throws ParallelPortException {
-		return manager.getValueByName(ConveyorBeltManager.SENSOR_FINISH) == 0;
+		return manager.getValueByName(ConveyorBeltManager.SENSOR_UNLOAD) == 0;
 	}
 
 	private boolean positionOccupied(int possition) {
@@ -139,7 +140,7 @@ public class ConveyorBeltSimulator extends Thread {
 	}
 
 	private boolean initialSensorActive() throws ParallelPortException {
-		return manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL) == 1;
+		return manager.getValueByName(ConveyorBeltManager.SENSOR_LOAD) == 1;
 	}
 
 	/**
@@ -179,4 +180,25 @@ public class ConveyorBeltSimulator extends Thread {
 		return manager;
 	}
 
+	public static void main(String[] args) {
+
+		ConveyorBeltManager manager = new ConveyorBeltManager();
+		ParallelPortState state = new ParallelPortState();
+		manager.setState(state);
+		try {
+			manager.setValueByName(ConveyorBeltManager.RUNNING, 1);
+			manager.setValueByName(ConveyorBeltManager.CAPACITY, 10);
+			manager.setValueByName(ConveyorBeltManager.SPEED, 2);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+
+		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
+		cbs.start();
+		System.out.println("hilos lanzados1");
+		// ATConveyorBelt atcb = new ATConveyorBelt(null, manager);
+		// atcb.start();
+		// System.out.println("hilos lanzados2");
+	}
+	
 }

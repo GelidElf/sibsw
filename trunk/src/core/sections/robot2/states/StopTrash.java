@@ -17,7 +17,7 @@ public class StopTrash extends Robot2State{
 	
 	@Override
 	public AutomataState Restart(){
-		return createState("Trash",this);
+		return createState(Trash.class,this);
 	}
 
 

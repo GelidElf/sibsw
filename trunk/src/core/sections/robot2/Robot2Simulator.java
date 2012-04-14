@@ -2,7 +2,6 @@ package core.sections.robot2;
 
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 public class Robot2Simulator extends Thread implements ParallelPortManagerObserver {
@@ -13,20 +12,10 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 		_manager = new Robot2Manager();
 	}
 	
-	@Override
-	public void update(ParallelPortState state) {
-		_manager.setState(state);
-	}
-	
 	public ParallelPortManager getManager() {
 		return _manager;
 	}
 
-	@Override
-	public void setParallelPortState(ParallelPortState state) {
-		_manager.setState(state);		
-	}
-	
 	@Override
 	public void run() {
 		while(true){
@@ -43,6 +32,12 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 				e.printStackTrace();
 			}
 		}
+		
+	}
+
+	@Override
+	public void update(ParallelPortManager manager) {
+		// TODO Auto-generated method stub
 		
 	}
 

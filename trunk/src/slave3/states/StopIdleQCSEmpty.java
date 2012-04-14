@@ -18,7 +18,7 @@ public class StopIdleQCSEmpty extends Slave3State {
 
 	@Override
 	public AutomataState Restart() {
-		return createState("IdleQCSEmpty",this);
+		return createState(IdleQCSEmpty.class,this);
 	}
 
 }

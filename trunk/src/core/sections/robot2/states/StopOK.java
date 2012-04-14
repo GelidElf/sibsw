@@ -17,7 +17,7 @@ public class StopOK extends Robot2State{
 	
 	@Override
 	public AutomataState Restart(){
-		return createState("Ok",this);
+		return createState(Ok.class,this);
 	}
 	
 

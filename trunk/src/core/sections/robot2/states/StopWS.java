@@ -17,7 +17,7 @@ public class StopWS extends Robot2State{
 	
 	@Override
 	public AutomataState Restart(){
-		return createState("WS",this);
+		return createState(WS.class,this);
 	}
 
 }

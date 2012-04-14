@@ -17,7 +17,7 @@ public class StopQCS extends Robot2State{
 	
 	@Override
 	public AutomataState Restart(){
-		return createState("QCS",this);
+		return createState(QCS.class,this);
 	}
 	
 

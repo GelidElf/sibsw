@@ -18,7 +18,7 @@ public class StopQCSWorking extends Slave3State {
 
 	@Override
 	public AutomataState Restart() {
-		return createState("QCSWorking",this);
+		return createState(QCSWorking.class,this);
 	}
 
 }

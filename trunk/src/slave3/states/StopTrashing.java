@@ -18,7 +18,7 @@ public class StopTrashing extends Slave3State {
 
 	@Override
 	public AutomataState Restart() {
-		return createState("Trashing",this);
+		return createState(Trashing.class,this);
 	}
 	
 

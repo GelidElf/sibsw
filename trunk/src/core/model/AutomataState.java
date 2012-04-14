@@ -11,7 +11,10 @@ import java.util.HashMap;
 
 public abstract class AutomataState implements Serializable {
 
-	private static String nombreGrupo = "";
+	/**
+	 * Each class must implement their own
+	 */
+	protected static String nombreGrupo = "";
 
 	private static final long serialVersionUID = 1764660909489565734L;
 
@@ -19,31 +22,23 @@ public abstract class AutomataState implements Serializable {
 
 	public abstract void execute(AutomataContainer master);
 
-	public static AutomataState createState(String name, AutomataState currentState) {
+	public static AutomataState createState(Class<? extends AutomataState> targetClass, AutomataState currentState, Class<? extends AutomataState> superclass) {
 		AutomataState nextState = null;
-		String identificator = stateIdentificator(name);
+		String identificator = targetClass.getName();
 		try{
-			Class <? extends AutomataState> c = Class.forName(identificator).asSubclass(AutomataState.class);
 			AutomataState as = instances.get(identificator);
 			if (as != null)
 				nextState = as;
 			else{
-				Constructor<?> parametrizedConstructor = c.getConstructor(AutomataState.class);
-				nextState = (AutomataState) parametrizedConstructor.newInstance(currentState);
+				nextState = (AutomataState) targetClass.newInstance();
 				instances.put(identificator,nextState);
 			}
 			if (currentState != null)
-				nextState = copyAtributeValues(c,currentState,nextState);
-		}catch (ClassNotFoundException e){
-
+				nextState = copyAtributeValues(targetClass,currentState,nextState);
 		}catch (IllegalAccessException e){
 
 		}catch (InstantiationException e){
-
-		}catch (NoSuchMethodException e){
-
-		}catch (InvocationTargetException e){
-
+			
 		}
 		return nextState;
 	}

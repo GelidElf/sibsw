@@ -2,7 +2,6 @@ package master;
 
 import core.aplication.Configuration;
 import core.messages.CommunicationManager;
-import core.messages.Message;
 import core.messages.MultipleInboxCommunicationManager;
 import core.model.AutomataContainer;
 
@@ -16,7 +15,7 @@ public class ATMaster extends AutomataContainer {
 		//send message to start process
 	}
 
-	@Override
+	/**
 	public void run (){
 		while (true){
 			try{
@@ -26,6 +25,6 @@ public class ATMaster extends AutomataContainer {
 				
 			}
 		}
-	}
+	}*/
 	
 }

@@ -14,17 +14,17 @@ public class QCSWorking extends Slave3State {
 
 	@Override
 	public AutomataState EStop() {
-		return createState("StopQCSWorking",this);
+		return createState(StopQCSWorking.class,this);
 	}
 	
 	@Override
 	public AutomataState Valid() {
-		return createState("Storing",this);
+		return createState(Storing.class,this);
 	}
 	
 	@Override
 	public AutomataState Invalid() {
-		return createState("Trashing",this);
+		return createState(Trashing.class,this);
 	}
 
 }

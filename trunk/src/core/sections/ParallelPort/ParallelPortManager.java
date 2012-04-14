@@ -147,6 +147,7 @@ public class ParallelPortManager {
 		}
 	}
 
+	
 	public synchronized void setBit(int position) {
 		_state.setValue(position, true);
 	}

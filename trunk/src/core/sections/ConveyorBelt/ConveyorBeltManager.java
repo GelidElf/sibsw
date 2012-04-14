@@ -1,6 +1,7 @@
 package core.sections.ConveyorBelt;
 
 import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 /**
@@ -14,8 +15,8 @@ public class ConveyorBeltManager extends ParallelPortManager {
 
 	// We create the names for the groups and pins, so that we can access the
 	// values later from other objects.
-	public static final String SENSOR_FINISH = "SENSOR_FINISH";
-	public static final String SENSOR_INITIAL = "SENSOR_INITIAL";
+	public static final String SENSOR_UNLOAD = "SENSOR_UNLOAD";
+	public static final String SENSOR_LOAD = "SENSOR_LOAD";
 	public static final String RUNNING = "RUNNING";
 	public static final String SPEED = "SPEED";
 	public static final String CAPACITY = "CAPACITY";
@@ -25,8 +26,8 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		super();
 		// We should set a name for all the pins, just in case
 		try {
-			this.setBitGroup(ConveyorBeltManager.SENSOR_FINISH, 0, 0);
-			this.setBitGroup(ConveyorBeltManager.SENSOR_INITIAL, 1, 1);
+			this.setBitGroup(ConveyorBeltManager.SENSOR_UNLOAD, 0, 0);
+			this.setBitGroup(ConveyorBeltManager.SENSOR_LOAD, 1, 1);
 			this.setBitGroup(ConveyorBeltManager.RUNNING, 2, 2);
 			this.setBitGroup(ConveyorBeltManager.SPEED, 3, 5);
 			this.setBitGroup(ConveyorBeltManager.CAPACITY, 6, 10);
@@ -38,9 +39,20 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 	}
 
+	public void configure(int capacity, int speed){
+		ParallelPortState state = new ParallelPortState();
+		setState(state);
+		try {
+			setValueByName(ConveyorBeltManager.CAPACITY, 10);
+			setValueByName(ConveyorBeltManager.SPEED, 2);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void setSensorInitial(Boolean value){
 		try {
-			setValueByNameAsBoolean(SENSOR_INITIAL, value);
+			setValueByNameAsBoolean(SENSOR_LOAD, value);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
@@ -49,7 +61,7 @@ public class ConveyorBeltManager extends ParallelPortManager {
 	public Boolean isSensorInitial(){
 		Boolean value = null;
 		try {
-			value = getValueByNameAsBoolean(SENSOR_INITIAL);
+			value = getValueByNameAsBoolean(SENSOR_LOAD);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
@@ -58,7 +70,7 @@ public class ConveyorBeltManager extends ParallelPortManager {
 	
 	public void setSensorFinish(Boolean value){
 		try {
-			setValueByNameAsBoolean(SENSOR_FINISH, value);
+			setValueByNameAsBoolean(SENSOR_UNLOAD, value);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
@@ -67,7 +79,7 @@ public class ConveyorBeltManager extends ParallelPortManager {
 	public Boolean isSensorFinish(){
 		Boolean value = null;
 		try {
-			value = getValueByNameAsBoolean(SENSOR_FINISH);
+			value = getValueByNameAsBoolean(SENSOR_UNLOAD);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
@@ -90,6 +102,14 @@ public class ConveyorBeltManager extends ParallelPortManager {
 			e.printStackTrace();
 		}
 		return value;
+	}
+	
+	public Boolean isSensorUnloadMax(){
+		return isSensorFinish() && (getBitGroupValue(CAPACITY)==getBitGroupValue(QUANTITY));
+	}
+	
+	public Boolean isEmpty(){
+		return (getBitGroupValue(QUANTITY) == 0);
 	}
 	
 	

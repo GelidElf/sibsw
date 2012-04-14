@@ -13,12 +13,12 @@ public class CBReady extends Slave3State {
 	
 	@Override
 	public AutomataState EStop(){
-		return createState("StopCBReady",this);
+		return createState(StopCBReady.class,this);
 	}
 	
 	@Override
 	public AutomataState R2Idle(){
-		return createState("IdleQCSEmpty",this);
+		return createState(IdleQCSEmpty.class,this);
 	}
 
 }

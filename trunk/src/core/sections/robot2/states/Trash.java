@@ -17,12 +17,12 @@ public class Trash extends Robot2State{
 	
 	@Override
 	public AutomataState EStop(){
-		return createState("StopTrash",this);
+		return createState(StopTrash.class,this);
 	}
 	
 	@Override
 	public AutomataState Completed(){
-		return createState("Idle",this);
+		return createState(Idle.class,this);
 	}
 
 }

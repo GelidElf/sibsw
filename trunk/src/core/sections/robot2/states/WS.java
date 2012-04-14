@@ -17,12 +17,12 @@ public class WS extends Robot2State{
 	
 	@Override
 	public AutomataState Completed(){
-		return createState("Idle",this);
+		return createState(Idle.class,this);
 	}
 	
 	@Override
 	public AutomataState EStop(){
-		return createState("StopWS",this);
+		return createState(StopWS.class,this);
 	}
 	
 	

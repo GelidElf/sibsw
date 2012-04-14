@@ -4,6 +4,7 @@ import core.model.AutomataContainer;
 import core.model.AutomataState;
 
 public class Started extends Slave3State {
+	
 	private static final long serialVersionUID = -1329748406408094832L;
 
 	@Override
@@ -14,6 +15,6 @@ public class Started extends Slave3State {
 
 	@Override
 	public AutomataState Start() {
-		return createState("IdleQCSEmpty",this);
+		return createState(IdleQCSEmpty.class,this);
 	}
 }

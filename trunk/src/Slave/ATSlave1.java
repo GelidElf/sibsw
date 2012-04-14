@@ -58,7 +58,7 @@ public class ATSlave1 extends AutomataContainer{
 	/*
 	 * Recibir config del buzón,
 	 */
-	@Override
+	/*@Override
 	public void run(){
 		setInitialSettings("Mensaje(s) leido del buzón con los parámetros");
 		gearBelt.start();
@@ -75,7 +75,7 @@ public class ATSlave1 extends AutomataContainer{
 		}
 
 
-	}
+	}*/
 
 	public void setInitialSettings(String settings){
 

@@ -17,27 +17,27 @@ public class Idle extends Robot2State{
 	
 	@Override
 	public AutomataState Store(){
-		return createState("OK",this);
+		return createState(Ok.class,this);
 	}
 	
 	@Override
 	public AutomataState Trash(){
-		return createState("Trash",this);
+		return createState(Trash.class,this);
 	}
 	
 	@Override
 	public AutomataState EStop(){
-		return createState("Stop",this);
+		return createState(Stop.class,this);
 	}
 	
 	@Override
 	public AutomataState Load_QCS(){
-		return createState("QCS",this);
+		return createState(QCS.class,this);
 	}
 	
 	@Override
 	public AutomataState Load_WS(){
-		return createState("WS",this);
+		return createState(WS.class,this);
 	}
 	
 	

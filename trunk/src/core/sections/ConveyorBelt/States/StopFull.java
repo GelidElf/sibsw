@@ -1,69 +1,22 @@
 package core.sections.ConveyorBelt.States;
 
-public class StopFull implements AutomataStateCB{
+import core.model.AutomataContainer;
+
+public class StopFull extends AutomataStateCB{
 	
-static AutomataStateCB instance = null;
-	
-	public static AutomataStateCB getInstance(){
-		if (instance == null){
-			instance = new StopFull();
-		}
-		return instance;
-		
-	}
-	
-	private StopFull(){
-		
-	}
-	
+	private static final long serialVersionUID = -9099799405325292141L;
 
 	@Override
-	public AutomataStateCB estop() {
+	public void execute(AutomataContainer master) {
 		// TODO Auto-generated method stub
-		return this;
+		
 	}
-
+	
 	@Override
 	public AutomataStateCB restart() {
-		// TODO Auto-generated method stub
-		return Full.getInstance();
+		return createState(Full.class,this);
 	}
 
-	@Override
-	public AutomataStateCB nstop() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB loadSensorTrue() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB unloadSensorTrue() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB unloadSensorFalse() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB empty() {
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	@Override
-	public AutomataStateCB unloadSensorTrueMax() {
-		// TODO Auto-generated method stub
-		return this;
-	}
 
 }
 
