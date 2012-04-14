@@ -17,7 +17,7 @@ public class Stop extends Robot2State{
 	
 	@Override
 	public AutomataState Restart(){
-		return createState("Idle",this);
+		return createState(Idle.class,this);
 	}
 
 

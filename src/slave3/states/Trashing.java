@@ -19,12 +19,12 @@ public class Trashing extends Slave3State {
 
 	@Override
 	public AutomataState EStop() {
-		return  createState("StopTrashing",this);
+		return  createState(StopTrashing.class,this);
 	}
 	
 	@Override
 	public AutomataState R2Idle() {
-		return  createState("IdleQCSEmpty",this);
+		return  createState(IdleQCSEmpty.class,this);
 	}
 
 }

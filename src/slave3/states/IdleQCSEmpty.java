@@ -13,12 +13,12 @@ public class IdleQCSEmpty extends Slave3State {
 
 	@Override
 	public AutomataState EStop() {
-		return createState("StopIdleQCSEmpty",this);
+		return createState(StopIdleQCSEmpty.class,this);
 	}
 
 	@Override
 	public AutomataState LoadQCS() {
-		return createState("QCSWorking",this);
+		return createState(QCSWorking.class,this);
 	}
 
 

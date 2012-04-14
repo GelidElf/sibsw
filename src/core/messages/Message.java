@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 public class Message implements Serializable {
 
+//	private CommunicationMessageType type = null;
 	private static final long serialVersionUID = -8585464412008833912L;
 	private ArrayList<Attribute> contents = null;
 	private String messageId = null;

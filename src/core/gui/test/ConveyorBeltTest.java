@@ -81,7 +81,7 @@ public class ConveyorBeltTest extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			try {
-				manager.setValueByName(ConveyorBeltManager.SENSOR_INITIAL, 1);
+				manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD, 1);
 				jButton.setEnabled(false);
 			} catch (ParallelPortException e) {
 				// TODO Auto-generated catch block
@@ -92,7 +92,7 @@ public class ConveyorBeltTest extends JFrame {
 		@Override
 		public void update(ParallelPortManager manager) {
 			try {
-				if (manager.getValueByName(ConveyorBeltManager.SENSOR_INITIAL) == 1) {
+				if (manager.getValueByName(ConveyorBeltManager.SENSOR_LOAD) == 1) {
 					jButton.setEnabled(true);
 				}
 			} catch (ParallelPortException e) {
@@ -120,7 +120,7 @@ public class ConveyorBeltTest extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			try {
-				manager.setValueByName(ConveyorBeltManager.SENSOR_FINISH, 1);
+				manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD, 1);
 				jButton.setEnabled(false);
 			} catch (ParallelPortException e) {
 				// TODO Auto-generated catch block
@@ -131,7 +131,7 @@ public class ConveyorBeltTest extends JFrame {
 		@Override
 		public void update(ParallelPortManager manager) {
 			try {
-				if (manager.getValueByName(ConveyorBeltManager.SENSOR_FINISH) == 1) {
+				if (manager.getValueByName(ConveyorBeltManager.SENSOR_UNLOAD) == 1) {
 					jButton.setEnabled(true);
 				}
 			} catch (ParallelPortException e) {

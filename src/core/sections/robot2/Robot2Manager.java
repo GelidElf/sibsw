@@ -2,7 +2,6 @@ package core.sections.robot2;
 
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
-import core.sections.QualityStation.QualityStationManager;
 
 public class Robot2Manager extends ParallelPortManager{
 	

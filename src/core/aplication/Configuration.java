@@ -8,6 +8,7 @@ public class Configuration {
 	public String logFile;
 	public String serverPort;
 	public String remotePort;
+	public String blinkPeriod = "500";
 	
 	public boolean getAutoDiscovery(){
 		return autoDiscovery.equals("yes");
@@ -21,5 +22,8 @@ public class Configuration {
 		return Integer.parseInt(serverPort);
 	}
 	
+	public int getBlinkPeriodAsInt(){
+		return Integer.parseInt(blinkPeriod);
+	}
 	
 }

@@ -18,7 +18,7 @@ public class StopStoring extends Slave3State {
 
 	@Override
 	public AutomataState Restart() {
-		return createState("Storing",this);
+		return createState(Storing.class,this);
 	}
 	
 

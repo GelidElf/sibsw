@@ -17,7 +17,7 @@ public class Started extends Robot2State{
 	
 	@Override
 	public AutomataState Start(){
-		return createState("Idle",this);
+		return createState(Idle.class,this);
 	}
 
 

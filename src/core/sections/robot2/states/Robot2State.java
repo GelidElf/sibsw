@@ -5,6 +5,13 @@ import core.model.AutomataState;
 
 public abstract class Robot2State extends AutomataState {
 	
+	private static final long serialVersionUID = -170786020874169763L;
+
+
+	public static AutomataState createState(Class <? extends Robot2State> targetClass, AutomataState currentState) {
+		return createState(targetClass,currentState,Robot2State.class);
+	}
+	
 	public AutomataState Start(){
 		return this;
 	}

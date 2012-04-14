@@ -7,12 +7,16 @@ public class MessageFactory {
 	public class MasterAtomataMessageFactory{
 		
 		public static final String ID = "MASTER";
-		
 		public static final String BROADCAST_MESSAGE = ID + SEPARATOR + "BROADCAST_MESSAGE";
-		
-		
-		
 		public static final String SERVER_PORT = "SERVER_PORT";
+		
+	}
+	
+	public class GeneralMessageFactory{
+
+		public static final String RESTART = "RESTART";
+		public static final String NSTOP = "NSTOP";
+		public static final String ESTOP = "ESTOP";
 		
 	}
 	
