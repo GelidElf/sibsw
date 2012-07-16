@@ -33,11 +33,11 @@ public class ATQualityStation extends Thread implements ParallelPortManagerObser
 					if(manager.getValueByName(QualityStationManager.ENABLED) == 0){
 						if(manager.getValueByName(QualityStationManager.RESULT) == 1){
 							currentState = currentState.valid();
-							Message message = new Message("QCS.AssemblyValid","MASTER",false);
+							Message message = new Message("QCS.AssemblyValid","MASTER",false,null,null);
 							father.injectMessage(message);
 						}else{
 							currentState = currentState.invalid();
-							Message message = new Message("QCS.AssemblyInvalid","MASTER",false);
+							Message message = new Message("QCS.AssemblyInvalid","MASTER",false,null,null);
 							father.injectMessage(message);
 						}
 					}

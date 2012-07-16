@@ -16,9 +16,9 @@ public class ConveyorBeltSimulator extends Thread {
 	private int numberOfElements = 0;
 
 
-	public ConveyorBeltSimulator(ConveyorBeltManager m) {
-		manager = m;
-		contents = new int[manager
+	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
+		this.manager = manager;
+		contents = new int[this.manager
 				.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
 		cleanContentsOfBelt();
 	}

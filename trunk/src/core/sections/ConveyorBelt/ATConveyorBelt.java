@@ -1,35 +1,33 @@
 package core.sections.ConveyorBelt;
 
+import core.messages.Attribute;
 import core.messages.Message;
-import core.messages.MessageFactory.SlaveAutomaton1MessageFactory;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATConveyorBelt extends AutomataContainer implements
+public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> implements
 		ParallelPortManagerObserver {
-
+	
 	private ConveyorBeltManager manager = null;
 	private AutomataStateCB currentState = null;
-	private ConveyorBeltSimulator cbs;
+	private ConveyorBeltSimulator simulator;
 	
 	private ConveyorBeltRandomFiller fillerThread = null;
 
-	public ATConveyorBelt(AutomataContainer father, ConveyorBeltManager manager) {
+	public ATConveyorBelt(AutomataContainer<?> father, ConveyorBeltManager manager) {
 		super(father);
-		this.manager = manager;
+		this.manager = manager;	
 		manager.registerObserver(this);
 		if (currentState == null){
-			currentState = AutomataStateCB.stadoInicial(manager.getBitGroupValue(ConveyorBeltManager.CAPACITY));
+			currentState = AutomataStateCB.estadoInicial(manager.getBitGroupValue(ConveyorBeltManager.CAPACITY));
 		}
-		manager.setRunning(true);
-		cbs = new ConveyorBeltSimulator(this.manager);
-		cbs.start();
+		simulator = new ConveyorBeltSimulator(this.manager);
 		System.out.println("AT CB Created");
 		fillerThread = new ConveyorBeltRandomFiller(manager);
-		fillerThread.start();
 	}
 
 	public void setupMockParametersFromMessage() {
@@ -63,56 +61,84 @@ public class ATConveyorBelt extends AutomataContainer implements
 		return manager;
 	}
 
-	public void setupParametersFromMessage(Message mes) {
-		String speed = mes
-				.getAttributeValue(SlaveAutomaton1MessageFactory.SPEED);
-		String capacity = mes
-				.getAttributeValue(SlaveAutomaton1MessageFactory.CAPACITY);
-		try {
-			manager.setValueByName(ConveyorBeltManager.SPEED,
-					Integer.parseInt(speed));
-			manager.setValueByName(ConveyorBeltManager.CAPACITY,
-					Integer.parseInt(capacity));
-		} catch (NumberFormatException e1) {
-			e1.printStackTrace();
-		} catch (ParallelPortException e1) {
-			e1.printStackTrace();
-		}
-	}
-	
 	public static void main(String[] args) {
 		ConveyorBeltManager m = new ConveyorBeltManager();
 		m.configure(10, 2);
 		ATConveyorBelt atcb = new ATConveyorBelt(null, m);
+		Message mess = new Message("algo", "algo", false, CommunicationMessageType.CONFIGURATION, null);
+		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY,"32"));
+		mess.addAttribute(new Attribute(ConveyorBeltManager.SPEED,"8"));
+		atcb.injectMessage(mess);
+		Message mess2 = new Message("algo", "algo", false, CommunicationMessageType.START, null);
+		atcb.injectMessage(mess2);
+	}
+	
+	@Override
+	public void update(ParallelPortManager manager) {
+		if (this.manager.isSensorInitial()){
+			inputStorage.add(ATConveyorBeltInput.loadSensorTrue);
+		}
+		if (this.manager.isSensorFinish()){
+			inputStorage.add(ATConveyorBeltInput.unloadSensorTrue);
+		}
+		if (!this.manager.isSensorFinish()){
+			inputStorage.add(ATConveyorBeltInput.unloadSensorFalse);
+		}
+		if (this.manager.isSensorUnloadMax()){
+			inputStorage.add(ATConveyorBeltInput.unloadSensorTrueMax);
+		}
+		if (this.manager.isEmpty()){
+			inputStorage.add(ATConveyorBeltInput.empty);
+		}
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
-		updateStates(null);
-		System.out.println("State:"	+ currentState.getClass().getCanonicalName());
+	protected void consume(ATConveyorBeltInput currentInput) {
+		switch (currentInput) {
+			case empty:
+					currentState.empty();
+				break;
+			case loadSensorTrue:
+				currentState.loadSensorTrue();
+			break;
+			case estop:
+				currentState.estop();
+			break;
+			case nstop:
+				currentState.nstop();
+			break;
+			case restart:
+				currentState.restart();
+			break;
+			case unloadSensorFalse:
+				currentState.unloadSensorFalse();
+			break;
+			case unloadSensorTrue:
+				currentState.unloadSensorTrue();
+			break;
+			case unloadSensorTrueMax:
+				currentState.unloadSensorTrueMax();
+			break;
+		}		
 	}
-	
-	public void updateStates(Message message){
-		AutomataStateCB oldState = currentState;
-		if (manager.isSensorInitial()){
-			currentState = currentState.loadSensorTrue();
-		}
-		if (manager.isSensorFinish()){
-			currentState = currentState.unloadSensorTrue();
-		}
-		if (!manager.isSensorFinish()){
-			currentState = currentState.unloadSensorFalse();
-		}
-		if (manager.isSensorUnloadMax()){
-			currentState = currentState.unloadSensorTrueMax();
-		}
-		if (manager.isEmpty()){
-			currentState = currentState.empty();
+
+	@Override
+	protected void begin() {
+		manager.setRunning(true);
+		simulator.start();
+		fillerThread.start();
+	}
+
+	@Override
+	protected void changeConfigurationParameter(Attribute attribute) {
+		try {
+			manager.setValueByName(attribute.getName(), Integer.parseInt(attribute.getValue()));
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
 		}
 		
-		if (currentState != oldState){
-			//aoisd
-		}
 	}
 
 }

@@ -1,34 +1,56 @@
 package core.sections.AssembyStation;
 
+import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
+import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
-
-
-public class AssemblyStationSimulator extends Thread{
+public class AssemblyStationSimulator extends Thread implements ParallelPortManagerObserver{
 	
-	private int speed = 1;
+	private AssemblyStationManager manager;
 	
-	public void move(){
-		System.out.println("ASSEMBLYNG!!!!!!!");
+	public AssemblyStationSimulator(AssemblyStationManager manager) {
+		this.manager = manager;
 	}
+
+	private int getAssemblingTime() {
+		return manager.getBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME);
+	}
+
 	@Override
 	public void run() {
-		move();
+		super.run();
 		try {
-			sleep(5000/speed);
+			Logger.println("Assembling");
+			sleepExecution(getAssemblingTime());
+			Logger.println("Finished assembling");
+			manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, true);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public int getSpeed() {
-		return speed;
+	private void sleepExecution(int velocity) throws InterruptedException {
+		if (velocity == 0) {
+			Logger.println("Speed set to 0");
+		} else {
+			
+			sleep(1000 / velocity);
+		}
 	}
 
-	public void setSpeed(int speed) {
-		this.speed = speed;
+	@Override
+	public void update(ParallelPortManager manager) {
+		if (manager.getModifiedGroupName().equals(AssemblyStationManager.ENGAGE)){
+			start();
+		}
+		
 	}
 
-
-
+	
+	
+	
+	
 }

@@ -1,24 +1,28 @@
 package core.sections.AssembyStation.States;
 
-import core.sections.AssembyStation.AssemblyStation;
-import core.sections.AssembyStation.AssemblyStationSimulator;
 
-public class Idle implements AssemblyStationState{
+public class Idle extends AutomataStateAssemblyStation{
 
-	private AssemblyStationSimulator sim;
-	public void execute(AssemblyStation AS) {
-		if(AS.isGearNeeded()==false && AS.isAxisNeeded()==false && !AS.isComplete()){
-			System.out.println("idle: ASSEMBLYNG");
-			AS.setEmpty(false);
-			sim = new AssemblyStationSimulator();
-			sim.run();
-			try {
-				sim.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			AS.setComplete(true);
-		}
+	private static final long serialVersionUID = -5445748675365451285L;
+	
+	@Override
+	public AutomataStateAssemblyStation estop() {
+		return createState(Stop.class, this);
 	}
+	
+	@Override
+	public AutomataStateAssemblyStation nstop() {
+		return createState(Stop.class, this);
+	} 
+	
+	@Override
+	public AutomataStateAssemblyStation gearDetectedTrue() {
+		return createState(GearLodaded.class, this);
+	}
+	
+	@Override
+	public AutomataStateAssemblyStation axisDetectedTrue() {
+		return createState(AxisLoaded.class, this);
+	}
+
 }

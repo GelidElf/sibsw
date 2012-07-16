@@ -1,17 +1,17 @@
-package core.sections.Robot;
+package core.sections.robot1;
 
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltSimulator;
 import core.sections.ParallelPort.ParallelPortState;
-import core.sections.Robot.States.AutomataStateRobot;
-import core.sections.Robot.States.Idle;
+import core.sections.robot1.states.AutomataStateRobot1;
+import core.sections.robot1.states.Idle;
 
 public class Robot extends Thread{
 	
 	private boolean gearReady;
 	private boolean axisReady;
 	private boolean unloadAs;
-	private AutomataStateRobot currentState;
+	private AutomataStateRobot1 currentState;
 	private RobotSimulator simulator;
 	
 	public Robot(){
@@ -21,7 +21,7 @@ public class Robot extends Thread{
 	public void run(){
 		currentState = new Idle();
 		while(true){
-			currentState.execute(this);
+//			currentState.execute(this);
 		}
 	}
 	

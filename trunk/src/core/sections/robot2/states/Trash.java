@@ -1,20 +1,11 @@
 package core.sections.robot2.states;
 
-import core.model.AutomataContainer;
 import core.model.AutomataState;
 
 public class Trash extends Robot2State{
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	@Override
-	public void execute(AutomataContainer master) {
-		// TODO Auto-generated method stub
-	}
-	
+	private static final long serialVersionUID = -2584948085473623710L;
+
 	@Override
 	public AutomataState EStop(){
 		return createState(StopTrash.class,this);

@@ -3,10 +3,13 @@ package core.messages;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import core.messages.enums.CommunicationMessageType;
+
 public class Message implements Serializable {
 
-//	private CommunicationMessageType type = null;
+	private CommunicationMessageType type = null;
 	private static final long serialVersionUID = -8585464412008833912L;
+	private Enum<?> inputType;
 	private ArrayList<Attribute> contents = null;
 	private String messageId = null;
 	private String destination = null;
@@ -21,10 +24,12 @@ public class Message implements Serializable {
 
 	private Boolean urgent = null;
 
-	public Message(String messageID, String destination, boolean isUrgent){
+	public Message(String messageID, String destination, boolean isUrgent, CommunicationMessageType type, Enum<?> inputType){
 		this.messageId = messageID;
 		this.destination = destination;
 		this.urgent = isUrgent;
+		this.inputType = inputType;
+		this.type = type;
 	}
 	
 	public void addAttribute(Attribute att){
@@ -83,6 +88,22 @@ public class Message implements Serializable {
 
 	public ArrayList<Attribute> getAttributes() {
 		return contents;		
+	}
+
+	public Enum<?> getInputType() {
+		return inputType;
+	}
+
+	public void setInputType(Enum<?> inputType) {
+		this.inputType = inputType;
+	}
+
+	public CommunicationMessageType getType() {
+		return type;
+	}
+
+	public void setType(CommunicationMessageType type) {
+		this.type = type;
 	}
 	
 }
