@@ -20,16 +20,47 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 	@Override
 	public void run() {
 		super.run();
+		while(true){
+			if (stationLoadedCorrectly() && stationClearToProceed()){
+			try {
+				Logger.println("Assembling");
+				sleepExecution(getAssemblingTime());
+				Logger.println("Finished assembling");
+				manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, true);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
+			}else{
+				try {
+					sleep(200);
+					Logger.println("sleeping");
+				} catch (InterruptedException e) {
+					Logger.println("error during sleep");
+				}
+			}
+		}
+	}
+
+	private boolean stationClearToProceed() {
 		try {
-			Logger.println("Assembling");
-			sleepExecution(getAssemblingTime());
-			Logger.println("Finished assembling");
-			manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, true);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return !manager.getValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
+		return false;
+	}
+
+	private boolean stationLoadedCorrectly() {
+		boolean loaded = true; 
+		try {
+			loaded = loaded && manager.getValueByNameAsBoolean(AssemblyStationManager.AXIS_DETECTED);
+			loaded = loaded && manager.getValueByNameAsBoolean(AssemblyStationManager.GEAR_DETECTED);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return loaded;
 	}
 
 	private void sleepExecution(int velocity) throws InterruptedException {

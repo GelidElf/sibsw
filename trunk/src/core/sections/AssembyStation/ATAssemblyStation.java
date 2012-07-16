@@ -1,6 +1,8 @@
 package core.sections.AssembyStation;
 
 import core.messages.Attribute;
+import core.messages.Message;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.States.AutomataStateAssemblyStation;
 import core.sections.AssembyStation.States.Idle;
@@ -20,9 +22,19 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 		manager.registerObserver(this);
 		currentState = AutomataStateAssemblyStation.createState(Idle.class, null);
 		simulator = new AssemblyStationSimulator(this.manager);
-		System.out.println("AT CB Created");
 	}
 
+	public static void main(String[] args) {
+		AssemblyStationManager m = new AssemblyStationManager();
+		m.configure(10);
+		ATAssemblyStation atcb = new ATAssemblyStation(null, m);
+		Message mess = new Message("algo", "algo", false, CommunicationMessageType.CONFIGURATION, null);
+		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME,"32"));
+		atcb.injectMessage(mess);
+		Message mess2 = new Message("algo", "algo", false, CommunicationMessageType.START, null);
+		atcb.injectMessage(mess2);
+	}
+	
 	@Override
 	protected void consume(ATAssemblyStationInput currentInput) {
 		switch (currentInput) {
@@ -94,6 +106,35 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 			inputStorage.add(ATAssemblyStationInput.gearDetectedTrue);
 		}else{
 			inputStorage.add(ATAssemblyStationInput.gearDetectedFalse);
+		}
+		
+	}
+
+	public void putAxis() {
+		try {
+			manager.setValueByNameAsBoolean(AssemblyStationManager.AXIS_DETECTED, true);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public void putEngranaje() {
+		try {
+			manager.setValueByNameAsBoolean(AssemblyStationManager.GEAR_DETECTED, true);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void sacaPieza() {
+		try {
+			manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, false);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 	}
