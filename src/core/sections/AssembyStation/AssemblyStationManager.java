@@ -1,6 +1,7 @@
 package core.sections.AssembyStation;
 
 import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 public class AssemblyStationManager extends ParallelPortManager{
@@ -26,6 +27,16 @@ public class AssemblyStationManager extends ParallelPortManager{
 			// continue
 		} catch (ParallelPortException e) {
 			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		ParallelPortState state = new ParallelPortState();
+		setState(state);
+	}
+	
+	public void configure(int assemblingTime){
+		try {
+			setValueByName(ASSEMBLING_TIME, assemblingTime);
+		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
