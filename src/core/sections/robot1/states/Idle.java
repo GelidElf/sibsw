@@ -1,9 +1,9 @@
-package core.sections.Robot.States;
+package core.sections.robot1.states;
 
-import core.sections.Robot.Robot;
-import core.sections.Robot.RobotSimulator;
+import core.sections.robot1.Robot;
+import core.sections.robot1.RobotSimulator;
 
-public class Idle implements AutomataStateRobot {
+public class Idle implements AutomataStateRobot1 {
 
 	
 	@Override

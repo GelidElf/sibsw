@@ -8,6 +8,7 @@ import core.file.ApplicationConfigurationFileReader;
 import core.messages.CommunicationManager;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
+import core.messages.enums.CommunicationMessageType;
 
 public class Scada implements Runnable{
 
@@ -23,7 +24,7 @@ public class Scada implements Runnable{
 	}
 
 	private Message createConfigurationMessage() {
-		Message message = new Message("SCADA.CONF", null, true);
+		Message message = new Message("SCADA.CONF", null, true,CommunicationMessageType.CONFIGURATION,null);
 		Field[] configurationOptions = ApplicationConfiguration.class.getFields();
 		for (Field f:configurationOptions){
 			String parameter = null;

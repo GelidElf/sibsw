@@ -1,17 +1,10 @@
 package core.sections.ConveyorBelt.States;
 
-import core.model.AutomataContainer;
 
 public class Running extends AutomataStateCB{
 	
 	private static final long serialVersionUID = -8738809400931757119L;
 
-	@Override
-	public void execute(AutomataContainer master) {
-		// TODO Auto-generated method stub
-		
-	}
-	
 	@Override
 	public AutomataStateCB loadSensorTrue() {
 		return createState(Running.class,this);

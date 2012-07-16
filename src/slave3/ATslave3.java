@@ -3,14 +3,11 @@ package slave3;
 import slave3.states.IdleQCSEmpty;
 import slave3.states.Slave3State;
 import core.aplication.Configuration;
-import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.QualityStation.ATQualityStation;
-import core.sections.QualityStation.QualityStationManager;
 
 public class ATslave3 extends AutomataContainer {
 

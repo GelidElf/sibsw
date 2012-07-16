@@ -59,7 +59,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 		try {
 			socket = new Socket(address, serverPort);
 			connection=new ConnectionManager(socket,applicationID,inbox);
-			connection.writeMessage(new Message(applicationID+".CONNECT","MASTER",false));
+			connection.writeMessage(new Message(applicationID+".CONNECT","MASTER",false,null,null));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,serverPort,e.getMessage()));
 			e.printStackTrace();

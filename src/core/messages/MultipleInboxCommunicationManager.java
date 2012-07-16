@@ -101,7 +101,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		try {
 			socket = new Socket(address, serverPort);
 			connection=new ConnectionManager(socket,applicationID,inbox);
-			connection.writeMessage(new Message(applicationID+".CONNECT",null,false));
+			connection.writeMessage(new Message(applicationID+".CONNECT",null,false,null,null));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));
 			e.printStackTrace();

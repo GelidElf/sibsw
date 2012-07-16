@@ -1,9 +1,7 @@
 package core.model;
 
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,8 +17,6 @@ public abstract class AutomataState implements Serializable {
 	private static final long serialVersionUID = 1764660909489565734L;
 
 	private static HashMap <String, AutomataState> instances = new HashMap<String, AutomataState>();
-
-	public abstract void execute(AutomataContainer master);
 
 	public static AutomataState createState(Class<? extends AutomataState> targetClass, AutomataState currentState, Class<? extends AutomataState> superclass) {
 		AutomataState nextState = null;
@@ -83,5 +79,5 @@ public abstract class AutomataState implements Serializable {
 	private static String stateIdentificator(String stateName){
 		return nombreGrupo+"."+stateName;
 	}
-
+	
 }

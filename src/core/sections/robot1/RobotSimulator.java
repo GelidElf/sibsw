@@ -1,11 +1,5 @@
-package core.sections.Robot;
+package core.sections.robot1;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import core.sections.ParallelPort.ParallelPortManagerObserver;
-import core.sections.ParallelPort.ParallelPortState;
-import core.sections.ParallelPort.Utils.ParallelPortException;
 
 
 

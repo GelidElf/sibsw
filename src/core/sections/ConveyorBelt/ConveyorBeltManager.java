@@ -37,14 +37,14 @@ public class ConveyorBeltManager extends ParallelPortManager {
 			System.out.println(e.getMessage());
 			e.printStackTrace();
 		}
+		ParallelPortState state = new ParallelPortState();
+		setState(state);
 	}
 
 	public void configure(int capacity, int speed){
-		ParallelPortState state = new ParallelPortState();
-		setState(state);
 		try {
-			setValueByName(ConveyorBeltManager.CAPACITY, 10);
-			setValueByName(ConveyorBeltManager.SPEED, 2);
+			setValueByName(ConveyorBeltManager.CAPACITY, capacity);
+			setValueByName(ConveyorBeltManager.SPEED, speed);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}

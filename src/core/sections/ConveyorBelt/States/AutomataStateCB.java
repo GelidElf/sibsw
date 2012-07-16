@@ -15,7 +15,7 @@ public abstract class AutomataStateCB extends AutomataState {
 	private int velocidad = 0;
 	private boolean enMovimiento;
 	
-	public static AutomataStateCB stadoInicial(int capacidad){
+	public static AutomataStateCB estadoInicial(int capacidad){
 		AutomataStateCB state = createState(Idle.class,null);
 		state.setCapacidad(capacidad);
 		state.setPosicionesOcupadas(new boolean[capacidad]);

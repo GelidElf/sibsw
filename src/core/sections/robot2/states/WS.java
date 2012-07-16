@@ -1,20 +1,11 @@
 package core.sections.robot2.states;
 
-import core.model.AutomataContainer;
 import core.model.AutomataState;
 
 public class WS extends Robot2State{
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	@Override
-	public void execute(AutomataContainer master) {
-		// TODO Auto-generated method stub
-	}
-	
+	private static final long serialVersionUID = -3747631783744535278L;
+
 	@Override
 	public AutomataState Completed(){
 		return createState(Idle.class,this);

@@ -8,7 +8,7 @@ import core.messages.SingleInboxCommunicationManager;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.AssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.Robot.Robot;
+import core.sections.robot.Robot;
 
 public class ATSlave1 extends AutomataContainer{
 

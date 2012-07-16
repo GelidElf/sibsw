@@ -1,6 +1,5 @@
 package core.sections.robot2.states;
 
-import core.model.AutomataContainer;
 import core.model.AutomataState;
 
 public abstract class Robot2State extends AutomataState {
@@ -42,12 +41,5 @@ public abstract class Robot2State extends AutomataState {
 		return null;
 	}
 	
-	
-	@Override
-	public void execute(AutomataContainer master) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 

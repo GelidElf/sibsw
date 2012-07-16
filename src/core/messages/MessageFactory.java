@@ -37,6 +37,6 @@ public class MessageFactory {
 	
 	
 	public static Message createMessage(String ID, String messageType, String destination, boolean isUrgent){
-		return new Message(ID.concat(".").concat(messageType),destination,isUrgent);
+		return new Message(ID.concat(".").concat(messageType),destination,isUrgent,null,null);
 	}
 }
