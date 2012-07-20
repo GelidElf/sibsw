@@ -2,6 +2,7 @@ package core.sections.ConveyorBelt;
 
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
@@ -65,11 +66,11 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 		ConveyorBeltManager m = new ConveyorBeltManager();
 		m.configure(10, 2);
 		ATConveyorBelt atcb = new ATConveyorBelt(null, m);
-		Message mess = new Message("algo", "algo", false, CommunicationMessageType.CONFIGURATION, null);
+		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY,"32"));
 		mess.addAttribute(new Attribute(ConveyorBeltManager.SPEED,"8"));
 		atcb.injectMessage(mess);
-		Message mess2 = new Message("algo", "algo", false, CommunicationMessageType.START, null);
+		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
 		atcb.injectMessage(mess2);
 	}
 	

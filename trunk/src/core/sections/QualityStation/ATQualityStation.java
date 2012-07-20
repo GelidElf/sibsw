@@ -2,6 +2,7 @@ package core.sections.QualityStation;
 
 import core.messages.Message;
 import core.messages.MessageFactory.SlaveAutomaton3MessageFactory;
+import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
@@ -33,11 +34,11 @@ public class ATQualityStation extends Thread implements ParallelPortManagerObser
 					if(manager.getValueByName(QualityStationManager.ENABLED) == 0){
 						if(manager.getValueByName(QualityStationManager.RESULT) == 1){
 							currentState = currentState.valid();
-							Message message = new Message("QCS.AssemblyValid","MASTER",false,null,null);
+							Message message = new Message("QCS.AssemblyValid",CommunicationIds.SLAVE3,false,null,null);
 							father.injectMessage(message);
 						}else{
 							currentState = currentState.invalid();
-							Message message = new Message("QCS.AssemblyInvalid","MASTER",false,null,null);
+							Message message = new Message("QCS.AssemblyInvalid",CommunicationIds.SLAVE3,false,null,null);
 							father.injectMessage(message);
 						}
 					}

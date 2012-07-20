@@ -1,5 +1,7 @@
 package core.messages;
 
+import core.messages.enums.CommunicationIds;
+
 public class MessageFactory {
 	
 	public static final String SEPARATOR = "#$#";
@@ -36,7 +38,4 @@ public class MessageFactory {
 	}
 	
 	
-	public static Message createMessage(String ID, String messageType, String destination, boolean isUrgent){
-		return new Message(ID.concat(".").concat(messageType),destination,isUrgent,null,null);
-	}
 }

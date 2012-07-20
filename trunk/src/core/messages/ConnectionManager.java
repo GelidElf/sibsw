@@ -5,6 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import core.messages.enums.CommunicationIds;
+import core.utilities.log.Logger;
+
 public class ConnectionManager extends Thread{
 
 	private Socket socket = null;
@@ -12,11 +15,11 @@ public class ConnectionManager extends Thread{
 	private ObjectInputStream  _ois = null;
 	private Inbox inbox = null;
 	private CommunicationManager commManager = null;
-	private String applicationId = null;
+	private CommunicationIds owner = null;
 	
 	public ConnectionManager (Socket socket, CommunicationManager cm, Inbox inbox){
 		this.socket = socket;
-		applicationId = cm.getApplicationId();
+		this.owner = cm.getOwner();
 		createInputAndOutputStreamsFromSocket();
 		if (this.inbox == null)
 			this.inbox = new Inbox();
@@ -25,9 +28,9 @@ public class ConnectionManager extends Thread{
 		commManager = cm;
 	}
 	
-	public ConnectionManager (Socket socket, String applicationId, Inbox inbox){
+	public ConnectionManager (Socket socket, CommunicationIds owner, Inbox inbox){
 		this.socket = socket;
-		this.applicationId = applicationId;
+		this.owner = owner;
 		createInputAndOutputStreamsFromSocket();
 		this.inbox = inbox;
 
@@ -51,17 +54,18 @@ public class ConnectionManager extends Thread{
 	}
 
 	private void trataMensajeRecibido(Message message) {
-		if (message.getDestination().equals(applicationId)){
-			System.out.println("RecibidoMensaje en: "+applicationId);
+		if (message.getDestination().equals(owner)){
+			Logger.println("RecibidoMensaje en: "+owner);
 			this.inbox.add(message);
 		}
 		else{
-			System.out.println(String.format("Reenviando mensaje ID:%s desde %s",message.getID(),applicationId));
+			Logger.println(String.format("Reenviando mensaje ID:%s desde %s",message.getID(),owner));
 			commManager.sendMessage(message);
 		}
 	}
 	
 	public synchronized void writeMessage(Message message){
+		message.setOwner(owner);
 		try {
 			_oos.writeObject(message);
 			_oos.flush();
@@ -75,7 +79,7 @@ public class ConnectionManager extends Thread{
 	 * Special method for naming the Communication interface in the manager so that it can send thoguth the correct 
 	 * Comm object the message
 	 */
-	public synchronized String getNameOfPeer(){
+	public synchronized CommunicationIds getPeer(){
 		return readMessageFromStream().getOwner();
 	}
 	
