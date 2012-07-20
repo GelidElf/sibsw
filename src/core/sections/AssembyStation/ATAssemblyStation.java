@@ -2,6 +2,7 @@ package core.sections.AssembyStation;
 
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.States.AutomataStateAssemblyStation;
@@ -28,10 +29,10 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 		AssemblyStationManager m = new AssemblyStationManager();
 		m.configure(10);
 		ATAssemblyStation atcb = new ATAssemblyStation(null, m);
-		Message mess = new Message("algo", "algo", false, CommunicationMessageType.CONFIGURATION, null);
+		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME,"32"));
 		atcb.injectMessage(mess);
-		Message mess2 = new Message("algo", "algo", false, CommunicationMessageType.START, null);
+		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
 		atcb.injectMessage(mess2);
 	}
 	

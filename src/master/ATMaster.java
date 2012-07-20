@@ -2,31 +2,48 @@ package master;
 
 import core.aplication.Configuration;
 import core.messages.Attribute;
-import core.messages.CommunicationManager;
+import core.messages.Message;
 import core.messages.MultipleInboxCommunicationManager;
+import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 
 public class ATMaster extends AutomataContainer<ATMasterInput> {
 
-	private CommunicationManager commManager;
-	private static final int NUMBEROFINBOXES = 2;
+	private static final int NUMBEROFINBOXES = 1;
 
 	public ATMaster(Configuration conf) {
-		super(null);
-		//super(conf,new MultipleInboxCommunicationManager("MASTER",conf,NUMBEROFINBOXES));
-		//send message to start process
+		super(null,new MultipleInboxCommunicationManager(CommunicationIds.MASTER,conf,NUMBEROFINBOXES));
 	}
 
 	@Override
 	protected void consume(ATMasterInput currentInput) {
-		// TODO Auto-generated method stub
+		switch (currentInput) {
+		case START:
+			sendBroadCastMessage(CommunicationMessageType.START);
+			break;
+		case NSTOP:
+			sendBroadCastMessage(CommunicationMessageType.NSTOP);
+			break;
+		case ESTOP:
+			sendBroadCastMessage(CommunicationMessageType.ESTOP);
+			break;
+		case RESUME:
+			sendBroadCastMessage(CommunicationMessageType.RESUME);
+			break;
+		default:
+			break;
+		}
 		
+	}
+
+	protected void sendBroadCastMessage(CommunicationMessageType messageType) {
+		getCommunicationManager().sendMessage(new Message(messageType.name(), null, true, messageType, null));
 	}
 
 	@Override
 	protected void begin() {
-		// TODO Auto-generated method stub
-		
+		getCommunicationManager().initialize();
 	}
 
 	@Override
@@ -34,17 +51,5 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 		// TODO Auto-generated method stub
 		
 	}
-
-	/**
-	public void run (){
-		while (true){
-			try{
-				Message m = commManager.readMessage();
-				System.out.println(m.getID().toString());
-			}catch (Exception e){
-				
-			}
-		}
-	}*/
 	
 }

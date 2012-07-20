@@ -11,13 +11,22 @@ import core.messages.Message;
 public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 
 	protected Configuration conf;
-	protected CommunicationManager commManager;
+	private CommunicationManager commManager;
 	protected AutomataContainer<?> father;
 	protected BlockingQueue<T> inputStorage = new LinkedBlockingQueue<T>();
 	protected BlockingQueue<T> priorityInputStorage = new LinkedBlockingQueue<T>();
 	
 	public AutomataContainer(AutomataContainer<?> father){
 		this.father = father;
+	}
+
+	public AutomataContainer(AutomataContainer<?> father, CommunicationManager commManager){
+		this.father = father;
+		this.commManager = commManager;
+	}
+	
+	public CommunicationManager getCommunicationManager(){
+		return commManager;
 	}
 	
 	public void injectMessage(Message message){
@@ -27,7 +36,7 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 			break;
 		case COMMAND:
 			if (message.isUrgent()){
-				priorityInputStorage.add((T) message.getInputType());
+				priorityInputStorage.add((T)message.getInputType());
 			}else{
 				inputStorage.add((T)message.getInputType());
 			}
@@ -70,4 +79,8 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 	protected abstract void begin();
 	
 	protected abstract void changeConfigurationParameter(Attribute attribute);
+	
+	public void sendMessage(Message message){
+		commManager.sendMessage(message);
+	}
 }

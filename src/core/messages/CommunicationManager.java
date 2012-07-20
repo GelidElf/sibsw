@@ -1,5 +1,7 @@
 	package core.messages;
 
+import core.messages.enums.CommunicationIds;
+
 
 public interface CommunicationManager {
 	
@@ -10,5 +12,6 @@ public interface CommunicationManager {
 	public Message readMessage();
 	public Inbox getInbox();
 	public void setInbox(Inbox inbox);
-	public String getApplicationId();
+	public CommunicationIds getOwner();
+	public void initialize();
 }

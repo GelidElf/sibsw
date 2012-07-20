@@ -3,6 +3,7 @@ package core.messages;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 
 public class Message implements Serializable {
@@ -12,19 +13,20 @@ public class Message implements Serializable {
 	private Enum<?> inputType;
 	private ArrayList<Attribute> contents = null;
 	private String messageId = null;
-	private String destination = null;
+	private CommunicationIds destination = null;
+	private CommunicationIds owner = null;
 	
-	public String getDestination() {
+	public CommunicationIds getDestination() {
 		return destination;
 	}
 
-	public void setDestination(String destination) {
+	public void setDestination(CommunicationIds destination) {
 		this.destination = destination;
 	}
 
 	private Boolean urgent = null;
 
-	public Message(String messageID, String destination, boolean isUrgent, CommunicationMessageType type, Enum<?> inputType){
+	public Message(String messageID, CommunicationIds destination, boolean isUrgent, CommunicationMessageType type, Enum<?> inputType){
 		this.messageId = messageID;
 		this.destination = destination;
 		this.urgent = isUrgent;
@@ -49,8 +51,8 @@ public class Message implements Serializable {
 		
 	}
 	
-	public String getOwner(){
-		return messageId.substring(0,messageId.indexOf("."));
+	public CommunicationIds getOwner(){
+		return owner;
 	}
 	
 	public Attribute getAttribute(int i){
@@ -104,6 +106,13 @@ public class Message implements Serializable {
 
 	public void setType(CommunicationMessageType type) {
 		this.type = type;
+	}
+
+	/**
+	 * @param owner the owner to set
+	 */
+	public void setOwner(CommunicationIds owner) {
+		this.owner = owner;
 	}
 	
 }

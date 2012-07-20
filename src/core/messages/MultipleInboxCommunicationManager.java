@@ -4,34 +4,36 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.acl.Owner;
 import java.util.HashMap;
 
 import core.aplication.Configuration;
+import core.messages.enums.CommunicationIds;
 
 public class MultipleInboxCommunicationManager implements CommunicationManager{
 
-	private HashMap<String, ConnectionManager> connections = new HashMap<String, ConnectionManager>();
+	private HashMap<CommunicationIds, ConnectionManager> connections = new HashMap<CommunicationIds, ConnectionManager>();
 	private int numberOfIncoming;
-	private String applicationID;
+	private CommunicationIds owner;
 	private Configuration conf;
 	private int serverPort;
 	private ServerSocket serverSocket;
 	private Inbox inbox;
 	private ConnectionManager connection;
 	
-	public MultipleInboxCommunicationManager(String ID, Configuration conf, int numberOfIncoming) {
-		applicationID = ID;
+	public MultipleInboxCommunicationManager(CommunicationIds owner, Configuration conf, int numberOfIncoming) {
+		this.owner = owner;
 		this.conf = conf;
 		this.numberOfIncoming = numberOfIncoming;
 		inbox = new Inbox();
-		initialize();
+		loadConfigurationFromFonfiguration();
+		setUpVariablesForMaster();
 	}
 
-	private void initialize() {
+	@Override
+	public void initialize() {
 		try {
-			loadConfigurationFromFonfiguration();
-			setUpVariablesForMaster();
-			waitForSocketsToConnect(numberOfIncoming);
+			waitForSocketsToConnect();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +44,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	}
 
 	private void setUpVariablesForMaster(){
-		connections = new HashMap<String,ConnectionManager>(numberOfIncoming);
+		connections = new HashMap<CommunicationIds,ConnectionManager>(numberOfIncoming);
 		try {
 			serverSocket = new ServerSocket();
 			serverSocket.bind(new InetSocketAddress(serverPort));
@@ -51,7 +53,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		}
 	}
 
-	private void waitForSocketsToConnect(int numberOfIncoming) throws IOException {
+	public void waitForSocketsToConnect() throws IOException {
 		while (connections.size() < numberOfIncoming){
 			System.out.println(String.format("Waiting for connection n1 %d", connections.size()));
 			Socket newSocket = serverSocket.accept();
@@ -60,7 +62,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 			serverSocket.bind(new InetSocketAddress(serverPort));
 			System.out.println("new connection established");
 			ConnectionManager c = new ConnectionManager(newSocket, this, inbox);
-			String s = c.getNameOfPeer();
+			CommunicationIds s = c.getPeer();
 			System.out.println(String.format("%s connected",s));
 			connections.put(s, c);
 			startConnection(connections.get(s));
@@ -100,8 +102,8 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		Socket socket;
 		try {
 			socket = new Socket(address, serverPort);
-			connection=new ConnectionManager(socket,applicationID,inbox);
-			connection.writeMessage(new Message(applicationID+".CONNECT",null,false,null,null));
+			connection=new ConnectionManager(socket,owner,inbox);
+			connection.writeMessage(new Message(owner+".CONNECT",null,false,null,null));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));
 			e.printStackTrace();
@@ -114,9 +116,8 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	}
 
 	@Override
-	public String getApplicationId() {
-		return applicationID;
+	public CommunicationIds getOwner() {
+		return owner;
 	}
-	
 	
 }

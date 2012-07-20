@@ -1,34 +1,44 @@
 package slave1;
 
 
-import slave1.states.AutomataStateSlave1;
-import slave1.states.Idle;
-import slave3.states.IdleQCSEmpty;
-import slave3.states.Slave3State;
 import core.aplication.Configuration;
+import core.messages.Attribute;
+import core.messages.CommunicationManager;
 import core.messages.SingleInboxCommunicationManager;
+import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
-import core.model.AutomataState;
-import core.sections.AssembyStation.AssemblyStation;
+import core.sections.AssembyStation.ATAssemblyStation;
+import core.sections.AssembyStation.AssemblyStationManager;
 import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.robot.Robot;
+import core.sections.ConveyorBelt.ConveyorBeltManager;
+import core.sections.robot1.Robot;
+import core.utilities.log.Logger;
 
-public class ATSlave1 extends AutomataContainer{
+public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
-	private AutomataStateSlave1 currentState;
-	private AssemblyStation assemblyStation;
+	private Slave1State currentState;
+	private ATAssemblyStation assemblyStation;
 	private Robot robot;
 
-	public AutomataStateSlave1 getCurrentState() {
+	public Slave1State getCurrentState() {
 		return currentState;
 	}
 
 
 	public ATSlave1(Configuration conf){
-		super(conf, new SingleInboxCommunicationManager("Slave3",conf));
-		currentState = Slave3State.createState(IdleQCSEmpty.class, currentState);
+		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
+		ConveyorBeltManager gearManager = new ConveyorBeltManager();
+		gearManager.configure(10,2);
+		gearBelt = new ATConveyorBelt(this, gearManager);
+		ConveyorBeltManager axisManager = new ConveyorBeltManager();
+		axisManager.configure(10,2);
+		axisBelt = new ATConveyorBelt(this, axisManager);
+		AssemblyStationManager assemblyManager = new AssemblyStationManager();
+		assemblyManager.configure(10);
+		assemblyStation = new ATAssemblyStation(this, assemblyManager);
 	}
 
 	//	public ATSlave1(){
@@ -85,13 +95,6 @@ public class ATSlave1 extends AutomataContainer{
 		//AS.setAssemblyDelay....
 
 	}
-	public void setCurrentState(AutomataState state){
-		if((currentState==null) || (state == null)){
-			currentState = new IdleQCSEmpty();
-		}else{
-			currentState = state;
-		}
-	}
 
 	public ATConveyorBelt getGearBelt() {
 		return gearBelt;
@@ -113,12 +116,12 @@ public class ATSlave1 extends AutomataContainer{
 	}
 
 
-	public AssemblyStation getAssemblyStation() {
+	public ATAssemblyStation getAssemblyStation() {
 		return assemblyStation;
 	}
 
 
-	public void setAssemblyStation(AssemblyStation assemblyStation) {
+	public void setAssemblyStation(ATAssemblyStation assemblyStation) {
 		this.assemblyStation = assemblyStation;
 	}
 
@@ -130,6 +133,38 @@ public class ATSlave1 extends AutomataContainer{
 
 	public void setRobot(Robot robot) {
 		this.robot = robot;
+	}
+
+
+	@Override
+	protected void consume(Slave1Input currentInput) {
+		switch (currentInput) {
+		case START:
+			currentState.execute(currentInput);
+			break;
+
+		case EMPTY_TRANSFER_CB:
+			
+			break;
+			
+		default:
+			break;
+		}
+		
+	}
+
+
+	@Override
+	protected void begin() {
+		currentState = new Slave1State(this);
+		getCommunicationManager().initialize();
+	}
+
+
+	@Override
+	protected void changeConfigurationParameter(Attribute attribute) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	//	public static void main (String args[]){

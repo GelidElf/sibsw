@@ -1,15 +1,15 @@
 package slave3;
 
-import slave3.states.IdleQCSEmpty;
-import slave3.states.Slave3State;
 import core.aplication.Configuration;
+import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
+import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.QualityStation.ATQualityStation;
 
-public class ATslave3 extends AutomataContainer {
+public class ATslave3 extends AutomataContainer<Slave3Input> {
 
 	private ATConveyorBelt conveyorBelt;
 	private ATQualityStation qualityStation;
@@ -17,8 +17,8 @@ public class ATslave3 extends AutomataContainer {
 	private Message messageToSend;
 	
 	public ATslave3(Configuration conf){
-		super(conf, new SingleInboxCommunicationManager("Slave3",conf));
-		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
+		super(null, new SingleInboxCommunicationManager(CommunicationIds.SLAVE3,conf));
+//		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
 	}	
 	
 	public void setATConveyorbelt(ATConveyorBelt cb){
@@ -27,6 +27,24 @@ public class ATslave3 extends AutomataContainer {
 	
 	public void setATQualityStation(ATQualityStation qcs){
 		qualityStation = qcs;
+	}
+
+	@Override
+	protected void consume(Slave3Input currentInput) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void begin() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void changeConfigurationParameter(Attribute attribute) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	/**@Override

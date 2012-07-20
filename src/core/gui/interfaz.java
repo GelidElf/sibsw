@@ -19,8 +19,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
+import core.aplication.Configuration;
+import core.file.ConfigurationFileReader;
+
+import master.ATMaster;
+
 public class interfaz {
 
+	private ATMaster master;
+	
 	private JFrame frame;
 	private JComboBox comboBox;
 	private JComboBox comboBox_1;
@@ -49,7 +56,8 @@ public class interfaz {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					interfaz window = new interfaz();
+					ConfigurationFileReader confReader = new ConfigurationFileReader("master.ini");
+					interfaz window = new interfaz(new ATMaster(confReader.readConfiguration()));
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,11 +69,16 @@ public class interfaz {
 	/**
 	 * Create the application.
 	 */
-	public interfaz() {
+	public interfaz(ATMaster master) {
+		this.master = master;
 		initialize();
 
 	}
 
+	public JFrame getFrame(){
+		return frame;
+	}
+	
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -76,37 +89,33 @@ public class interfaz {
 		frame.getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(569, 24, 151, 158);
+		panel.setBounds(569, 24, 171, 158);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
 		comboBox = new JComboBox();
-		comboBox
-				.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
+		comboBox.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
 		comboBox.setToolTipText("");
-		comboBox.setBounds(96, 31, 45, 20);
+		comboBox.setBounds(96, 31, 70, 20);
 		panel.add(comboBox);
 
 		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(
-				new String[] { "On", "Off" }));
+		comboBox_1.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
 		comboBox_1.setToolTipText("");
-		comboBox_1.setBounds(96, 62, 45, 20);
+		comboBox_1.setBounds(96, 62, 70, 20);
 		panel.add(comboBox_1);
 
 		comboBox_2 = new JComboBox();
-		comboBox_2.setModel(new DefaultComboBoxModel(
-				new String[] { "On", "Off" }));
+		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
 		comboBox_2.setToolTipText("");
-		comboBox_2.setBounds(96, 93, 45, 20);
+		comboBox_2.setBounds(96, 93, 70, 20);
 		panel.add(comboBox_2);
 
 		comboBox_3 = new JComboBox();
-		comboBox_3.setModel(new DefaultComboBoxModel(
-				new String[] { "On", "Off" }));
+		comboBox_3.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
 		comboBox_3.setToolTipText("");
-		comboBox_3.setBounds(96, 124, 45, 20);
+		comboBox_3.setBounds(96, 124, 70, 20);
 		panel.add(comboBox_3);
 
 		JLabel lblMaster = new JLabel("Master");
@@ -177,8 +186,7 @@ public class interfaz {
 		Master.add(textField);
 		textField.setColumns(10);
 
-		JLabel lblTimeToTransport = new JLabel(
-				"Time to transport and place assembled piece");
+		JLabel lblTimeToTransport = new JLabel("Time to transport and place assembled piece");
 		lblTimeToTransport.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTimeToTransport.setBounds(10, 90, 253, 28);
 		Master.add(lblTimeToTransport);
@@ -189,8 +197,7 @@ public class interfaz {
 		textField_1.setBounds(271, 94, 42, 20);
 		Master.add(textField_1);
 
-		JLabel lblTimeToTransport_1 = new JLabel(
-				"Time to transport and place welded piece");
+		JLabel lblTimeToTransport_1 = new JLabel("Time to transport and place welded piece");
 		lblTimeToTransport_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTimeToTransport_1.setBounds(10, 129, 253, 28);
 		Master.add(lblTimeToTransport_1);
@@ -236,8 +243,7 @@ public class interfaz {
 		textField_3.setColumns(10);
 		Robot1.add(textField_3);
 
-		JLabel lblTimeToTransport_2 = new JLabel(
-				"Time to transport and place axis/gear");
+		JLabel lblTimeToTransport_2 = new JLabel("Time to transport and place axis/gear");
 		lblTimeToTransport_2.setBounds(5, 71, 246, 15);
 		lblTimeToTransport_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_2);
@@ -248,8 +254,7 @@ public class interfaz {
 		textField_4.setColumns(10);
 		Robot1.add(textField_4);
 
-		JLabel lblTimeToTransport_3 = new JLabel(
-				"Time to transport and place assembled piece");
+		JLabel lblTimeToTransport_3 = new JLabel("Time to transport and place assembled piece");
 		lblTimeToTransport_3.setBounds(5, 109, 246, 15);
 		lblTimeToTransport_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_3);
@@ -361,8 +366,7 @@ public class interfaz {
 		lblNewLabel_1.setBounds(10, 55, 152, 14);
 		Slave3.add(lblNewLabel_1);
 
-		JLabel lblQualityControlStation = new JLabel(
-				"Quality control station and OK Conveyor Belt");
+		JLabel lblQualityControlStation = new JLabel("Quality control station and OK Conveyor Belt");
 		lblQualityControlStation.setHorizontalAlignment(SwingConstants.CENTER);
 		lblQualityControlStation.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblQualityControlStation.setBounds(33, 11, 282, 29);

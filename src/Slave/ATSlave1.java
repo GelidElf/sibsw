@@ -10,7 +10,7 @@ import core.sections.AssembyStation.AssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.robot.Robot;
 
-public class ATSlave1 extends AutomataContainer{
+public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -27,7 +27,8 @@ public class ATSlave1 extends AutomataContainer{
 
 
 	public ATSlave1(Configuration conf){
-		super(conf, new SingleInboxCommunicationManager("Slave3",conf));
+		new SingleInboxCommunicationManager("Slave1",conf)
+		super(null,conf);
 		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}
 

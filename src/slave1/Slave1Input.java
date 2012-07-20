@@ -1,6 +1,6 @@
-package master;
+package slave1;
 
-public enum ATMasterInput {
+public enum Slave1Input {
 	START,
 	EMPTY_TRANSFER_CB,
 	FEED_AXIS,
@@ -8,5 +8,5 @@ public enum ATMasterInput {
 	AUTO_FEED_AXIS_ON,
 	AUTO_FEED_AXIS_OFF,
 	AUTO_FEED_GEAR_ON,
-	AUTO_FEED_GEAR_OFF, ESTOP, NSTOP, RESUME
+	AUTO_FEED_GEAR_OFF, ESTOP, NSTOP, RESTART, AS_EMPTY
 }
