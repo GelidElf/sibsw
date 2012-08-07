@@ -1,6 +1,5 @@
 package core.messages;
 
-import core.messages.enums.CommunicationIds;
 
 public class MessageFactory {
 	

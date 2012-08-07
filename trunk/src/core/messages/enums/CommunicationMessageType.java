@@ -7,6 +7,8 @@ public enum CommunicationMessageType {
 	ESTOP,
 	RESUME,
 	COMMAND,
-	CONFIGURATION;
+	CONFIGURATION,
+	HANDSHAKE,
+	STATUS_UPDATE;
 	
 }

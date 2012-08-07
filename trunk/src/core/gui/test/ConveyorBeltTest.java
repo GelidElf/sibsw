@@ -75,7 +75,7 @@ public class ConveyorBeltTest extends JFrame {
 			this.manager = manager;
 			manager.registerObserver(this);
 			this.jButton = jButton;
-			update(manager);
+			updateFromPortManager(manager);
 		}
 
 		@Override
@@ -90,7 +90,7 @@ public class ConveyorBeltTest extends JFrame {
 		}
 
 		@Override
-		public void update(ParallelPortManager manager) {
+		public void updateFromPortManager(ParallelPortManager manager) {
 			try {
 				if (manager.getValueByName(ConveyorBeltManager.SENSOR_LOAD) == 1) {
 					jButton.setEnabled(true);
@@ -114,7 +114,7 @@ public class ConveyorBeltTest extends JFrame {
 			this.manager = manager;
 			manager.registerObserver(this);
 			this.jButton = jButton;
-			update(manager);
+			updateFromPortManager(manager);
 		}
 
 		@Override
@@ -129,7 +129,7 @@ public class ConveyorBeltTest extends JFrame {
 		}
 
 		@Override
-		public void update(ParallelPortManager manager) {
+		public void updateFromPortManager(ParallelPortManager manager) {
 			try {
 				if (manager.getValueByName(ConveyorBeltManager.SENSOR_UNLOAD) == 1) {
 					jButton.setEnabled(true);

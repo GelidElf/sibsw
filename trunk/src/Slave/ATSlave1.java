@@ -1,25 +1,26 @@
 package Slave;
 
 
+import slave1.Slave1Input;
 import Slave.States.AutomataStateSlave;
 import Slave.States.Idle;
 import core.aplication.Configuration;
+import core.messages.Attribute;
+import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
+import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
-import core.sections.AssembyStation.AssemblyStation;
+import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.robot.Robot;
+import core.sections.robot1.Robot;
 
 public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
 	private AutomataStateSlave currentState;
-	private AssemblyStation assemblyStation;
-	private Robot robot;
-
-
-
+	private ATAssemblyStation assemblyStation;
+	private core.sections.robot1.Robot robot;
 
 	public AutomataStateSlave getCurrentState() {
 		return currentState;
@@ -27,8 +28,7 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 
 	public ATSlave1(Configuration conf){
-		new SingleInboxCommunicationManager("Slave1",conf)
-		super(null,conf);
+		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
 		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}
 
@@ -114,12 +114,12 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 	}
 
 
-	public AssemblyStation getAssemblyStation() {
+	public ATAssemblyStation getAssemblyStation() {
 		return assemblyStation;
 	}
 
 
-	public void setAssemblyStation(AssemblyStation assemblyStation) {
+	public void setAssemblyStation(ATAssemblyStation assemblyStation) {
 		this.assemblyStation = assemblyStation;
 	}
 
@@ -131,6 +131,27 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 	public void setRobot(Robot robot) {
 		this.robot = robot;
+	}
+
+
+	@Override
+	protected void startCommand() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void changeConfigurationParameter(Attribute attribute) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	protected void consume(Message currentMessage) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	//	public static void main (String args[]){

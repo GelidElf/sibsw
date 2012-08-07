@@ -115,4 +115,8 @@ public class Message implements Serializable {
 		this.owner = owner;
 	}
 	
+	public boolean isBroadcast(){
+		return this.destination == null || this.destination == CommunicationIds.BROADCAST;
+	}
+	
 }

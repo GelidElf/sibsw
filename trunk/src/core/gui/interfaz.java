@@ -19,20 +19,24 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
-import core.aplication.Configuration;
-import core.file.ConfigurationFileReader;
-
 import master.ATMaster;
+import master.ATMasterInput;
+import core.file.ConfigurationFileReader;
+import core.gui.satuspanel.ModeEnum;
+import core.gui.satuspanel.StatusPanel;
+import core.messages.enums.CommunicationIds;
+import core.model.MasterModel;
+import core.model.ModelListener;
 
-public class interfaz {
+public class interfaz implements ModelListener{
 
 	private ATMaster master;
 	
 	private JFrame frame;
-	private JComboBox comboBox;
-	private JComboBox comboBox_1;
-	private JComboBox comboBox_2;
-	private JComboBox comboBox_3;
+	private JComboBox masterComboBox;
+	private StatusPanel slave1StatusPanel;
+	private StatusPanel slave2StatusPanel;
+	private StatusPanel slave3StatusPanel;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -72,7 +76,8 @@ public class interfaz {
 	public interfaz(ATMaster master) {
 		this.master = master;
 		initialize();
-
+		MasterModel.addListener(this);
+		update();
 	}
 
 	public JFrame getFrame(){
@@ -94,29 +99,26 @@ public class interfaz {
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
-		comboBox = new JComboBox();
-		comboBox.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
-		comboBox.setToolTipText("");
-		comboBox.setBounds(96, 31, 70, 20);
-		panel.add(comboBox);
+		masterComboBox = new JComboBox();
+		masterComboBox.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
+		masterComboBox.setToolTipText("");
+		masterComboBox.setBounds(96, 31, 70, 20);
+		panel.add(masterComboBox);
 
-		comboBox_1 = new JComboBox();
-		comboBox_1.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
-		comboBox_1.setToolTipText("");
-		comboBox_1.setBounds(96, 62, 70, 20);
-		panel.add(comboBox_1);
+		slave1StatusPanel = new StatusPanel();
+		slave1StatusPanel.setBounds(96, 62, 70, 20);
+		slave1StatusPanel.setVisible(true);
+		panel.add(slave1StatusPanel);
 
-		comboBox_2 = new JComboBox();
-		comboBox_2.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
-		comboBox_2.setToolTipText("");
-		comboBox_2.setBounds(96, 93, 70, 20);
-		panel.add(comboBox_2);
+		slave2StatusPanel = new StatusPanel();
+		slave2StatusPanel.setBounds(96, 93, 70, 20);
+		slave2StatusPanel.setVisible(true);
+		panel.add(slave2StatusPanel);
 
-		comboBox_3 = new JComboBox();
-		comboBox_3.setModel(new DefaultComboBoxModel(new String[] { "On", "Off" }));
-		comboBox_3.setToolTipText("");
-		comboBox_3.setBounds(96, 124, 70, 20);
-		panel.add(comboBox_3);
+		slave3StatusPanel = new StatusPanel();
+		slave3StatusPanel.setBounds(96, 124, 70, 20);
+		slave3StatusPanel.setVisible(true);
+		panel.add(slave3StatusPanel);
 
 		JLabel lblMaster = new JLabel("Master");
 		lblMaster.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -150,11 +152,19 @@ public class interfaz {
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnEmergencyStop.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				master.feedInput(ATMasterInput.ESTOP,true);
+			}
+		});
 
 		JButton btnStop = new JButton("Stop");
 		btnStop.setBounds(599, 238, 86, 34);
 		btnStop.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				master.feedInput(ATMasterInput.NSTOP,true);
 			}
 		});
 		btnStop.setForeground(Color.RED);
@@ -165,6 +175,12 @@ public class interfaz {
 		btnStart.setBounds(599, 193, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				master.feedInput(ATMasterInput.START,true);
+			}
+		});
 		frame.getContentPane().add(btnStart);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -402,6 +418,8 @@ public class interfaz {
 	}
 
 	private class SwingAction extends AbstractAction {
+		private static final long serialVersionUID = 7656906617014037779L;
+
 		public SwingAction() {
 			putValue(NAME, "SwingAction");
 			putValue(SHORT_DESCRIPTION, "Some short description");
@@ -409,5 +427,20 @@ public class interfaz {
 
 		public void actionPerformed(ActionEvent e) {
 		}
+	}
+
+	@Override
+	public void update() {
+		/*slave1comboBox.setSelectedIndex(MasterModel.getInstance().getConnected().get(CommunicationIds.SLAVE1)?0:1);
+		slave1comboBox.validate();*/
+
+		setStatusPanelFor(CommunicationIds.SLAVE1);
+		setStatusPanelFor(CommunicationIds.SLAVE2);
+		setStatusPanelFor(CommunicationIds.SLAVE3);
+	}
+
+	private void setStatusPanelFor(CommunicationIds slave1) {
+		MasterModel model = MasterModel.getInstance();
+		slave1StatusPanel.setModo(model.getConnected().get(slave1)?model.getModel().get(slave1).getCurrentMode():ModeEnum.DESCONEXION);
 	}
 }

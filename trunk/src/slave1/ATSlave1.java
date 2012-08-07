@@ -3,17 +3,15 @@ package slave1;
 
 import core.aplication.Configuration;
 import core.messages.Attribute;
-import core.messages.CommunicationManager;
+import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
-import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.AssembyStation.AssemblyStationManager;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
-import core.utilities.log.Logger;
 
 public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
@@ -137,10 +135,10 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 
 	@Override
-	protected void consume(Slave1Input currentInput) {
-		switch (currentInput) {
+	protected void consume(Message message) {
+		switch ((Slave1Input)message.getInputType()) {
 		case START:
-			currentState.execute(currentInput);
+			currentState.execute((Slave1Input)message.getInputType());
 			break;
 
 		case EMPTY_TRANSFER_CB:
@@ -155,9 +153,10 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 
 	@Override
-	protected void begin() {
+	protected void startCommand() {
 		currentState = new Slave1State(this);
 		getCommunicationManager().initialize();
+		start();
 	}
 
 

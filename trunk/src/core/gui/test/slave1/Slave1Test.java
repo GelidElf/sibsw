@@ -121,9 +121,9 @@ public class Slave1Test extends JFrame {
 			Object source = e.getItemSelectable();
 			JCheckBox jcb = (JCheckBox) source;
 			if (jcb.isSelected()){
-				slave1.feedInput(cierto);
+				slave1.feedInput(cierto, false);
 			}else{
-				slave1.feedInput(falso);
+				slave1.feedInput(falso,false);
 			}
 		}
 	}
@@ -140,7 +140,7 @@ public class Slave1Test extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			slave1.feedInput(input);
+			slave1.feedInput(input,false);
 		}
 
 	}

@@ -2,7 +2,6 @@ package core.sections.ConveyorBelt;
 
 import core.messages.Attribute;
 import core.messages.Message;
-import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
@@ -75,27 +74,27 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	}
 	
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		if (this.manager.isSensorInitial()){
-			inputStorage.add(ATConveyorBeltInput.loadSensorTrue);
+			feedInput(ATConveyorBeltInput.loadSensorTrue,false);
 		}
 		if (this.manager.isSensorFinish()){
-			inputStorage.add(ATConveyorBeltInput.unloadSensorTrue);
+			feedInput(ATConveyorBeltInput.unloadSensorTrue,false);
 		}
 		if (!this.manager.isSensorFinish()){
-			inputStorage.add(ATConveyorBeltInput.unloadSensorFalse);
+			feedInput(ATConveyorBeltInput.unloadSensorFalse,false);
 		}
 		if (this.manager.isSensorUnloadMax()){
-			inputStorage.add(ATConveyorBeltInput.unloadSensorTrueMax);
+			feedInput(ATConveyorBeltInput.unloadSensorTrueMax,false);
 		}
 		if (this.manager.isEmpty()){
-			inputStorage.add(ATConveyorBeltInput.empty);
+			feedInput(ATConveyorBeltInput.empty,false);
 		}
 	}
 
 	@Override
-	protected void consume(ATConveyorBeltInput currentInput) {
-		switch (currentInput) {
+	protected void consume(Message message) {
+		switch ((ATConveyorBeltInput)message.getInputType()) {
 			case empty:
 					currentState.empty();
 				break;
@@ -124,7 +123,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	}
 
 	@Override
-	protected void begin() {
+	protected void startCommand() {
 		manager.setRunning(true);
 		simulator.start();
 		fillerThread.start();

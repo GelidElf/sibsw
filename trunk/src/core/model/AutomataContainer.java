@@ -1,86 +1,68 @@
 package core.model;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.CommunicationManager;
 import core.messages.Message;
+import core.messages.enums.CommunicationMessageType;
+import core.utilities.log.Logger;
 
-public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
+public abstract class AutomataContainer<T extends Enum<T>> extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
 	protected AutomataContainer<?> father;
-	protected BlockingQueue<T> inputStorage = new LinkedBlockingQueue<T>();
-	protected BlockingQueue<T> priorityInputStorage = new LinkedBlockingQueue<T>();
-	
-	public AutomataContainer(AutomataContainer<?> father){
+
+	public AutomataContainer(AutomataContainer<?> father) {
 		this.father = father;
 	}
 
-	public AutomataContainer(AutomataContainer<?> father, CommunicationManager commManager){
+	public AutomataContainer(AutomataContainer<?> father, CommunicationManager commManager) {
 		this.father = father;
 		this.commManager = commManager;
 	}
-	
-	public CommunicationManager getCommunicationManager(){
+
+	public CommunicationManager getCommunicationManager() {
 		return commManager;
 	}
-	
-	public void injectMessage(Message message){
-		switch (message.getType()) {
-		case START:
-			begin();
-			break;
-		case COMMAND:
-			if (message.isUrgent()){
-				priorityInputStorage.add((T)message.getInputType());
-			}else{
-				inputStorage.add((T)message.getInputType());
-			}
-			break;
-		case CONFIGURATION:
-			for (Attribute attribute: message.getAttributes())
-			changeConfigurationParameter(attribute);
-		break;
-		default:
-			break;
+
+	public void injectMessage(Message message) {
+		if (message == null) {
+			return;
 		}
+		commManager.getInbox().add(message);
 	}
 
 	@Override
 	public void run() {
-		while(true){
-			super.run();
+		super.run();
+		while (true){
 			try {
-				if (priorityInputStorage.size() == 0){
-					consume(inputStorage.take());
-				}else{
-					consume(priorityInputStorage.poll());
-				}
+				consume(commManager.getInbox().getMessage());
 			} catch (InterruptedException e) {
-				System.out.println(this.getClass().getCanonicalName() + " Interrupted");
+				Logger.println("error reading messages");
+				e.printStackTrace();
 			}
 		}
 	}
 
-	public void feedInput(T input){
-		inputStorage.add(input);
-	}
-	
-	public void feedPriorityInput(T input){
-		priorityInputStorage.add(input);
-	}
-	
-	protected abstract void consume(T currentInput);
-	
-	protected abstract void begin();
-	
+	protected abstract void consume(Message currentMessage);
+
+	protected abstract void startCommand();
+
 	protected abstract void changeConfigurationParameter(Attribute attribute);
-	
-	public void sendMessage(Message message){
+
+	public void sendMessage(Message message) {
 		commManager.sendMessage(message);
 	}
+
+	public synchronized void feedInput(T input, boolean isUrgent) {
+		commManager.feed(createDummyMessageForInput(input, isUrgent));
+	}
+
+	protected Message createDummyMessageForInput(T input, boolean isUrgent) {
+		Message message = new Message("dummyInputMessage", null, isUrgent, CommunicationMessageType.COMMAND, input);
+		return message;
+	}
+
 }
