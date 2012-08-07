@@ -12,8 +12,6 @@ import core.messages.Message;
 import core.messages.enums.CommunicationMessageType;
 import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.AssembyStation.AssemblyStationManager;
-import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.ConveyorBelt.ConveyorBeltManager;
 
 public class AtAssemblyStationTest extends JFrame {
 
@@ -40,10 +38,10 @@ public class AtAssemblyStationTest extends JFrame {
 		AssemblyStationManager manager = new AssemblyStationManager();
 		manager.configure(10);
 		atas = new ATAssemblyStation(null, manager);
-		Message mess = new Message("algo", "algo", false, CommunicationMessageType.CONFIGURATION, null);
+		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME,"32"));
 		atas.injectMessage(mess);
-		Message mess2 = new Message("algo", "algo", false, CommunicationMessageType.START, null);
+		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
 		atas.injectMessage(mess2);
 	}
 

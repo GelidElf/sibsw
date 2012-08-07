@@ -46,7 +46,7 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,7 +8,7 @@ public class Slave1Executable extends RunnableApplication {
 		initialize(args,"slave1.ini");
 
 		ATSlave1 slave1 = new ATSlave1(configuration);
-		slave1.begin();
+		slave1.startCommand();
 	}
 
 }

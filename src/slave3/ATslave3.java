@@ -30,19 +30,19 @@ public class ATslave3 extends AutomataContainer<Slave3Input> {
 	}
 
 	@Override
-	protected void consume(Slave3Input currentInput) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	protected void begin() {
+	protected void startCommand() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	protected void consume(Message currentMessage) {
 		// TODO Auto-generated method stub
 		
 	}

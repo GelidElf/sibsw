@@ -22,7 +22,7 @@ public class Logger {
 	
 	public static void println(String text){
 		for (LoggerListener listener:listeners){
-			listener.println(text);
+			listener.println(Thread.currentThread().getName()+":>" + text);
 		}
 	}
 	

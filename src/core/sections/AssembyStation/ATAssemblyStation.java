@@ -37,8 +37,8 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	}
 	
 	@Override
-	protected void consume(ATAssemblyStationInput currentInput) {
-		switch (currentInput) {
+	protected void consume(Message message) {
+		switch ((ATAssemblyStationInput)message.getInputType()) {
 		case apDetectedFalse:
 			currentState.apDetectedFalse();
 			break;
@@ -74,7 +74,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	}
 
 	@Override
-	protected void begin() {
+	protected void startCommand() {
 		simulator.start();
 	}
 
@@ -94,19 +94,19 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		if (!this.manager.isAPDetected()){
-			inputStorage.add(ATAssemblyStationInput.apDetectedFalse);
+			consume(createDummyMessageForInput(ATAssemblyStationInput.apDetectedFalse,false));
 		}
 		if (this.manager.isAxisDetected()){
-			inputStorage.add(ATAssemblyStationInput.axisDetectedTrue);
+			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedTrue,false));
 		}else{
-			inputStorage.add(ATAssemblyStationInput.axisDetectedFalse);
+			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedFalse,false));
 		}
 		if (this.manager.isGearDetected()){
-			inputStorage.add(ATAssemblyStationInput.gearDetectedTrue);
+			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedTrue,false));
 		}else{
-			inputStorage.add(ATAssemblyStationInput.gearDetectedFalse);
+			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedFalse,false));
 		}
 		
 	}

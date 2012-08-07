@@ -1,22 +1,35 @@
 package core.gui.satuspanel;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javax.swing.border.EtchedBorder;
 
+/**
+ * Panel que indica el color del fondo
+ * 
+ * @author gonzalo
+ *
+ */
 public class StatusPanel extends JPanel implements ActionListener {
 
 	private static final long serialVersionUID = -9053998826495892562L;
 	private static int LONGITUD_LADO = 10;
 	private ModeEnum modo = null;
+	private boolean blinkingOn = true;
+	private Timer timer;
 	
 	public StatusPanel(){
 		super();
 		setSize(LONGITUD_LADO, LONGITUD_LADO);
-		int speed = 300;
-		Timer timer = new Timer(speed, this);
+		setMaximumSize(new Dimension(LONGITUD_LADO, LONGITUD_LADO));
+		setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
+		int speed = 500;
+		timer = new Timer(speed, this);
 		timer.start();
 	}
 
@@ -27,12 +40,21 @@ public class StatusPanel extends JPanel implements ActionListener {
 	public void setModo(ModeEnum modo) {
 		this.modo = modo;
 		setBackground(modo.getColor());
+		setToolTipText(modo.getLiteral());
+		validate();
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (modo != null){
-			this.setBackground(modo.getColor());
+			if (modo.isBlink()){
+				Color currentColor =this.blinkingOn?modo.getColor():Color.BLACK; 
+				this.setBackground(currentColor);
+				this.blinkingOn = !this.blinkingOn;
+				timer.start();
+			}else{
+				this.setBackground(Color.BLACK);
+			}
 		}
 	}
 	

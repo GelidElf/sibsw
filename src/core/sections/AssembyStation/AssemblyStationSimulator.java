@@ -73,7 +73,7 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		if (manager.getModifiedGroupName().equals(AssemblyStationManager.ENGAGE)){
 			start();
 		}

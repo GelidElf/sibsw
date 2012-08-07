@@ -13,6 +13,6 @@ public interface ParallelPortManagerObserver {
 	 * 
 	 * @param state
 	 */
-	public abstract void update(ParallelPortManager manager);
+	public abstract void updateFromPortManager(ParallelPortManager manager);
 
 }

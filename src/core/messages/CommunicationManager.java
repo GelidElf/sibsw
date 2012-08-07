@@ -9,9 +9,11 @@ public interface CommunicationManager {
 	public static final int DEF_SERVER_PORT = 40000;
 	
 	public void sendMessage(Message message);
-	public Message readMessage();
 	public Inbox getInbox();
 	public void setInbox(Inbox inbox);
 	public CommunicationIds getOwner();
 	public void initialize();
+	public void feed(Message message);
+	public void clientDisconnected( CommunicationIds commId);
+	
 }

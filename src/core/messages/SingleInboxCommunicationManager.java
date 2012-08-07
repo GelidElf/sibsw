@@ -4,9 +4,12 @@ import java.net.Socket;
 
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
+import core.utilities.log.Logger;
 
-public class SingleInboxCommunicationManager implements CommunicationManager{
+public class SingleInboxCommunicationManager implements CommunicationManager {
 
+	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;
 	private CommunicationIds owner;
 	private ConnectionManager connection;
 	private Socket socket;
@@ -14,7 +17,9 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 	private int serverPort;
 	private Configuration conf;
 	private Inbox inbox;
-	
+	private boolean connected = false;
+	private int numberOfAttempts = 0;
+
 	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf) {
 		this.owner = owner;
 		this.conf = conf;
@@ -29,11 +34,6 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 	public void sendMessage(Message message) {
 		connection.writeMessage(message);
 	}
-	
-	@Override
-	public Message readMessage(){
-		return connection.readMessage();
-	}
 
 	private void initializeVariables() {
 		this.inbox = new Inbox();
@@ -44,25 +44,64 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 		address = conf.address;
 		serverPort = conf.getRemotePortAsInt();
 	}
-	
+
 	private void connectAndStartThread() {
-		tryToConnectToServer();
-		try{
-			connection.start();
-		}catch (Exception e){
-			connectAndStartThread();
+		while (!connected){
+			if (tryToConnectToServer()){
+				sendPeerInformation();
+				connection.setPeer(CommunicationIds.MASTER);
+				connection.start();
+				Logger.println("Connection achieved");
+			}else{
+				Logger.println("Unable to connect to server, retrying");
+				numberOfAttempts = 0;
+				sleepSeconds(5);
+			}
 		}
 	}
 
-	private void tryToConnectToServer() {
-		try {
-			socket = new Socket(address, serverPort);
-			connection=new ConnectionManager(socket,owner,inbox);
-			connection.writeMessage(new Message("CONNECT",CommunicationIds.MASTER,false,null,null));
-		} catch (Exception e) {
-			System.out.println(String.format("Error connecting to server at %s:%s %s",address,serverPort,e.getMessage()));
-			e.printStackTrace();
+	private void sendPeerInformation() {
+		Message message = new Message("IDENTIFICATION", CommunicationIds.MASTER, true, CommunicationMessageType.HANDSHAKE, null);
+		sendMessage(message);
+	}
+
+	private boolean tryToConnectToServer() {
+		Logger.println("Trying to connect to server");
+		numberOfAttempts = 0;
+		while (keepTryingToConnect()) {
+			try {
+				socket = new Socket(address, serverPort);
+				weHaveConnection();
+				socket.setTcpNoDelay(true);
+				connection = new ConnectionManager(socket, this,inbox);
+				connection.enable();
+				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, null, null));
+				return true;
+			} catch (Exception e) {
+				Logger.println(String.format("Error connecting to server at %s:%s %s", address, serverPort,
+						e.getMessage()));
+				sleepSeconds(numberOfAttempts);
+			} finally{
+				numberOfAttempts++;
+			}
 		}
+		return false;
+	}
+
+	private void sleepSeconds(int seconds) {
+		try {
+			Thread.sleep(seconds + 1000);
+		} catch (InterruptedException e1) {
+			Logger.println("Error trying to sleep connection thread");
+		}
+	}
+
+	private void weHaveConnection() {
+		connected = true;
+	}
+
+	private boolean keepTryingToConnect() {
+		return !connected && numberOfAttempts < MAX_NUMBER_OF_CONNECTION_ATTEMPTS;
 	}
 
 	@Override
@@ -80,5 +119,16 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 		initializeVariables();
 		connectAndStartThread();
 	}
-	
+
+	@Override
+	public void feed(Message message) {
+		inbox.add(message);
+	}
+
+	@Override
+	public void clientDisconnected(CommunicationIds commId) {
+		connected = false;
+		connectAndStartThread();
+	}
+
 }

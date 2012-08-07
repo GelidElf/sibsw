@@ -17,8 +17,8 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 	}
 
 	@Override
-	protected void consume(ATMasterInput currentInput) {
-		switch (currentInput) {
+	protected void consume(Message message) {
+		switch ((ATMasterInput)message.getInputType()) {
 		case START:
 			sendBroadCastMessage(CommunicationMessageType.START);
 			break;
@@ -38,12 +38,13 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 	}
 
 	protected void sendBroadCastMessage(CommunicationMessageType messageType) {
-		getCommunicationManager().sendMessage(new Message(messageType.name(), null, true, messageType, null));
+		getCommunicationManager().sendMessage(new Message(messageType.name(), CommunicationIds.BROADCAST, true, messageType, null));
 	}
 
 	@Override
-	protected void begin() {
+	protected void startCommand() {
 		getCommunicationManager().initialize();
+		this.start();
 	}
 
 	@Override
@@ -51,5 +52,5 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 		// TODO Auto-generated method stub
 		
 	}
-	
+
 }

@@ -143,7 +143,7 @@ public class ParallelPortManager {
 	 */
 	public synchronized void update() {
 		for (ParallelPortManagerObserver obs : _observers) {
-			obs.update(this);
+			obs.updateFromPortManager(this);
 		}
 	}
 

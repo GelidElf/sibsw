@@ -36,7 +36,7 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		// TODO Auto-generated method stub
 		
 	}

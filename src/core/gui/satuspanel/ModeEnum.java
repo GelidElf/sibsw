@@ -6,8 +6,8 @@ import javax.swing.ImageIcon;
 
 /**
  * Tipo de modo de funcionamiento del indicador de vista.
+ * 
  * @author gonzalo
- *
  */
 public enum ModeEnum {
 

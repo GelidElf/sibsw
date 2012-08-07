@@ -81,7 +81,7 @@ public class ATQualityStation extends Thread implements ParallelPortManagerObser
 	}
 
 	@Override
-	public void update(ParallelPortManager manager) {
+	public void updateFromPortManager(ParallelPortManager manager) {
 		// TODO Auto-generated method stub
 		
 	}

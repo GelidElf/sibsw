@@ -1,39 +1,63 @@
 package core.messages;
+import java.io.EOFException;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 
 import core.messages.enums.CommunicationIds;
 import core.utilities.log.Logger;
 
-public class ConnectionManager extends Thread{
+public class ConnectionManager extends Thread {
 
 	private Socket socket = null;
-	private ObjectOutputStream  _oos = null;
-	private ObjectInputStream  _ois = null;
+	private ObjectOutputStream _oos = null;
+	private ObjectInputStream _ois = null;
 	private Inbox inbox = null;
 	private CommunicationManager commManager = null;
 	private CommunicationIds owner = null;
-	
-	public ConnectionManager (Socket socket, CommunicationManager cm, Inbox inbox){
-		this.socket = socket;
-		this.owner = cm.getOwner();
-		createInputAndOutputStreamsFromSocket();
-		if (this.inbox == null)
-			this.inbox = new Inbox();
-		else
-			this.inbox = inbox;
-		commManager = cm;
-	}
-	
-	public ConnectionManager (Socket socket, CommunicationIds owner, Inbox inbox){
-		this.socket = socket;
-		this.owner = owner;
-		createInputAndOutputStreamsFromSocket();
-		this.inbox = inbox;
+	private CommunicationIds peer = null;
+	private int messagesToRead = 0;
+	private boolean keepRunning = true;
 
+	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox) {
+		super("ConnectionManagerThread");
+		this.socket = socket;
+		commManager = cm;
+		this.owner = cm.getOwner();
+		if (this.inbox == null) {
+			this.inbox = new Inbox();
+		} else {
+			this.inbox = inbox;
+		}
+		createInputAndOutputStreamsFromSocket();
+	}
+
+	private void identifyPeer() {
+		peer = readPeerFromSocket();
+	}
+
+	private CommunicationIds readPeerFromSocket() {
+		Object o;
+		try {
+			o = _ois.readObject();
+			if (o instanceof Message) {
+				System.out.println(o);
+				return ((Message) o).getOwner();
+			}
+		} catch (IOException e) {
+			if (e instanceof EOFException) {
+				Logger.println("Client has disconnected. Awaiting for reconnection");
+				commManager.clientDisconnected(getPeer());
+			} else {
+				e.printStackTrace();
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		};
+		return null;
 	}
 
 	private void createInputAndOutputStreamsFromSocket() {
@@ -41,72 +65,139 @@ public class ConnectionManager extends Thread{
 			_oos = new ObjectOutputStream(this.socket.getOutputStream());
 			_ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
-			System.out.println("Error creating input and output streams from socket: "+e.getMessage());
-			e.printStackTrace();
+			System.out.println("Error creating input and output streams from socket: " + e.getMessage());
+			commManager.clientDisconnected(getPeer());
 		}
 	}
-	
-	public void run (){
-		while (true){
-			Message message =readMessageFromStream(); 
-			trataMensajeRecibido(message);
+
+	public void run() {
+		while (true) {
+			if (keepRunning) {
+				Message message = readMessageFromStream();
+				trataMensajeRecibido(message);
+			}
 		}
 	}
 
 	private void trataMensajeRecibido(Message message) {
-		if (message.getDestination().equals(owner)){
-			Logger.println("RecibidoMensaje en: "+owner);
-			this.inbox.add(message);
+		if (message == null) {
+			return;
+		} else {
+			Logger.println("RecibidoMensaje en: " + owner);
+			if (message.getDestination() == null) {
+				this.inbox.add(message);
+				commManager.sendMessage(message);
+			} else {
+				if (message.isBroadcast()|| message.getDestination().equals(owner)) {
+					this.inbox.add(message);
+				} else {
+					Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
+					commManager.sendMessage(message);
+				}
+			}
 		}
-		else{
-			Logger.println(String.format("Reenviando mensaje ID:%s desde %s",message.getID(),owner));
-			commManager.sendMessage(message);
-		}
+
 	}
-	
-	public synchronized void writeMessage(Message message){
+
+
+	public synchronized void writeMessage(Message message) {
 		message.setOwner(owner);
 		try {
 			_oos.writeObject(message);
 			_oos.flush();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Logger.println("Error escribiendo el mensaje");
 		}
 	}
-	
+
 	/**
-	 * Special method for naming the Communication interface in the manager so that it can send thoguth the correct 
-	 * Comm object the message
+	 * Special method for naming the Communication interface in the manager so
+	 * that it can send thoguth the correct Comm object the message
 	 */
-	public synchronized CommunicationIds getPeer(){
-		return readMessageFromStream().getOwner();
+	public synchronized CommunicationIds getPeer() {
+		if (peer == null){
+			identifyPeer();
+		}
+		return peer;
 	}
-	
-	private Message readMessageFromStream(){
+
+	private Message readMessageFromStream() {
 		Object o;
 		try {
 			o = _ois.readObject();
-			if (o instanceof Message){
+			if (o instanceof Message) {
 				System.out.println(o);
-				return ((Message)o);
+				return ((Message) o);
 			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (e instanceof EOFException || e instanceof SocketException) {
+				Logger.println("Client has disconnected. Awaiting for reconnection");
+				commManager.clientDisconnected(getPeer());
+			} else {
+				e.printStackTrace();
+			}
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
-	public Inbox getInbox(){
+
+	public Inbox getInbox() {
 		return this.inbox;
 	}
-	
-	public Message readMessage() {
-		return this.inbox.getMessage();		
+
+	public Message readMessageFromInbox() {
+		try {
+			return this.inbox.getMessage();
+		} catch (InterruptedException e) {
+			Logger.println("Error leyendo mensaje: " + e.getMessage());
+			return null;
+		}
+	}
+
+	/**
+	 * @return the messagesToRead
+	 */
+	public int getMessagesToRead() {
+		return messagesToRead;
+	}
+
+	/**
+	 * @param messagesToRead
+	 *            the messagesToRead to set
+	 */
+	public void setMessagesToRead(int messagesToRead) {
+		this.messagesToRead = messagesToRead;
+	}
+
+	public void disable() {
+		keepRunning = false;
+	}
+
+	public void enable() {
+		keepRunning = true;
+	}
+
+	/**
+	 * @return the socket
+	 */
+	public Socket getSocket() {
+		return socket;
+	}
+
+	/**
+	 * @param socket
+	 *            the socket to set
+	 */
+	public void setSocket(Socket socket) {
+		this.socket = socket;
+	}
+
+	/**
+	 * @param peer the peer to set
+	 */
+	public void setPeer(CommunicationIds peer) {
+		this.peer = peer;
 	}
 
 }
