@@ -95,18 +95,16 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		try {
 			manageNewSocketReceived(future.get());
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
 	private void manageNewSocketReceived(Socket socket) {
-		ConnectionManager c = new ConnectionManager(socket,this, inbox);
+		ConnectionManager c = new ConnectionManager(socket,this, inbox, null);
 		CommunicationIds s = c.getPeer();
-		MasterModel.getInstance().setConnected(s,true);
+		MasterModel.getInstance().setModel(s,c.getCurrentModel());
 		connections.put(s, c);
 		System.out.println(String.format("%s connected",s));
 		c.enable();
@@ -115,7 +113,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 
 	public void clientDisconnected (CommunicationIds commId){
 		connections.get(commId).disable();
-		MasterModel.getInstance().setConnected(commId,false);
+		MasterModel.getInstance().setModel(commId,null);
 		//TODO: Must inform that the client was disconnected
 		reconnectClient(commId);
 	}
@@ -148,7 +146,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		Socket socket;
 		try {
 			socket = new Socket(address, serverPort);
-			connection=new ConnectionManager(socket,this,inbox);
+			connection=new ConnectionManager(socket,this,inbox, MasterModel.getInstance());
 			connection.writeMessage(new Message(owner+".CONNECT",null,false,null,null));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));

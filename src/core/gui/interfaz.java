@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -34,9 +36,7 @@ public class interfaz implements ModelListener{
 	
 	private JFrame frame;
 	private JComboBox masterComboBox;
-	private StatusPanel slave1StatusPanel;
-	private StatusPanel slave2StatusPanel;
-	private StatusPanel slave3StatusPanel;
+	private Map<CommunicationIds, StatusPanel> statusPanels;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -105,19 +105,23 @@ public class interfaz implements ModelListener{
 		masterComboBox.setBounds(96, 31, 70, 20);
 		panel.add(masterComboBox);
 
-		slave1StatusPanel = new StatusPanel();
+		statusPanels = new HashMap<CommunicationIds, StatusPanel>();
+		StatusPanel slave1StatusPanel = new StatusPanel();
 		slave1StatusPanel.setBounds(96, 62, 70, 20);
 		slave1StatusPanel.setVisible(true);
+		statusPanels.put(CommunicationIds.SLAVE1, slave1StatusPanel);
 		panel.add(slave1StatusPanel);
 
-		slave2StatusPanel = new StatusPanel();
+		StatusPanel slave2StatusPanel = new StatusPanel();
 		slave2StatusPanel.setBounds(96, 93, 70, 20);
 		slave2StatusPanel.setVisible(true);
+		statusPanels.put(CommunicationIds.SLAVE2, slave2StatusPanel);
 		panel.add(slave2StatusPanel);
 
-		slave3StatusPanel = new StatusPanel();
+		StatusPanel slave3StatusPanel = new StatusPanel();
 		slave3StatusPanel.setBounds(96, 124, 70, 20);
 		slave3StatusPanel.setVisible(true);
+		statusPanels.put(CommunicationIds.SLAVE3, slave3StatusPanel);
 		panel.add(slave3StatusPanel);
 
 		JLabel lblMaster = new JLabel("Master");
@@ -439,8 +443,9 @@ public class interfaz implements ModelListener{
 		setStatusPanelFor(CommunicationIds.SLAVE3);
 	}
 
-	private void setStatusPanelFor(CommunicationIds slave1) {
+	private void setStatusPanelFor(CommunicationIds commID) {
 		MasterModel model = MasterModel.getInstance();
-		slave1StatusPanel.setModo(model.getConnected().get(slave1)?model.getModel().get(slave1).getCurrentMode():ModeEnum.DESCONEXION);
+		statusPanels.get(commID).setModo(model.isConnected(commID)?model.getModel().get(commID).getCurrentMode():null);
 	}
+	
 }

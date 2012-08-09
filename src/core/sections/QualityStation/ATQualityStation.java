@@ -66,8 +66,8 @@ public class ATQualityStation extends Thread implements ParallelPortManagerObser
 	}*/
 
 	public void setupParametersFromMessage(Message mes) {
-		String activationTime = mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
-		String failurePercentage = mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
+		String activationTime = (String)mes.getAttributeValue(SlaveAutomaton3MessageFactory.ACTIVATION_TIME);
+		String failurePercentage = (String)mes.getAttributeValue(SlaveAutomaton3MessageFactory.FAILURE_PERCENTAGE);
 		try {
 			manager.setValueByName(QualityStationManager.ACTIVATION_TIME, Integer.parseInt(activationTime));
 			manager.setValueByName(QualityStationManager.FAILURE_PERCENTAGE, Integer.parseInt(failurePercentage));

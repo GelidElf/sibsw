@@ -132,7 +132,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		try {
-			manager.setValueByName(attribute.getName(), Integer.parseInt(attribute.getValue()));
+			manager.setValueByName(attribute.getName(), Integer.parseInt((String)attribute.getValue()));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParallelPortException e) {

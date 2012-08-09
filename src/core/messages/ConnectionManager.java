@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import core.messages.enums.CommunicationIds;
+import core.model.AutomataModel;
 import core.utilities.log.Logger;
 
 public class ConnectionManager extends Thread {
@@ -21,10 +22,12 @@ public class ConnectionManager extends Thread {
 	private CommunicationIds peer = null;
 	private int messagesToRead = 0;
 	private boolean keepRunning = true;
+	private AutomataModel currentModel;
 
-	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox) {
+	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox, AutomataModel currentModel) {
 		super("ConnectionManagerThread");
 		this.socket = socket;
+		this.currentModel = currentModel;
 		commManager = cm;
 		this.owner = cm.getOwner();
 		if (this.inbox == null) {
@@ -36,28 +39,12 @@ public class ConnectionManager extends Thread {
 	}
 
 	private void identifyPeer() {
-		peer = readPeerFromSocket();
-	}
-
-	private CommunicationIds readPeerFromSocket() {
-		Object o;
-		try {
-			o = _ois.readObject();
-			if (o instanceof Message) {
-				System.out.println(o);
-				return ((Message) o).getOwner();
-			}
-		} catch (IOException e) {
-			if (e instanceof EOFException) {
-				Logger.println("Client has disconnected. Awaiting for reconnection");
-				commManager.clientDisconnected(getPeer());
-			} else {
-				e.printStackTrace();
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		};
-		return null;
+		Message firstMessage = readMessageFromStream();
+		peer = firstMessage.getOwner();
+		if (firstMessage.getCurrentModel() != null){
+			currentModel = firstMessage.getCurrentModel();
+		}
+		trataMensajeRecibido(firstMessage);
 	}
 
 	private void createInputAndOutputStreamsFromSocket() {
@@ -71,11 +58,9 @@ public class ConnectionManager extends Thread {
 	}
 
 	public void run() {
-		while (true) {
-			if (keepRunning) {
-				Message message = readMessageFromStream();
-				trataMensajeRecibido(message);
-			}
+		while (keepRunning) {
+			Message message = readMessageFromStream();
+			trataMensajeRecibido(message);
 		}
 	}
 
@@ -84,11 +69,11 @@ public class ConnectionManager extends Thread {
 			return;
 		} else {
 			Logger.println("RecibidoMensaje en: " + owner);
-			if (message.getDestination() == null) {
+			if (message.isBroadcast()) {
 				this.inbox.add(message);
 				commManager.sendMessage(message);
 			} else {
-				if (message.isBroadcast()|| message.getDestination().equals(owner)) {
+				if (message.getDestination().equals(owner)) {
 					this.inbox.add(message);
 				} else {
 					Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
@@ -102,6 +87,7 @@ public class ConnectionManager extends Thread {
 
 	public synchronized void writeMessage(Message message) {
 		message.setOwner(owner);
+		message.setCurrentModel(currentModel);
 		try {
 			_oos.writeObject(message);
 			_oos.flush();
@@ -126,7 +112,6 @@ public class ConnectionManager extends Thread {
 		try {
 			o = _ois.readObject();
 			if (o instanceof Message) {
-				System.out.println(o);
 				return ((Message) o);
 			}
 		} catch (IOException e) {
@@ -198,6 +183,20 @@ public class ConnectionManager extends Thread {
 	 */
 	public void setPeer(CommunicationIds peer) {
 		this.peer = peer;
+	}
+
+	/**
+	 * @return the currentModel
+	 */
+	public AutomataModel getCurrentModel() {
+		return currentModel;
+	}
+
+	/**
+	 * @param currentModel the currentModel to set
+	 */
+	public void setCurrentModel(AutomataModel currentModel) {
+		this.currentModel = currentModel;
 	}
 
 }

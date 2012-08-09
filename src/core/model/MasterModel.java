@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 
-public class MasterModel {
+public class MasterModel implements AutomataModel{
 
+	private static final long serialVersionUID = -5649471149764787709L;
 	private static List<ModelListener> modelListeners = new ArrayList<ModelListener>(); 
 	private static MasterModel instance;
 	
@@ -36,21 +38,38 @@ public class MasterModel {
 	}
 	
 	private Map<CommunicationIds, Boolean> connected = new HashMap<CommunicationIds, Boolean>();
-	public void setConnected(CommunicationIds id, Boolean value){
-		connected.put(id,value);
-		notifyObservers();
-	}
-	public Map<CommunicationIds, Boolean> getConnected(){
-		return connected;
+	public boolean isConnected (CommunicationIds id){
+		if (connected.get(id) == null){
+			return false;
+		}else{
+			return connected.get(id);
+		}
 	}
 	
 	private Map<CommunicationIds, AutomataModel> models = new HashMap<CommunicationIds, AutomataModel>();
+	private ModeEnum currentMode;
 	public void setModel(CommunicationIds id, AutomataModel model){
-		models.put(id, model);
+		if (model != null){
+			connected.put(id, true);
+			models.put(id, model);
+		}else{
+			connected.put(id, false);
+		}
 		notifyObservers();
 	}
 	public Map<CommunicationIds, AutomataModel> getModel(){
 		return models;
+	}
+
+	@Override
+	public ModeEnum getCurrentMode() {
+		return currentMode;
+	}
+
+	@Override
+	public void setCurrentMode(ModeEnum currentMode) {
+		this.currentMode = currentMode;
+		notifyObservers();
 	}
 	
 	
