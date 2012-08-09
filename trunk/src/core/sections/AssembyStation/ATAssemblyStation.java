@@ -82,7 +82,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	protected void changeConfigurationParameter(Attribute attribute) {
 		try {
 			if (attribute.getName().equals(AssemblyStationManager.ASSEMBLING_TIME)){
-				manager.setValueByName(AssemblyStationManager.ASSEMBLING_TIME, Integer.parseInt(attribute.getValue()));
+				manager.setValueByName(AssemblyStationManager.ASSEMBLING_TIME, Integer.parseInt((String)attribute.getValue()));
 			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block

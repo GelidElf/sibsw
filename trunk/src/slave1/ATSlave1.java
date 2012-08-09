@@ -27,7 +27,7 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 
 	public ATSlave1(Configuration conf){
-		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
+		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf,new Slave1Model()));
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10,2);
 		gearBelt = new ATConveyorBelt(this, gearManager);

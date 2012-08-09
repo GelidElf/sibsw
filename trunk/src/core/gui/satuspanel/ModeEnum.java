@@ -15,8 +15,7 @@ public enum ModeEnum {
 	RUNNING ("Corriendo", Color.green, true),
 	ESTOP ("Parada de emergencia", Color.red, true),
 	NSTOP ("Parada normal", Color.red, false),
-	IDLE ("Esperando",Color.blue, false),
-	DESCONEXION ("Se ha desconectado el elemento", Color.black,false);
+	IDLE ("Esperando",Color.blue, false);
 	
 	private String literal;
 	private Color color;

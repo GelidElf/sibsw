@@ -5,6 +5,7 @@ import java.net.Socket;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
+import core.model.AutomataModel;
 import core.utilities.log.Logger;
 
 public class SingleInboxCommunicationManager implements CommunicationManager {
@@ -19,10 +20,12 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	private Inbox inbox;
 	private boolean connected = false;
 	private int numberOfAttempts = 0;
+	private AutomataModel currentModel;
 
-	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf) {
+	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf, AutomataModel currentModel) {
 		this.owner = owner;
 		this.conf = conf;
+		this.currentModel = currentModel;
 	}
 
 	@Override
@@ -73,7 +76,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 				socket = new Socket(address, serverPort);
 				weHaveConnection();
 				socket.setTcpNoDelay(true);
-				connection = new ConnectionManager(socket, this,inbox);
+				connection = new ConnectionManager(socket, this,inbox, currentModel);
 				connection.enable();
 				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, null, null));
 				return true;
@@ -129,6 +132,20 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	public void clientDisconnected(CommunicationIds commId) {
 		connected = false;
 		connectAndStartThread();
+	}
+
+	/**
+	 * @return the currentModel
+	 */
+	public AutomataModel getCurrentModel() {
+		return currentModel;
+	}
+
+	/**
+	 * @param currentModel the currentModel to set
+	 */
+	public void setCurrentModel(AutomataModel currentModel) {
+		this.currentModel = currentModel;
 	}
 
 }

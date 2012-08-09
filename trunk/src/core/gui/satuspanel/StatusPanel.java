@@ -39,21 +39,28 @@ public class StatusPanel extends JPanel implements ActionListener {
 
 	public void setModo(ModeEnum modo) {
 		this.modo = modo;
-		setBackground(modo.getColor());
-		setToolTipText(modo.getLiteral());
+		if (modo != null){
+			setBackground(modo.getColor());
+			setToolTipText(modo.getLiteral());
+		}else{
+			setBackground(Color.BLACK);
+			setToolTipText("Elemento desconectado");
+		}
 		validate();
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (modo != null){
-			if (modo.isBlink()){
+		if (modo == null){
+			this.setBackground(Color.BLACK);
+		}else {
+			if (!modo.isBlink()){
+				this.setBackground(modo.getColor());
+			}else{
 				Color currentColor =this.blinkingOn?modo.getColor():Color.BLACK; 
 				this.setBackground(currentColor);
 				this.blinkingOn = !this.blinkingOn;
 				timer.start();
-			}else{
-				this.setBackground(Color.BLACK);
 			}
 		}
 	}

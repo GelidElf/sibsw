@@ -10,7 +10,7 @@ public class Slave1Model implements AutomataModel{
 	private ModeEnum currentMode;
 	
 	public Slave1Model() {
-		currentMode = ModeEnum.DESCONEXION;
+		currentMode = ModeEnum.READY;
 	}
 	
 	@Override

@@ -5,24 +5,18 @@ import java.util.ArrayList;
 
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
+import core.model.AutomataModel;
 
 public class Message implements Serializable {
 
 	private CommunicationMessageType type = null;
 	private static final long serialVersionUID = -8585464412008833912L;
+	private static final String MODEL_KEY = "MODEL_KEY";
 	private Enum<?> inputType;
 	private ArrayList<Attribute> contents = null;
 	private String messageId = null;
 	private CommunicationIds destination = null;
 	private CommunicationIds owner = null;
-	
-	public CommunicationIds getDestination() {
-		return destination;
-	}
-
-	public void setDestination(CommunicationIds destination) {
-		this.destination = destination;
-	}
 
 	private Boolean urgent = null;
 
@@ -40,7 +34,7 @@ public class Message implements Serializable {
 		contents.add(att);
 	}
 	
-	public void addAttribute (String name, String value){
+	public void addAttribute (String name, Object value){
 		if (contents == null)
 			contents = new ArrayList<Attribute>();
 		contents.add(new Attribute(name, value));	
@@ -51,6 +45,14 @@ public class Message implements Serializable {
 		
 	}
 	
+	public CommunicationIds getDestination() {
+		return destination;
+	}
+
+	public void setDestination(CommunicationIds destination) {
+		this.destination = destination;
+	}
+	
 	public CommunicationIds getOwner(){
 		return owner;
 	}
@@ -59,7 +61,7 @@ public class Message implements Serializable {
 		return contents.get(i);
 	}
 	
-	public String getAttributeValue(String key){
+	public Object getAttributeValue(String key){
 		for (Attribute att:contents){
 			if (att.getName().equals(key))
 				return att.getValue();
@@ -117,6 +119,20 @@ public class Message implements Serializable {
 	
 	public boolean isBroadcast(){
 		return this.destination == null || this.destination == CommunicationIds.BROADCAST;
+	}
+
+	/**
+	 * @return the currentModel
+	 */
+	public AutomataModel getCurrentModel() {
+		return (AutomataModel) getAttribute(MODEL_KEY).getValue();
+	}
+
+	/**
+	 * @param currentModel the currentModel to set
+	 */
+	public void setCurrentModel(AutomataModel currentModel) {
+		addAttribute(MODEL_KEY, currentModel);
 	}
 	
 }
