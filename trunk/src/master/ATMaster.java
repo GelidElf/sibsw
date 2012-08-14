@@ -7,32 +7,36 @@ import core.messages.MultipleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
+import core.model.AutomataModel;
+import core.model.MasterModel;
 
 public class ATMaster extends AutomataContainer<ATMasterInput> {
 
 	private static final int NUMBEROFINBOXES = 1;
 
 	public ATMaster(Configuration conf) {
-		super(null,new MultipleInboxCommunicationManager(CommunicationIds.MASTER,conf,NUMBEROFINBOXES));
+		super(null, MasterModel.getInstance(),new MultipleInboxCommunicationManager(CommunicationIds.MASTER,conf,NUMBEROFINBOXES));
 	}
 
 	@Override
 	protected void consume(Message message) {
-		switch ((ATMasterInput)message.getInputType()) {
-		case START:
-			sendBroadCastMessage(CommunicationMessageType.START);
-			break;
-		case NSTOP:
-			sendBroadCastMessage(CommunicationMessageType.NSTOP);
-			break;
-		case ESTOP:
-			sendBroadCastMessage(CommunicationMessageType.ESTOP);
-			break;
-		case RESUME:
-			sendBroadCastMessage(CommunicationMessageType.RESUME);
-			break;
-		default:
-			break;
+		if (message.getType() == CommunicationMessageType.COMMAND){
+			switch ((ATMasterInput)message.getInputType()) {
+			case START:
+				sendBroadCastMessage(CommunicationMessageType.START);
+				break;
+			case NSTOP:
+				sendBroadCastMessage(CommunicationMessageType.NSTOP);
+				break;
+			case ESTOP:
+				sendBroadCastMessage(CommunicationMessageType.ESTOP);
+				break;
+			case RESUME:
+				sendBroadCastMessage(CommunicationMessageType.RESUME);
+				break;
+			default:
+				break;
+			}
 		}
 		
 	}
@@ -51,6 +55,11 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 	protected void changeConfigurationParameter(Attribute attribute) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model) {
+		MasterModel.getInstance().setModel(commId, model);
 	}
 
 }

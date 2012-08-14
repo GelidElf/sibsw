@@ -102,9 +102,8 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	}
 	
 	private void manageNewSocketReceived(Socket socket) {
-		ConnectionManager c = new ConnectionManager(socket,this, inbox, null);
+		ConnectionManager c = new ConnectionManager(socket,this, inbox);
 		CommunicationIds s = c.getPeer();
-		MasterModel.getInstance().setModel(s,c.getCurrentModel());
 		connections.put(s, c);
 		System.out.println(String.format("%s connected",s));
 		c.enable();
@@ -146,7 +145,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 		Socket socket;
 		try {
 			socket = new Socket(address, serverPort);
-			connection=new ConnectionManager(socket,this,inbox, MasterModel.getInstance());
+			connection=new ConnectionManager(socket,this,inbox);
 			connection.writeMessage(new Message(owner+".CONNECT",null,false,null,null));
 		} catch (Exception e) {
 			System.out.println(String.format("Error connecting to server at %s:%s %s",address,port,e.getMessage()));

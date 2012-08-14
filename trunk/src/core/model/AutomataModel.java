@@ -6,7 +6,9 @@ import core.gui.satuspanel.ModeEnum;
 
 public interface AutomataModel extends Serializable{
 
-	public ModeEnum getCurrentMode();
-	public void setCurrentMode(ModeEnum currentMode);
+	ModeEnum getCurrentMode();
+	void setCurrentMode(ModeEnum currentMode);
+	void addListener(ModelListener listener);
+	void notifyObservers();
 	
 }

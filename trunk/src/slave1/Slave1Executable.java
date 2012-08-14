@@ -7,7 +7,7 @@ public class Slave1Executable extends RunnableApplication {
 	public static void main (String []args){
 		initialize(args,"slave1.ini");
 
-		ATSlave1 slave1 = new ATSlave1(configuration);
+		Slave1Automata slave1 = new Slave1Automata(configuration);
 		slave1.startCommand();
 	}
 

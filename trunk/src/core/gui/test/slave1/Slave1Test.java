@@ -13,13 +13,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import slave1.ATSlave1;
+import slave1.Slave1Automata;
 import slave1.Slave1Input;
 
 public class Slave1Test extends JFrame {
 
 	private static final long serialVersionUID = -2412052089713542223L;
-	private static ATSlave1 slave1;
+	private static Slave1Automata slave1;
 
 	public static void main(String[] args) {
 		new Slave1Test();
@@ -71,7 +71,7 @@ public class Slave1Test extends JFrame {
 	}
 
 	public void createModel() {
-		slave1 = new ATSlave1(null);
+		slave1 = new Slave1Automata(null);
 	}
 
 	private JButton creaBoton(String title, Slave1Input input) {
@@ -106,11 +106,11 @@ public class Slave1Test extends JFrame {
 	
 	private class AlimentaAutomaticoActionListener implements ItemListener{
 
-		private ATSlave1 slave1;
+		private Slave1Automata slave1;
 		private Slave1Input cierto;
 		private Slave1Input falso;
 		
-		public AlimentaAutomaticoActionListener(ATSlave1 slave1,Slave1Input cierto,Slave1Input falso){
+		public AlimentaAutomaticoActionListener(Slave1Automata slave1,Slave1Input cierto,Slave1Input falso){
 			this.slave1 = slave1; 
 			this.cierto = cierto;
 			this.falso = falso;
@@ -130,10 +130,10 @@ public class Slave1Test extends JFrame {
 	
 	private class AlimentaActionListener implements ActionListener {
 
-		private ATSlave1 slave1;
+		private Slave1Automata slave1;
 		private Slave1Input input;
 
-		public AlimentaActionListener(ATSlave1 manager,Slave1Input input) {
+		public AlimentaActionListener(Slave1Automata manager,Slave1Input input) {
 			this.slave1 = manager;
 			this.input = input;
 		}

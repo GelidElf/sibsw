@@ -4,6 +4,7 @@ import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
+import core.model.DummyAutomataModel;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
@@ -19,7 +20,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	private ConveyorBeltRandomFiller fillerThread = null;
 
 	public ATConveyorBelt(AutomataContainer<?> father, ConveyorBeltManager manager) {
-		super(father);
+		super(father,new DummyAutomataModel());
 		this.manager = manager;	
 		manager.registerObserver(this);
 		if (currentState == null){

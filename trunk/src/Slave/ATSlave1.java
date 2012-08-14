@@ -10,6 +10,7 @@ import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
+import core.model.DummyAutomataModel;
 import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.robot1.Robot;
@@ -28,7 +29,7 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 
 	public ATSlave1(Configuration conf){
-		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
+		super(null,new DummyAutomataModel(),new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
 		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}
 

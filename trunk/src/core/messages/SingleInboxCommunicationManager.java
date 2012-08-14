@@ -6,9 +6,10 @@ import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataModel;
+import core.model.ModelListener;
 import core.utilities.log.Logger;
 
-public class SingleInboxCommunicationManager implements CommunicationManager {
+public class SingleInboxCommunicationManager implements CommunicationManager, ModelListener{
 
 	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;
 	private CommunicationIds owner;
@@ -20,12 +21,10 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	private Inbox inbox;
 	private boolean connected = false;
 	private int numberOfAttempts = 0;
-	private AutomataModel currentModel;
 
-	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf, AutomataModel currentModel) {
+	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf) {
 		this.owner = owner;
 		this.conf = conf;
-		this.currentModel = currentModel;
 	}
 
 	@Override
@@ -51,7 +50,6 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	private void connectAndStartThread() {
 		while (!connected){
 			if (tryToConnectToServer()){
-				sendPeerInformation();
 				connection.setPeer(CommunicationIds.MASTER);
 				connection.start();
 				Logger.println("Connection achieved");
@@ -63,11 +61,6 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 		}
 	}
 
-	private void sendPeerInformation() {
-		Message message = new Message("IDENTIFICATION", CommunicationIds.MASTER, true, CommunicationMessageType.HANDSHAKE, null);
-		sendMessage(message);
-	}
-
 	private boolean tryToConnectToServer() {
 		Logger.println("Trying to connect to server");
 		numberOfAttempts = 0;
@@ -76,9 +69,9 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 				socket = new Socket(address, serverPort);
 				weHaveConnection();
 				socket.setTcpNoDelay(true);
-				connection = new ConnectionManager(socket, this,inbox, currentModel);
+				connection = new ConnectionManager(socket, this,inbox);
 				connection.enable();
-				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, null, null));
+				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, CommunicationMessageType.HANDSHAKE, null));
 				return true;
 			} catch (Exception e) {
 				Logger.println(String.format("Error connecting to server at %s:%s %s", address, serverPort,
@@ -134,18 +127,9 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 		connectAndStartThread();
 	}
 
-	/**
-	 * @return the currentModel
-	 */
-	public AutomataModel getCurrentModel() {
-		return currentModel;
-	}
-
-	/**
-	 * @param currentModel the currentModel to set
-	 */
-	public void setCurrentModel(AutomataModel currentModel) {
-		this.currentModel = currentModel;
+	@Override
+	public void update() {
+		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
 	}
 
 }

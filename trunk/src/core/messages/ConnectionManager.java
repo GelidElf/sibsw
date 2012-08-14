@@ -22,15 +22,13 @@ public class ConnectionManager extends Thread {
 	private CommunicationIds peer = null;
 	private int messagesToRead = 0;
 	private boolean keepRunning = true;
-	private AutomataModel currentModel;
 
-	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox, AutomataModel currentModel) {
+	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox) {
 		super("ConnectionManagerThread");
 		this.socket = socket;
-		this.currentModel = currentModel;
 		commManager = cm;
 		this.owner = cm.getOwner();
-		if (this.inbox == null) {
+		if (inbox == null) {
 			this.inbox = new Inbox();
 		} else {
 			this.inbox = inbox;
@@ -41,9 +39,6 @@ public class ConnectionManager extends Thread {
 	private void identifyPeer() {
 		Message firstMessage = readMessageFromStream();
 		peer = firstMessage.getOwner();
-		if (firstMessage.getCurrentModel() != null){
-			currentModel = firstMessage.getCurrentModel();
-		}
 		trataMensajeRecibido(firstMessage);
 	}
 
@@ -69,25 +64,33 @@ public class ConnectionManager extends Thread {
 			return;
 		} else {
 			Logger.println("RecibidoMensaje en: " + owner);
-			if (message.isBroadcast()) {
+			if (somosDestinatariosDelMensaje(message)){
 				this.inbox.add(message);
-				commManager.sendMessage(message);
-			} else {
-				if (message.getDestination().equals(owner)) {
-					this.inbox.add(message);
-				} else {
-					Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
-					commManager.sendMessage(message);
+
+			}else {
+				if (somosElMaster()){
+					reenviamos(message);
 				}
 			}
 		}
 
 	}
 
+	private void reenviamos(Message message) {
+		Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
+		commManager.sendMessage(message);
+	}
+
+	private boolean somosElMaster() {
+		return owner == CommunicationIds.MASTER;
+	}
+
+	private boolean somosDestinatariosDelMensaje(Message message) {
+		return message.isBroadcast() || message.getDestination() == owner;
+	}
 
 	public synchronized void writeMessage(Message message) {
 		message.setOwner(owner);
-		message.setCurrentModel(currentModel);
 		try {
 			_oos.writeObject(message);
 			_oos.flush();
@@ -183,20 +186,6 @@ public class ConnectionManager extends Thread {
 	 */
 	public void setPeer(CommunicationIds peer) {
 		this.peer = peer;
-	}
-
-	/**
-	 * @return the currentModel
-	 */
-	public AutomataModel getCurrentModel() {
-		return currentModel;
-	}
-
-	/**
-	 * @param currentModel the currentModel to set
-	 */
-	public void setCurrentModel(AutomataModel currentModel) {
-		this.currentModel = currentModel;
 	}
 
 }
