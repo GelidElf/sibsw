@@ -6,6 +6,7 @@ import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
+import core.model.DummyAutomataModel;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.QualityStation.ATQualityStation;
 
@@ -17,7 +18,7 @@ public class ATslave3 extends AutomataContainer<Slave3Input> {
 	private Message messageToSend;
 	
 	public ATslave3(Configuration conf){
-		super(null, new SingleInboxCommunicationManager(CommunicationIds.SLAVE3,conf));
+		super(null, new DummyAutomataModel(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3,conf));
 //		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
 	}	
 	

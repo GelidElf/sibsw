@@ -76,7 +76,7 @@ public class interfaz implements ModelListener{
 	public interfaz(ATMaster master) {
 		this.master = master;
 		initialize();
-		MasterModel.addListener(this);
+		MasterModel.getInstance().addListener(this);
 		update();
 	}
 

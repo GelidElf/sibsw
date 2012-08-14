@@ -11,8 +11,8 @@ import core.messages.enums.CommunicationIds;
 public class MasterModel implements AutomataModel{
 
 	private static final long serialVersionUID = -5649471149764787709L;
-	private static List<ModelListener> modelListeners = new ArrayList<ModelListener>(); 
 	private static MasterModel instance;
+	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>(); 
 	
 	public static synchronized MasterModel getInstance(){
 		if (instance == null){
@@ -21,7 +21,7 @@ public class MasterModel implements AutomataModel{
 		return instance;
 	}
 	
-	public static void addListener (ModelListener listener){
+	public void addListener (ModelListener listener){
 		modelListeners.add(listener);
 	}
 	

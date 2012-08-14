@@ -2,10 +2,12 @@ package slave1;
 
 
 import core.aplication.Configuration;
+import core.gui.satuspanel.ModeEnum;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.AssembyStation.AssemblyStationManager;
@@ -13,7 +15,7 @@ import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
 
-public class ATSlave1 extends AutomataContainer<Slave1Input>{
+public class Slave1Automata extends AutomataContainer<Slave1Input>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -26,8 +28,8 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 	}
 
 
-	public ATSlave1(Configuration conf){
-		super(null,new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf,new Slave1Model()));
+	public Slave1Automata(Configuration conf){
+		super(null,new Slave1Model(),new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10,2);
 		gearBelt = new ATConveyorBelt(this, gearManager);
@@ -38,52 +40,6 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 		assemblyManager.configure(10);
 		assemblyStation = new ATAssemblyStation(this, assemblyManager);
 	}
-
-	//	public ATSlave1(){
-	//		System.out.println("lanzo simulación en robot");
-	//		/* Iniciamos robot*/
-	//		robot = new Robot();
-	//
-	//		assemblyStation = new AssemblyStation();
-	//		assemblyStation.setEmpty(true);
-	//		assemblyStation.setGearNeeded(true);
-	//		assemblyStation.setAxisNeeded(true);
-	//		assemblyStation.start();
-	//
-	//		ParallelPortState state = new ParallelPortState();
-	//		gearBelt = new ATConveyorBelt(this,new ConveyorBeltManager());
-	//		gearBelt.getManager().setState(state);
-	//
-	//
-	//		ParallelPortState state2 = new ParallelPortState();
-	//		axisBelt = new ATConveyorBelt(this,new ConveyorBeltManager());
-	//		axisBelt.getManager().setState(state2);
-	//		axisBelt.start();
-	//
-	//	}
-
-
-	/*
-	 * Recibir config del buzón,
-	 */
-	/*@Override
-	public void run(){
-		setInitialSettings("Mensaje(s) leido del buzón con los parámetros");
-		gearBelt.start();
-		robot.start();
-		setCurrentState(new Idle());
-		while(true){
-			currentState.execute(this);
-			try {
-				sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-
-	}*/
 
 	public void setInitialSettings(String settings){
 
@@ -136,19 +92,38 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 
 	@Override
 	protected void consume(Message message) {
-		switch ((Slave1Input)message.getInputType()) {
-		case START:
-			currentState.execute((Slave1Input)message.getInputType());
-			break;
-
-		case EMPTY_TRANSFER_CB:
-			
-			break;
-			
-		default:
-			break;
+		reaccionaPorTipoDeMensaje(message);
+		if (debeReaccionaPorTipoEntrada(message)){
+			switch ((Slave1Input)message.getInputType()) {
+			case START:
+				currentState.execute((Slave1Input)message.getInputType());
+				break;
+	
+			case EMPTY_TRANSFER_CB:
+				
+				break;
+				
+			default:
+				break;
+			}
 		}
 		
+	}
+
+	private void reaccionaPorTipoDeMensaje(Message message) {
+		switch(message.getType()) { 
+			case START:
+				model.setCurrentMode(ModeEnum.RUNNING);
+				break;
+			case NSTOP:
+				model.setCurrentMode(ModeEnum.NSTOP);
+				break;
+		}
+		
+	}
+
+	private boolean debeReaccionaPorTipoEntrada(Message message) {
+		return message.getType() == CommunicationMessageType.COMMAND;
 	}
 
 
@@ -159,16 +134,10 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 		start();
 	}
 
-
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		// TODO Auto-generated method stub
 		
 	}
-
-	//	public static void main (String args[]){
-	//		ATSlave1 slave = new ATSlave1();
-	//		System.out.println("ARRRRRRRANCO!");
-	//		slave.start();
-	//	}
+	
 }

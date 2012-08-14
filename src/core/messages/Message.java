@@ -62,19 +62,24 @@ public class Message implements Serializable {
 	}
 	
 	public Object getAttributeValue(String key){
-		for (Attribute att:contents){
-			if (att.getName().equals(key))
-				return att.getValue();
+		Attribute attribute = getAttribute(key);
+		if (attribute == null){
+			return null;
+		}else{
+			return attribute.getValue();
 		}
-		return null;
 	}
 	
 	public Attribute getAttribute (String key){
-		for (Attribute att:contents){
-			if (att.getName().equals(key))
-				return att;
+		if (contents == null){
+			return null;
+		}else{
+			for (Attribute att:contents){
+				if (att.getName().equals(key))
+					return att;
+			}
+			return null;
 		}
-		return null;
 		
 	}
 	
@@ -125,7 +130,7 @@ public class Message implements Serializable {
 	 * @return the currentModel
 	 */
 	public AutomataModel getCurrentModel() {
-		return (AutomataModel) getAttribute(MODEL_KEY).getValue();
+		return (AutomataModel) getAttributeValue(MODEL_KEY);
 	}
 
 	/**

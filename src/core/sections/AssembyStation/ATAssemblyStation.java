@@ -2,9 +2,9 @@ package core.sections.AssembyStation;
 
 import core.messages.Attribute;
 import core.messages.Message;
-import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
+import core.model.DummyAutomataModel;
 import core.sections.AssembyStation.States.AutomataStateAssemblyStation;
 import core.sections.AssembyStation.States.Idle;
 import core.sections.ParallelPort.ParallelPortManager;
@@ -18,7 +18,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	private AutomataStateAssemblyStation currentState;
 	
 	public ATAssemblyStation(AutomataContainer<?> father, AssemblyStationManager manager) {
-		super(father);
+		super(father, new DummyAutomataModel());
 		this.manager = manager;	
 		manager.registerObserver(this);
 		currentState = AutomataStateAssemblyStation.createState(Idle.class, null);

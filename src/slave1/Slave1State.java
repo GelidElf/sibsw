@@ -1,6 +1,5 @@
 package slave1;
 
-import core.model.AutomataContainer;
 import core.model.State;
 
 public class Slave1State implements State<Slave1Input> {
@@ -36,9 +35,9 @@ public class Slave1State implements State<Slave1Input> {
 	}
 	
 	private states currentState;
-	private ATSlave1 slave1;
+	private Slave1Automata slave1;
 	
-	public Slave1State(ATSlave1 slave1) {
+	public Slave1State(Slave1Automata slave1) {
 		this.slave1 = slave1;
 		currentState = states.STARTED;
 	}
