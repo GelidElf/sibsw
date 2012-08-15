@@ -20,31 +20,33 @@ public class Message implements Serializable {
 
 	private Boolean urgent = null;
 
-	public Message(String messageID, CommunicationIds destination, boolean isUrgent, CommunicationMessageType type, Enum<?> inputType){
+	public Message(String messageID, CommunicationIds destination, boolean isUrgent, CommunicationMessageType type, Enum<?> inputType) {
 		this.messageId = messageID;
 		this.destination = destination;
 		this.urgent = isUrgent;
 		this.inputType = inputType;
 		this.type = type;
 	}
-	
-	public void addAttribute(Attribute att){
-		if (contents == null)
+
+	public void addAttribute(Attribute att) {
+		if (contents == null) {
 			contents = new ArrayList<Attribute>();
+		}
 		contents.add(att);
 	}
-	
-	public void addAttribute (String name, Object value){
-		if (contents == null)
+
+	public void addAttribute(String name, Object value) {
+		if (contents == null) {
 			contents = new ArrayList<Attribute>();
-		contents.add(new Attribute(name, value));	
+		}
+		contents.add(new Attribute(name, value));
 	}
-	
-	public String getID(){
+
+	public String getID() {
 		return messageId;
-		
+
 	}
-	
+
 	public CommunicationIds getDestination() {
 		return destination;
 	}
@@ -52,51 +54,52 @@ public class Message implements Serializable {
 	public void setDestination(CommunicationIds destination) {
 		this.destination = destination;
 	}
-	
-	public CommunicationIds getOwner(){
+
+	public CommunicationIds getOwner() {
 		return owner;
 	}
-	
-	public Attribute getAttribute(int i){
+
+	public Attribute getAttribute(int i) {
 		return contents.get(i);
 	}
-	
-	public Object getAttributeValue(String key){
+
+	public Object getAttributeValue(String key) {
 		Attribute attribute = getAttribute(key);
-		if (attribute == null){
+		if (attribute == null) {
 			return null;
-		}else{
+		} else {
 			return attribute.getValue();
 		}
 	}
-	
-	public Attribute getAttribute (String key){
-		if (contents == null){
+
+	public Attribute getAttribute(String key) {
+		if (contents == null) {
 			return null;
-		}else{
-			for (Attribute att:contents){
-				if (att.getName().equals(key))
+		} else {
+			for (Attribute att : contents) {
+				if (att.getName().equals(key)) {
 					return att;
+				}
 			}
 			return null;
 		}
-		
+
 	}
-	
-	public Boolean isUrgent(){
+
+	public Boolean isUrgent() {
 		return urgent;
 	}
-	
-	public void setUrgent(){
+
+	public void setUrgent() {
 		urgent = true;
 	}
-	
-	public void unsetUrgent(){
+
+	public void unsetUrgent() {
 		urgent = false;
 	}
 
 	public ArrayList<Attribute> getAttributes() {
-		return contents;		
+		return contents;
 	}
 
 	public Enum<?> getInputType() {
@@ -121,9 +124,9 @@ public class Message implements Serializable {
 	public void setOwner(CommunicationIds owner) {
 		this.owner = owner;
 	}
-	
-	public boolean isBroadcast(){
-		return this.destination == null || this.destination == CommunicationIds.BROADCAST;
+
+	public boolean isBroadcast() {
+		return (this.destination == null) || (this.destination == CommunicationIds.BROADCAST);
 	}
 
 	/**
@@ -139,5 +142,17 @@ public class Message implements Serializable {
 	public void setCurrentModel(AutomataModel currentModel) {
 		addAttribute(MODEL_KEY, currentModel);
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(super.toString());
+		builder.append(" ID: " + messageId);
+		builder.append(" ORG: " + owner);
+		builder.append(" DST: " + destination);
+		builder.append(" Urgent: " + urgent);
+		builder.append(" Type: " + type);
+		builder.append(" InputType: " + inputType);
+		return builder.toString();
+	}
 }
