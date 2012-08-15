@@ -8,7 +8,7 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
-public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
+public abstract class AutomataContainer<T extends Enum<T>> extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
@@ -41,7 +41,7 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 	public void run() {
 		sendPeerInformation(); //TODO: Comprobar este cambio!
 		super.run();
-		while (true){
+		while (true) {
 			try {
 				Message message = commManager.getInbox().getMessage();
 				actualizarEstadoConModeloRemoto(message);
@@ -58,10 +58,10 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 		message.setCurrentModel(model);
 		sendMessage(message);
 	}
-	
+
 	private void actualizarEstadoConModeloRemoto(Message message) {
-		if (mensajeConModeloYDebemosActualizarConElCambio(message)){
-//			model = message.getCurrentModel();
+		if (mensajeConModeloYDebemosActualizarConElCambio(message)) {
+			//			model = message.getCurrentModel();
 			updateWithModelFromMessage(message.getOwner(), message.getCurrentModel());
 		}
 	}
@@ -74,7 +74,7 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 	private boolean somosElMaster() {
 		return commManager.getOwner() == CommunicationIds.MASTER;
 	}
-	
+
 	protected abstract void consume(Message currentMessage);
 
 	protected abstract void startCommand();
@@ -86,8 +86,9 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 	 * @param commId 
 	 * @param model
 	 */
-	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model){}
-	
+	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model) {
+	}
+
 	public void sendMessage(Message message) {
 		message.setCurrentModel(model);
 		commManager.sendMessage(message);
@@ -98,7 +99,7 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread{
 	}
 
 	protected Message createDummyMessageForInput(T input, boolean isUrgent) {
-		Message message = new Message("dummyInputMessage", null, isUrgent, CommunicationMessageType.COMMAND, input);
+		Message message = new Message("FeededInputDummyMessage", getCommunicationManager().getOwner(), isUrgent, CommunicationMessageType.COMMAND, input);
 		return message;
 	}
 

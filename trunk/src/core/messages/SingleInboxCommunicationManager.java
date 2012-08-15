@@ -5,11 +5,9 @@ import java.net.Socket;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
-import core.model.AutomataModel;
-import core.model.ModelListener;
 import core.utilities.log.Logger;
 
-public class SingleInboxCommunicationManager implements CommunicationManager, ModelListener{
+public class SingleInboxCommunicationManager implements CommunicationManager {
 
 	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;
 	private CommunicationIds owner;
@@ -48,12 +46,12 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Mo
 	}
 
 	private void connectAndStartThread() {
-		while (!connected){
-			if (tryToConnectToServer()){
+		while (!connected) {
+			if (tryToConnectToServer()) {
 				connection.setPeer(CommunicationIds.MASTER);
 				connection.start();
 				Logger.println("Connection achieved");
-			}else{
+			} else {
 				Logger.println("Unable to connect to server, retrying");
 				numberOfAttempts = 0;
 				sleepSeconds(5);
@@ -69,15 +67,14 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Mo
 				socket = new Socket(address, serverPort);
 				weHaveConnection();
 				socket.setTcpNoDelay(true);
-				connection = new ConnectionManager(socket, this,inbox);
+				connection = new ConnectionManager(socket, this, inbox);
 				connection.enable();
 				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, CommunicationMessageType.HANDSHAKE, null));
 				return true;
 			} catch (Exception e) {
-				Logger.println(String.format("Error connecting to server at %s:%s %s", address, serverPort,
-						e.getMessage()));
+				Logger.println(String.format("Error connecting to server at %s:%s %s", address, serverPort, e.getMessage()));
 				sleepSeconds(numberOfAttempts);
-			} finally{
+			} finally {
 				numberOfAttempts++;
 			}
 		}
@@ -97,7 +94,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Mo
 	}
 
 	private boolean keepTryingToConnect() {
-		return !connected && numberOfAttempts < MAX_NUMBER_OF_CONNECTION_ATTEMPTS;
+		return !connected && (numberOfAttempts < MAX_NUMBER_OF_CONNECTION_ATTEMPTS);
 	}
 
 	@Override
@@ -125,11 +122,6 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Mo
 	public void clientDisconnected(CommunicationIds commId) {
 		connected = false;
 		connectAndStartThread();
-	}
-
-	@Override
-	public void update() {
-		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
 	}
 
 }

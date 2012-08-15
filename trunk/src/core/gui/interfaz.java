@@ -24,16 +24,15 @@ import javax.swing.border.EtchedBorder;
 import master.ATMaster;
 import master.ATMasterInput;
 import core.file.ConfigurationFileReader;
-import core.gui.satuspanel.ModeEnum;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.enums.CommunicationIds;
 import core.model.MasterModel;
 import core.model.ModelListener;
 
-public class interfaz implements ModelListener{
+public class interfaz implements ModelListener {
 
 	private ATMaster master;
-	
+
 	private JFrame frame;
 	private JComboBox masterComboBox;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
@@ -77,13 +76,13 @@ public class interfaz implements ModelListener{
 		this.master = master;
 		initialize();
 		MasterModel.getInstance().addListener(this);
-		update();
+		updateOnModelChange();
 	}
 
-	public JFrame getFrame(){
+	public JFrame getFrame() {
 		return frame;
 	}
-	
+
 	/**
 	 * Initialize the contents of the frame.
 	 */
@@ -159,7 +158,7 @@ public class interfaz implements ModelListener{
 		btnEmergencyStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(ATMasterInput.ESTOP,true);
+				master.feedInput(ATMasterInput.ESTOP, true);
 			}
 		});
 
@@ -168,7 +167,7 @@ public class interfaz implements ModelListener{
 		btnStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(ATMasterInput.NSTOP,true);
+				master.feedInput(ATMasterInput.NSTOP, true);
 			}
 		});
 		btnStop.setForeground(Color.RED);
@@ -182,7 +181,7 @@ public class interfaz implements ModelListener{
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				master.feedInput(ATMasterInput.START,true);
+				master.feedInput(ATMasterInput.START, true);
 			}
 		});
 		frame.getContentPane().add(btnStart);
@@ -434,9 +433,11 @@ public class interfaz implements ModelListener{
 	}
 
 	@Override
-	public void update() {
-		/*slave1comboBox.setSelectedIndex(MasterModel.getInstance().getConnected().get(CommunicationIds.SLAVE1)?0:1);
-		slave1comboBox.validate();*/
+	public void updateOnModelChange() {
+		/*
+		 * slave1comboBox.setSelectedIndex(MasterModel.getInstance().getConnected
+		 * ().get(CommunicationIds.SLAVE1)?0:1); slave1comboBox.validate();
+		 */
 
 		setStatusPanelFor(CommunicationIds.SLAVE1);
 		setStatusPanelFor(CommunicationIds.SLAVE2);
@@ -445,7 +446,7 @@ public class interfaz implements ModelListener{
 
 	private void setStatusPanelFor(CommunicationIds commID) {
 		MasterModel model = MasterModel.getInstance();
-		statusPanels.get(commID).setModo(model.isConnected(commID)?model.getModel().get(commID).getCurrentMode():null);
+		statusPanels.get(commID).setModo(model.isConnected(commID) ? model.getModel().get(commID).getCurrentMode() : null);
 	}
-	
+
 }

@@ -8,56 +8,59 @@ import java.util.Map;
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 
-public class MasterModel implements AutomataModel{
+public class MasterModel implements AutomataModel {
 
 	private static final long serialVersionUID = -5649471149764787709L;
 	private static MasterModel instance;
-	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>(); 
-	
-	public static synchronized MasterModel getInstance(){
-		if (instance == null){
+	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
+
+	public static synchronized MasterModel getInstance() {
+		if (instance == null) {
 			instance = new MasterModel();
 		}
 		return instance;
 	}
-	
-	public void addListener (ModelListener listener){
+
+	public void addListener(ModelListener listener) {
 		modelListeners.add(listener);
 	}
-	
-	public void notifyObservers(){
-		for (ModelListener listener: modelListeners){
-			listener.update();
+
+	public void notifyObservers() {
+		for (ModelListener listener : modelListeners) {
+			listener.updateOnModelChange();
 		}
 	}
-	
-	private MasterModel(){
-		for (CommunicationIds id: CommunicationIds.values()){
-			connected.put(id,false);
+
+	private MasterModel() {
+		for (CommunicationIds id : CommunicationIds.values()) {
+			connected.put(id, false);
 		}
 	}
-	
+
 	private Map<CommunicationIds, Boolean> connected = new HashMap<CommunicationIds, Boolean>();
-	public boolean isConnected (CommunicationIds id){
-		if (connected.get(id) == null){
+
+	public boolean isConnected(CommunicationIds id) {
+		if (connected.get(id) == null) {
 			return false;
-		}else{
+		} else {
 			return connected.get(id);
 		}
 	}
-	
+
 	private Map<CommunicationIds, AutomataModel> models = new HashMap<CommunicationIds, AutomataModel>();
 	private ModeEnum currentMode;
-	public void setModel(CommunicationIds id, AutomataModel model){
-		if (model != null){
+
+	public void setModel(CommunicationIds id, AutomataModel model) {
+		if (model != null) {
 			connected.put(id, true);
 			models.put(id, model);
-		}else{
+		} else {
 			connected.put(id, false);
 		}
 		notifyObservers();
 	}
-	public Map<CommunicationIds, AutomataModel> getModel(){
+
+	public Map<CommunicationIds, AutomataModel> getModel() {
 		return models;
 	}
 
@@ -71,6 +74,5 @@ public class MasterModel implements AutomataModel{
 		this.currentMode = currentMode;
 		notifyObservers();
 	}
-	
-	
+
 }

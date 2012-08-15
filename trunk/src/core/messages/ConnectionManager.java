@@ -1,6 +1,6 @@
 package core.messages;
-import java.io.EOFException;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import core.messages.enums.CommunicationIds;
-import core.model.AutomataModel;
 import core.utilities.log.Logger;
 
 public class ConnectionManager extends Thread {
@@ -28,11 +27,7 @@ public class ConnectionManager extends Thread {
 		this.socket = socket;
 		commManager = cm;
 		this.owner = cm.getOwner();
-		if (inbox == null) {
-			this.inbox = new Inbox();
-		} else {
-			this.inbox = inbox;
-		}
+		this.inbox = inbox;
 		createInputAndOutputStreamsFromSocket();
 	}
 
@@ -52,6 +47,7 @@ public class ConnectionManager extends Thread {
 		}
 	}
 
+	@Override
 	public void run() {
 		while (keepRunning) {
 			Message message = readMessageFromStream();
@@ -64,11 +60,11 @@ public class ConnectionManager extends Thread {
 			return;
 		} else {
 			Logger.println("RecibidoMensaje en: " + owner);
-			if (somosDestinatariosDelMensaje(message)){
+			if (somosDestinatariosDelMensaje(message)) {
 				this.inbox.add(message);
 
-			}else {
-				if (somosElMaster()){
+			} else {
+				if (somosElMaster()) {
 					reenviamos(message);
 				}
 			}
@@ -86,7 +82,7 @@ public class ConnectionManager extends Thread {
 	}
 
 	private boolean somosDestinatariosDelMensaje(Message message) {
-		return message.isBroadcast() || message.getDestination() == owner;
+		return message.isBroadcast() || (message.getDestination() == owner);
 	}
 
 	public synchronized void writeMessage(Message message) {
@@ -104,7 +100,7 @@ public class ConnectionManager extends Thread {
 	 * that it can send thoguth the correct Comm object the message
 	 */
 	public synchronized CommunicationIds getPeer() {
-		if (peer == null){
+		if (peer == null) {
 			identifyPeer();
 		}
 		return peer;
@@ -118,7 +114,7 @@ public class ConnectionManager extends Thread {
 				return ((Message) o);
 			}
 		} catch (IOException e) {
-			if (e instanceof EOFException || e instanceof SocketException) {
+			if ((e instanceof EOFException) || (e instanceof SocketException)) {
 				Logger.println("Client has disconnected. Awaiting for reconnection");
 				commManager.clientDisconnected(getPeer());
 			} else {
