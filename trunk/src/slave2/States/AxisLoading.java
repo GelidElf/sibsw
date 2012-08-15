@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class AxisLoading implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		master.getRobot().setAxisReady(true);
 		master.setCurrentState(new AxisUnload());
 	}

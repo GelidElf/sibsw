@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class GearUnload implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		if(master.getRobot().isGearReady()==false){
 			master.getAssemblyStation().setGearNeeded(false); //ya hemos llevado la pieza a la estación de montaje
 			master.getGearBelt().piecePicked(); //notificamos al CB que ya hemos cogido la pieza

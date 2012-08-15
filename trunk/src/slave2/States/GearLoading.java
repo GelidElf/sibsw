@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class GearLoading implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		master.getRobot().setGearReady(true);
 		master.setCurrentState(new GearUnload());
 		

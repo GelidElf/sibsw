@@ -1,9 +1,9 @@
-package Slave;
+package slave2;
 
 
 import slave1.Slave1Input;
-import Slave.States.AutomataStateSlave;
-import Slave.States.Idle;
+import slave2.States.AutomataStateSlave;
+import slave2.States.Idle;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
@@ -15,7 +15,7 @@ import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.robot1.Robot;
 
-public class ATSlave1 extends AutomataContainer<Slave1Input>{
+public class slave2Automata extends AutomataContainer<Slave1Input>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -28,7 +28,7 @@ public class ATSlave1 extends AutomataContainer<Slave1Input>{
 	}
 
 
-	public ATSlave1(Configuration conf){
+	public slave2Automata(Configuration conf){
 		super(null,new DummyAutomataModel(),new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
 		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}

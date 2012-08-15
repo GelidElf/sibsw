@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class LoadingTransferCB implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		System.out.println("Assembled piece into transfer CB...");
 		master.getRobot().setUnloadAs(false);
 		master.getAssemblyStation().setComplete(false);
