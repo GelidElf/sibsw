@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class LoadingAS implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		if(master.getAxisBelt().isReady() && master.getAssemblyStation().isAxisNeeded()){
 			System.out.println("Slave1: axis loading...");
 			master.setCurrentState(new AxisLoading());

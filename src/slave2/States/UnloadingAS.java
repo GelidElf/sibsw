@@ -1,11 +1,11 @@
-package Slave.States;
+package slave2.States;
 
-import Slave.ATSlave1;
+import slave2.slave2Automata;
 
 public class UnloadingAS implements AutomataStateSlave{
 
 	@Override
-	public void execute(ATSlave1 master) {
+	public void execute(slave2Automata master) {
 		if(master.getAssemblyStation().isComplete()){
 			master.getRobot().setUnloadAs(true);
 			master.setCurrentState(new LoadingTransferCB());
