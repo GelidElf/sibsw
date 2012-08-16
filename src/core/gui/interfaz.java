@@ -24,6 +24,7 @@ import javax.swing.border.EtchedBorder;
 import master.ATMaster;
 import master.ATMasterInput;
 import core.file.ConfigurationFileReader;
+import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.enums.CommunicationIds;
 import core.model.MasterModel;
@@ -36,6 +37,7 @@ public class interfaz implements ModelListener {
 	private JFrame frame;
 	private JComboBox masterComboBox;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
+	private MainView mainView;
 	private JTextField textField;
 	private JTextField textField_1;
 	private JTextField textField_2;
@@ -88,12 +90,17 @@ public class interfaz implements ModelListener {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 751, 646);
+		frame.setBounds(100, 100, 1091, 770);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
+		mainView = new MainView();
+		mainView.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		mainView.setBounds(0, 0, 884, 486);
+		frame.getContentPane().add(mainView);
+
 		JPanel panel = new JPanel();
-		panel.setBounds(569, 24, 171, 158);
+		panel.setBounds(894, 11, 171, 158);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
@@ -151,7 +158,7 @@ public class interfaz implements ModelListener {
 		panel.add(lblComponents);
 
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
-		btnEmergencyStop.setBounds(569, 283, 151, 51);
+		btnEmergencyStop.setBounds(914, 276, 151, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -163,7 +170,7 @@ public class interfaz implements ModelListener {
 		});
 
 		JButton btnStop = new JButton("Stop");
-		btnStop.setBounds(599, 238, 86, 34);
+		btnStop.setBounds(951, 225, 86, 34);
 		btnStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -175,7 +182,7 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(btnStop);
 
 		JButton btnStart = new JButton("Start");
-		btnStart.setBounds(599, 193, 86, 34);
+		btnStart.setBounds(951, 180, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnStart.addActionListener(new ActionListener() {
@@ -187,7 +194,7 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(btnStart);
 
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 401, 349, 196);
+		tabbedPane.setBounds(10, 525, 349, 196);
 		frame.getContentPane().add(tabbedPane);
 
 		JPanel Master = new JPanel();
@@ -404,8 +411,12 @@ public class interfaz implements ModelListener {
 		JButton btnReports = new JButton("Reports");
 		btnReports.setAction(action);
 		btnReports.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnReports.setBounds(10, 360, 139, 23);
+		btnReports.setBounds(10, 491, 139, 23);
 		frame.getContentPane().add(btnReports);
+
+		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_2.setBounds(419, 525, 635, 196);
+		frame.getContentPane().add(tabbedPane_2);
 		btnReports.addActionListener(new ActionListener() {
 
 			@Override
@@ -448,5 +459,4 @@ public class interfaz implements ModelListener {
 		MasterModel model = MasterModel.getInstance();
 		statusPanels.get(commID).setModo(model.isConnected(commID) ? model.getModel().get(commID).getCurrentMode() : null);
 	}
-
 }
