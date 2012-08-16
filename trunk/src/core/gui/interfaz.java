@@ -490,6 +490,7 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE1);
 		setStatusPanelFor(CommunicationIds.SLAVE2);
 		setStatusPanelFor(CommunicationIds.SLAVE3);
+		frame.repaint();
 	}
 
 	private void setStatusPanelFor(CommunicationIds commID) {

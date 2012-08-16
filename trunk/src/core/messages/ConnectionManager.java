@@ -31,10 +31,11 @@ public class ConnectionManager extends Thread {
 		createInputAndOutputStreamsFromSocket();
 	}
 
-	private void identifyPeer() {
+	public CommunicationIds waitTilMessageReceivedAndReturnPeer() {
 		Message firstMessage = readMessageFromStream();
 		peer = firstMessage.getOwner();
 		trataMensajeRecibido(firstMessage);
+		return peer;
 	}
 
 	private void createInputAndOutputStreamsFromSocket() {
@@ -90,6 +91,7 @@ public class ConnectionManager extends Thread {
 		try {
 			_oos.writeObject(message);
 			_oos.flush();
+			_oos.reset();
 		} catch (IOException e) {
 			Logger.println("Error escribiendo el mensaje");
 		}
@@ -100,9 +102,6 @@ public class ConnectionManager extends Thread {
 	 * that it can send thoguth the correct Comm object the message
 	 */
 	public synchronized CommunicationIds getPeer() {
-		if (peer == null) {
-			identifyPeer();
-		}
 		return peer;
 	}
 
@@ -122,6 +121,9 @@ public class ConnectionManager extends Thread {
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (NullPointerException e) {
+			Logger.println("Client has disconnected. Awaiting for reconnection");
+			commManager.clientDisconnected(getPeer());
 		}
 		return null;
 	}
