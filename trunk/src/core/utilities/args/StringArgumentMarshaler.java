@@ -1,6 +1,6 @@
 package core.utilities.args;
 
-import static core.utilities.args.ArgsException.ErrorCode.*;
+import static core.utilities.args.ArgsException.ErrorCode.MISSING_STRING;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

@@ -3,7 +3,6 @@ import core.aplication.RunnableApplication;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ConveyorBelt.ConveyorBeltSimulator;
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.QualityStation.ATQualityStation;
 import core.sections.QualityStation.QualityStationManager;
 import core.sections.QualityStation.QualityStationSimulator;

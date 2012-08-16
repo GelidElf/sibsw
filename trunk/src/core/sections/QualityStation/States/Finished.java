@@ -1,6 +1,5 @@
 package core.sections.QualityStation.States;
 
-import core.sections.ConveyorBelt.States.AutomataStateCB;
 public class Finished implements AutomataStateQS{
 	
 	static AutomataStateQS instance = null;
