@@ -1,6 +1,6 @@
 package core.utilities.args;
 
-import static core.utilities.args.ArgsException.ErrorCode.*;
+import static core.utilities.args.ArgsException.ErrorCode.OK;
 
 public class ArgsException extends Exception { 
 	private static final long serialVersionUID = 7466575429272099211L;

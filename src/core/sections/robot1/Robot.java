@@ -1,8 +1,5 @@
 package core.sections.robot1;
 
-import core.sections.ConveyorBelt.ATConveyorBelt;
-import core.sections.ConveyorBelt.ConveyorBeltSimulator;
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.robot1.states.AutomataStateRobot1;
 import core.sections.robot1.states.Idle;
 

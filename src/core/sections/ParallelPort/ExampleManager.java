@@ -1,6 +1,5 @@
 package core.sections.ParallelPort;
 
-import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
 /**

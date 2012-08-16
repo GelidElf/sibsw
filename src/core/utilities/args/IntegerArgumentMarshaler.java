@@ -1,6 +1,7 @@
 package core.utilities.args;
 
-import static core.utilities.args.ArgsException.ErrorCode.*;
+import static core.utilities.args.ArgsException.ErrorCode.INVALID_INTEGER;
+import static core.utilities.args.ArgsException.ErrorCode.MISSING_INTEGER;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
