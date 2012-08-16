@@ -95,6 +95,43 @@ public class interfaz implements ModelListener {
 		mainView.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		mainView.setBounds(10, 11, 909, 501);
 		frame.getContentPane().add(mainView);
+		mainView.setLayout(null);
+
+		StatusPanel axisStatusPanel = new StatusPanel();
+		axisStatusPanel.setBounds(731, 372, 14, 10);
+		mainView.add(axisStatusPanel);
+
+		StatusPanel gearStatusPanel = new StatusPanel();
+		gearStatusPanel.setBounds(731, 466, 14, 10);
+		mainView.add(gearStatusPanel);
+
+		StatusPanel assemblyStatusPanel = new StatusPanel();
+		assemblyStatusPanel.setBounds(814, 142, 14, 10);
+		mainView.add(assemblyStatusPanel);
+
+		StatusPanel assembledStatusPanel = new StatusPanel();
+		assembledStatusPanel.setBounds(468, 254, 14, 10);
+		mainView.add(assembledStatusPanel);
+
+		StatusPanel finisedStatusPanel = new StatusPanel();
+		finisedStatusPanel.setBounds(207, 444, 14, 10);
+		mainView.add(finisedStatusPanel);
+
+		StatusPanel robot2StatusPanel = new StatusPanel();
+		robot2StatusPanel.setBounds(303, 390, 14, 10);
+		mainView.add(robot2StatusPanel);
+
+		StatusPanel qualityStatusPanel = new StatusPanel();
+		qualityStatusPanel.setBounds(138, 279, 14, 10);
+		mainView.add(qualityStatusPanel);
+
+		StatusPanel weldingStatusPanel = new StatusPanel();
+		weldingStatusPanel.setBounds(387, 171, 14, 10);
+		mainView.add(weldingStatusPanel);
+
+		StatusPanel robot1StatusPanel = new StatusPanel();
+		robot1StatusPanel.setBounds(654, 390, 14, 10);
+		mainView.add(robot1StatusPanel);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(961, 11, 104, 124);
