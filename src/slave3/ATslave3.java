@@ -6,11 +6,10 @@ import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
-import core.model.DummyAutomataModel;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.QualityStation.ATQualityStation;
 
-public class ATslave3 extends AutomataContainer<Slave3Input> {
+public class ATslave3 extends AutomataContainer<Slave3Input,Slave3Model> {
 
 	private ATConveyorBelt conveyorBelt;
 	private ATQualityStation qualityStation;
@@ -18,7 +17,7 @@ public class ATslave3 extends AutomataContainer<Slave3Input> {
 	private Message messageToSend;
 	
 	public ATslave3(Configuration conf){
-		super(null, new DummyAutomataModel(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3,conf));
+		super(null, new Slave3Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3,conf));
 //		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
 	}	
 	
@@ -31,7 +30,7 @@ public class ATslave3 extends AutomataContainer<Slave3Input> {
 	}
 
 	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		// TODO Auto-generated method stub
 		
 	}

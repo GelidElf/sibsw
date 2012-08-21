@@ -1,13 +1,13 @@
 package core.messages.enums;
 
-public enum CommunicationMessageType {
 
+public enum CommunicationMessageType {
 	START,
 	NSTOP,
 	ESTOP,
-	RESUME,
-	COMMAND,
+	RESTART,
 	CONFIGURATION,
+	COMMAND,
 	HANDSHAKE,
 	STATUS_UPDATE;
 	

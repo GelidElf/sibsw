@@ -7,16 +7,17 @@ public class Slave1State implements State<Slave1Input> {
 	public static enum states {
 		STARTED{
 			@Override
-			public states executeInternal(Slave1State currentState, Slave1Input input) {
+			protected states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case START:
+					currentState.getAutomata().getGearBelt();
 					return IDDLE;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		}, IDDLE{
 			@Override
-			public states executeInternal(Slave1State currentState, Slave1Input input) {
+			protected states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case AS_EMPTY:
 					
@@ -29,7 +30,7 @@ public class Slave1State implements State<Slave1Input> {
 			}
 		}, AS_UNLOAD, LOADING_TRANSFER_CB, UNLOADING_AS, LOADING_AS, GEAR_UNLOAD, GEAR_LOADING, AXIS_UNLOAD, AXIS_LOADING;
 		
-		public states executeInternal(Slave1State currentState,Slave1Input input){
+		protected states executeInternal(Slave1State currentState,Slave1Input input){
 			return this;
 		}
 	}
@@ -45,6 +46,10 @@ public class Slave1State implements State<Slave1Input> {
 	@Override
 	public void execute(Slave1Input input) {
 		currentState = currentState.executeInternal(this, input);
+	}
+	
+	public Slave1Automata getAutomata(){
+		return slave1;
 	}
 
 }

@@ -1,7 +1,6 @@
 package slave1;
 
 import core.aplication.Configuration;
-import core.gui.satuspanel.ModeEnum;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
@@ -15,7 +14,7 @@ import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
 
-public class Slave1Automata extends AutomataContainer<Slave1Input> implements ModelListener {
+public class Slave1Automata extends AutomataContainer<Slave1Input,Slave1Model> implements ModelListener {
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -86,18 +85,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input> implements Mo
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			switch ((Slave1Input) message.getInputType()) {
-			case START:
-				currentState.execute((Slave1Input) message.getInputType());
-				break;
-
-			case EMPTY_TRANSFER_CB:
-
-				break;
-
-			default:
-				break;
-			}
+			currentState.execute((Slave1Input) message.getInputType());
 		}
 
 	}
@@ -105,10 +93,21 @@ public class Slave1Automata extends AutomataContainer<Slave1Input> implements Mo
 	private void reaccionaPorTipoDeMensaje(Message message) {
 		switch (message.getType()) {
 		case START:
-			model.setCurrentMode(ModeEnum.RUNNING);
+			feedInput(Slave1Input.START, message.isUrgent());
 			break;
 		case NSTOP:
-			model.setCurrentMode(ModeEnum.NSTOP);
+			feedInput(Slave1Input.NSTOP, message.isUrgent());
+			break;
+		case ESTOP:
+			feedInput(Slave1Input.ESTOP, message.isUrgent());
+			break;
+		case RESTART:
+			feedInput(Slave1Input.RESTART, message.isUrgent());
+			break;
+		case CONFIGURATION:
+			for (Attribute attribute:message.getAttributes()){
+				changeConfigurationParameter(attribute);
+			}
 			break;
 		}
 
@@ -118,11 +117,13 @@ public class Slave1Automata extends AutomataContainer<Slave1Input> implements Mo
 		return message.getType() == CommunicationMessageType.COMMAND;
 	}
 
-	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		currentState = new Slave1State(this);
 		getCommunicationManager().initialize();
 		start();
+		gearBelt.startCommand();
+		axisBelt.startCommand();
+		assemblyStation.startCommand();
 	}
 
 	@Override

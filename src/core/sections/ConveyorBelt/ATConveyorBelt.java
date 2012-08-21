@@ -2,6 +2,7 @@ package core.sections.ConveyorBelt;
 
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.model.DummyAutomataModel;
@@ -10,7 +11,7 @@ import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> implements
+public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput,DummyAutomataModel> implements
 		ParallelPortManagerObserver {
 	
 	private ConveyorBeltManager manager = null;
@@ -19,8 +20,8 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	
 	private ConveyorBeltRandomFiller fillerThread = null;
 
-	public ATConveyorBelt(AutomataContainer<?> father, ConveyorBeltManager manager) {
-		super(father,new DummyAutomataModel());
+	public ATConveyorBelt(AutomataContainer<?,?> father, ConveyorBeltManager manager) {
+		super(father,new DummyAutomataModel(), new OfflineCommunicationManager());
 		this.manager = manager;	
 		manager.registerObserver(this);
 		if (currentState == null){
@@ -66,6 +67,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 		ConveyorBeltManager m = new ConveyorBeltManager();
 		m.configure(10, 2);
 		ATConveyorBelt atcb = new ATConveyorBelt(null, m);
+		atcb.startCommand();
 		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY,"32"));
 		mess.addAttribute(new Attribute(ConveyorBeltManager.SPEED,"8"));
@@ -124,7 +126,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput> imple
 	}
 
 	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		manager.setRunning(true);
 		simulator.start();
 		fillerThread.start();
