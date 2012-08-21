@@ -1,7 +1,6 @@
 package slave2;
 
 
-import slave1.Slave1Input;
 import slave2.States.AutomataStateSlave;
 import slave2.States.Idle;
 import core.aplication.Configuration;
@@ -10,12 +9,11 @@ import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
-import core.model.DummyAutomataModel;
 import core.sections.AssembyStation.ATAssemblyStation;
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.robot1.Robot;
 
-public class slave2Automata extends AutomataContainer<Slave1Input>{
+public class slave2Automata extends AutomataContainer<Slave2Input,Slave2Model>{
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -29,7 +27,7 @@ public class slave2Automata extends AutomataContainer<Slave1Input>{
 
 
 	public slave2Automata(Configuration conf){
-		super(null,new DummyAutomataModel(),new SingleInboxCommunicationManager(CommunicationIds.SLAVE1,conf));
+		super(null,new Slave2Model(),new SingleInboxCommunicationManager(CommunicationIds.SLAVE2,conf));
 		//currentState = (Slave3State) Slave3State.createState("Idle", currentState);
 	}
 
@@ -136,7 +134,7 @@ public class slave2Automata extends AutomataContainer<Slave1Input>{
 
 
 	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		// TODO Auto-generated method stub
 		
 	}

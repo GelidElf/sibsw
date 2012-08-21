@@ -10,7 +10,7 @@ import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.MasterModel;
 
-public class ATMaster extends AutomataContainer<ATMasterInput> {
+public class ATMaster extends AutomataContainer<ATMasterInput,MasterModel> {
 
 	private static final int NUMBEROFINBOXES = 1;
 
@@ -32,7 +32,7 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 				sendBroadCastMessage(CommunicationMessageType.ESTOP);
 				break;
 			case RESUME:
-				sendBroadCastMessage(CommunicationMessageType.RESUME);
+				sendBroadCastMessage(CommunicationMessageType.RESTART);
 				break;
 			default:
 				break;
@@ -46,7 +46,7 @@ public class ATMaster extends AutomataContainer<ATMasterInput> {
 	}
 
 	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		getCommunicationManager().initialize();
 		this.start();
 	}

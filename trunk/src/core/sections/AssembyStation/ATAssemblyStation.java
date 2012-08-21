@@ -2,6 +2,7 @@ package core.sections.AssembyStation;
 
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.model.DummyAutomataModel;
@@ -11,14 +12,14 @@ import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput> implements ParallelPortManagerObserver{
+public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,DummyAutomataModel> implements ParallelPortManagerObserver{
 
 	private AssemblyStationManager manager;
 	private AssemblyStationSimulator simulator;
 	private AutomataStateAssemblyStation currentState;
 	
-	public ATAssemblyStation(AutomataContainer<?> father, AssemblyStationManager manager) {
-		super(father, new DummyAutomataModel());
+	public ATAssemblyStation(AutomataContainer<?,?> father, AssemblyStationManager manager) {
+		super(father, new DummyAutomataModel(), new OfflineCommunicationManager());
 		this.manager = manager;	
 		manager.registerObserver(this);
 		currentState = AutomataStateAssemblyStation.createState(Idle.class, null);
@@ -74,7 +75,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput>
 	}
 
 	@Override
-	protected void startCommand() {
+	public void startCommand() {
 		simulator.start();
 	}
 

@@ -8,19 +8,14 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
-public abstract class AutomataContainer<T extends Enum<T>> extends Thread {
+public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataModel> extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
-	protected AutomataContainer<?> father;
-	protected AutomataModel model;
+	protected AutomataContainer<?,?> father;
+	protected AS model;
 
-	public AutomataContainer(AutomataContainer<?> father, AutomataModel model) {
-		this.model = model;
-		this.father = father;
-	}
-
-	public AutomataContainer(AutomataContainer<?> father, AutomataModel model, CommunicationManager commManager) {
+	public AutomataContainer(AutomataContainer<?,?> father, AS model, CommunicationManager commManager) {
 		this.father = father;
 		this.commManager = commManager;
 		this.model = model;
@@ -77,7 +72,7 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread {
 
 	protected abstract void consume(Message currentMessage);
 
-	protected abstract void startCommand();
+	public abstract void startCommand();
 
 	protected abstract void changeConfigurationParameter(Attribute attribute);
 
@@ -94,6 +89,11 @@ public abstract class AutomataContainer<T extends Enum<T>> extends Thread {
 		commManager.sendMessage(message);
 	}
 
+	/**
+	 * alimenta un input al automata, se usa para comunicar automatas del mismo slave, entrada de usuario y el resto de comunicacion que no sea a través de mensajes
+	 * @param input el input del automata a incluir en el inbox
+	 * @param isUrgent si es urgente
+	 */
 	public synchronized void feedInput(T input, boolean isUrgent) {
 		commManager.feed(createDummyMessageForInput(input, isUrgent));
 	}
