@@ -52,7 +52,7 @@ public class Robot extends Thread{
 	}
 	
 	/*public static void main(String args[]){
-		System.out.println("lanzo simulación en robot");
+		Logger.println("lanzo simulación en robot");
 	
 		Robot a = new Robot();
 	//	a.setDone(false);
@@ -62,17 +62,17 @@ public class Robot extends Thread{
 		ATConveyorBelt atcb = new ATConveyorBelt();
 		atcb.getManager().setState(state);
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(atcb.getManager());
-		System.out.println("hilos lanzados1");
+		Logger.println("hilos lanzados1");
 		cbs.getManager().setState(state);
-		System.out.println("hilos lanzados2");
+		Logger.println("hilos lanzados2");
 		atcb.start();
-		System.out.println("hilos lanzados3");
+		Logger.println("hilos lanzados3");
 		
 
 		try {
 			while(true){
 				sleep(1000);
-				if(atcb.isReady()) System.out.println("GearReady!!");
+				if(atcb.isReady()) Logger.println("GearReady!!");
 				a.setGearReady(atcb.isReady());
 			//	if(a.isDone())atcb.piecePicked();
 	

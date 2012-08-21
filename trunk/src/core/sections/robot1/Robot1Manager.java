@@ -2,6 +2,7 @@ package core.sections.robot1;
 
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 public class Robot1Manager extends ParallelPortManager {
 
@@ -30,9 +31,9 @@ public class Robot1Manager extends ParallelPortManager {
 			this.setBitGroup(Robot1Manager.ASSEMBLED_TIME, 13, 15);
 			// continue
 		} catch (ParallelPortException e) {
-			System.out.println(e.getMessage());
+			Logger.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}
-	
+
 }

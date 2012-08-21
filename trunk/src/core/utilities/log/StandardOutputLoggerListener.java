@@ -7,4 +7,9 @@ public class StandardOutputLoggerListener implements LoggerListener {
 		System.out.println(text);
 	}
 
+	@Override
+	public void print(String string) {
+		System.out.print(string);
+	}
+
 }

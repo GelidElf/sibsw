@@ -10,25 +10,25 @@ import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
-public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput,DummyAutomataModel> implements
-		ParallelPortManagerObserver {
-	
+public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, DummyAutomataModel> implements ParallelPortManagerObserver {
+
 	private ConveyorBeltManager manager = null;
 	private AutomataStateCB currentState = null;
 	private ConveyorBeltSimulator simulator;
-	
+
 	private ConveyorBeltRandomFiller fillerThread = null;
 
-	public ATConveyorBelt(AutomataContainer<?,?> father, ConveyorBeltManager manager) {
-		super(father,new DummyAutomataModel(), new OfflineCommunicationManager());
-		this.manager = manager;	
+	public ATConveyorBelt(AutomataContainer<?, ?> father, ConveyorBeltManager manager) {
+		super(father, new DummyAutomataModel(), new OfflineCommunicationManager());
+		this.manager = manager;
 		manager.registerObserver(this);
-		if (currentState == null){
+		if (currentState == null) {
 			currentState = AutomataStateCB.estadoInicial(manager.getBitGroupValue(ConveyorBeltManager.CAPACITY));
 		}
 		simulator = new ConveyorBeltSimulator(this.manager);
-		System.out.println("AT CB Created");
+		Logger.println("AT CB Created");
 		fillerThread = new ConveyorBeltRandomFiller(manager);
 	}
 
@@ -69,60 +69,60 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput,DummyA
 		ATConveyorBelt atcb = new ATConveyorBelt(null, m);
 		atcb.startCommand();
 		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
-		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY,"32"));
-		mess.addAttribute(new Attribute(ConveyorBeltManager.SPEED,"8"));
+		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY, "32"));
+		mess.addAttribute(new Attribute(ConveyorBeltManager.SPEED, "8"));
 		atcb.injectMessage(mess);
 		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
 		atcb.injectMessage(mess2);
 	}
-	
+
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (this.manager.isSensorInitial()){
-			feedInput(ATConveyorBeltInput.loadSensorTrue,false);
+		if (this.manager.isSensorInitial()) {
+			feedInput(ATConveyorBeltInput.loadSensorTrue, false);
 		}
-		if (this.manager.isSensorFinish()){
-			feedInput(ATConveyorBeltInput.unloadSensorTrue,false);
+		if (this.manager.isSensorFinish()) {
+			feedInput(ATConveyorBeltInput.unloadSensorTrue, false);
 		}
-		if (!this.manager.isSensorFinish()){
-			feedInput(ATConveyorBeltInput.unloadSensorFalse,false);
+		if (!this.manager.isSensorFinish()) {
+			feedInput(ATConveyorBeltInput.unloadSensorFalse, false);
 		}
-		if (this.manager.isSensorUnloadMax()){
-			feedInput(ATConveyorBeltInput.unloadSensorTrueMax,false);
+		if (this.manager.isSensorUnloadMax()) {
+			feedInput(ATConveyorBeltInput.unloadSensorTrueMax, false);
 		}
-		if (this.manager.isEmpty()){
-			feedInput(ATConveyorBeltInput.empty,false);
+		if (this.manager.isEmpty()) {
+			feedInput(ATConveyorBeltInput.empty, false);
 		}
 	}
 
 	@Override
 	protected void consume(Message message) {
-		switch ((ATConveyorBeltInput)message.getInputType()) {
-			case empty:
-					currentState.empty();
-				break;
-			case loadSensorTrue:
-				currentState.loadSensorTrue();
+		switch ((ATConveyorBeltInput) message.getInputType()) {
+		case empty:
+			currentState.empty();
 			break;
-			case estop:
-				currentState.estop();
+		case loadSensorTrue:
+			currentState.loadSensorTrue();
 			break;
-			case nstop:
-				currentState.nstop();
+		case estop:
+			currentState.estop();
 			break;
-			case restart:
-				currentState.restart();
+		case nstop:
+			currentState.nstop();
 			break;
-			case unloadSensorFalse:
-				currentState.unloadSensorFalse();
+		case restart:
+			currentState.restart();
 			break;
-			case unloadSensorTrue:
-				currentState.unloadSensorTrue();
+		case unloadSensorFalse:
+			currentState.unloadSensorFalse();
 			break;
-			case unloadSensorTrueMax:
-				currentState.unloadSensorTrueMax();
+		case unloadSensorTrue:
+			currentState.unloadSensorTrue();
 			break;
-		}		
+		case unloadSensorTrueMax:
+			currentState.unloadSensorTrueMax();
+			break;
+		}
 	}
 
 	@Override
@@ -135,13 +135,13 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput,DummyA
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		try {
-			manager.setValueByName(attribute.getName(), Integer.parseInt((String)attribute.getValue()));
+			manager.setValueByName(attribute.getName(), Integer.parseInt((String) attribute.getValue()));
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import core.aplication.ApplicationConfiguration;
 import core.aplication.Configuration;
+import core.utilities.log.Logger;
 
 public class ApplicationConfigurationFileReader {
 
@@ -32,8 +33,7 @@ public class ApplicationConfigurationFileReader {
 
 			in.close();
 		} catch (Exception e) {
-			System.err.println("Error: Unable to parse configuration file \""
-					+ fileName + "\": " + e.getMessage());
+			System.err.println("Error: Unable to parse configuration file \"" + fileName + "\": " + e.getMessage());
 		}
 	}
 
@@ -45,10 +45,10 @@ public class ApplicationConfigurationFileReader {
 
 		attribute = linea.substring(0, linea.indexOf(':'));
 		int lastValueCharacterPosition = linea.length();
-		if (linea.charAt(linea.length() - 1) == ';')
+		if (linea.charAt(linea.length() - 1) == ';') {
 			lastValueCharacterPosition--;
-		value = linea.substring(linea.indexOf(':') + 1,
-				lastValueCharacterPosition);
+		}
+		value = linea.substring(linea.indexOf(':') + 1, lastValueCharacterPosition);
 		Field field = null;
 		for (Field f : configurationClass.getFields()) {
 			if (attribute.equalsIgnoreCase(f.getName())) {
@@ -69,16 +69,16 @@ public class ApplicationConfigurationFileReader {
 				e.printStackTrace();
 			}
 		} else {
-			System.out.println(String.format(
-					"Warning: Property %s does not exist.", attribute));
+			Logger.println(String.format("Warning: Property %s does not exist.", attribute));
 		}
 	}
 
 	public String get(String key) {
-		if (contents.keySet().contains(key))
+		if (contents.keySet().contains(key)) {
 			return contents.get(key);
-		else
+		} else {
 			return null;
+		}
 	}
 
 	public ApplicationConfiguration readConfiguration() {

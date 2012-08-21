@@ -2,13 +2,13 @@ package core.sections.robot1.states;
 
 import core.sections.robot1.Robot;
 import core.sections.robot1.RobotSimulator;
+import core.utilities.log.Logger;
 
 public class Idle implements AutomataStateRobot1 {
 
-	
 	@Override
 	public void execute(Robot robot) {
-		if(robot.isUnloadAs()){
+		if (robot.isUnloadAs()) {
 			RobotSimulator simulator = new RobotSimulator();
 			simulator.start();
 			try {
@@ -18,7 +18,7 @@ public class Idle implements AutomataStateRobot1 {
 				e.printStackTrace();
 			}
 			robot.setUnloadAs(false);
-		}else if(robot.isGearReady()){
+		} else if (robot.isGearReady()) {
 			RobotSimulator simulator = new RobotSimulator();
 			simulator.start();
 			try {
@@ -28,8 +28,8 @@ public class Idle implements AutomataStateRobot1 {
 				e.printStackTrace();
 			}
 			robot.setGearReady(false);
-			System.out.println("Gear picked and deposited...");
-		}else if(robot.isAxisReady()){
+			Logger.println("Gear picked and deposited...");
+		} else if (robot.isAxisReady()) {
 			RobotSimulator simulator = new RobotSimulator();
 			simulator.start();
 			try {
@@ -39,9 +39,9 @@ public class Idle implements AutomataStateRobot1 {
 				e.printStackTrace();
 			}
 			robot.setAxisReady(false);
-			System.out.println("Axis picked and deposited...");
-		}else{
-			System.out.print("");
+			Logger.println("Axis picked and deposited...");
+		} else {
+			Logger.println("");
 		}
 
 	}

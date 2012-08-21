@@ -32,7 +32,7 @@ public class slave2Automata extends AutomataContainer<Slave2Input,Slave2Model>{
 	}
 
 	//	public ATSlave1(){
-	//		System.out.println("lanzo simulación en robot");
+	//		Logger.println("lanzo simulación en robot");
 	//		/* Iniciamos robot*/
 	//		robot = new Robot();
 	//
@@ -155,7 +155,7 @@ public class slave2Automata extends AutomataContainer<Slave2Input,Slave2Model>{
 
 	//	public static void main (String args[]){
 	//		ATSlave1 slave = new ATSlave1();
-	//		System.out.println("ARRRRRRRANCO!");
+	//		Logger.println("ARRRRRRRANCO!");
 	//		slave.start();
 	//	}
 }
