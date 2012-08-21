@@ -1,6 +1,7 @@
 package core.sections.ParallelPort;
 
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 /**
  * Example class implementing a specific manager for a parallel connection.
@@ -15,18 +16,18 @@ public class ExampleManager extends ParallelPortManager {
 	public static final String ESTADO = "ESTADO";
 	public static final String SENSOR_CARGA = "SENSOR_CARGA";
 	public static final String SENSOR_DESCARGA = "SENSOR_DESCARGA";
-	
+
 	public ExampleManager() {
 		super();
 		//We should set a name for all the pins, just in case
-		try{
+		try {
 			this.setBitGroup(ExampleManager.ACTIVIDAD, 0, 2);
 			this.setBitGroup(ExampleManager.ESTADO, 3, 6);
 			this.setBitGroup(ExampleManager.SENSOR_CARGA, 7, 7);
 			this.setBitGroup(ExampleManager.SENSOR_DESCARGA, 8, 8);
 			//continue
-		}catch (ParallelPortException e) {
-			System.out.println(e.getMessage());
+		} catch (ParallelPortException e) {
+			Logger.println(e.getMessage());
 			e.printStackTrace();
 		}
 	}

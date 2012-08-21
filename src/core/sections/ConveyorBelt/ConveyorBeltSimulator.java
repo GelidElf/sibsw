@@ -2,6 +2,7 @@ package core.sections.ConveyorBelt;
 
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 /**
  * 
@@ -15,11 +16,9 @@ public class ConveyorBeltSimulator extends Thread {
 	private int capacity = 0;
 	private int numberOfElements = 0;
 
-
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.manager = manager;
-		contents = new int[this.manager
-				.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
+		contents = new int[this.manager.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
 		cleanContentsOfBelt();
 	}
 
@@ -33,10 +32,8 @@ public class ConveyorBeltSimulator extends Thread {
 		}
 		contents[contents.length - 1] = 0;
 		try {
-			manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD,
-					contents[contents.length - 1]);
-			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD,
-					contents[0]);
+			manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD, contents[contents.length - 1]);
+			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD, contents[0]);
 		} catch (ParallelPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -45,11 +42,11 @@ public class ConveyorBeltSimulator extends Thread {
 	}
 
 	private void printContents(String text) {
-		System.out.print(text);
+		Logger.print(text);
 		for (int i = 0; i < contents.length; i++) {
-			System.out.print(" " + contents[i]);
+			Logger.print(" " + contents[i]);
 		}
-		System.out.println();
+		Logger.println();
 	}
 
 	@Override
@@ -62,15 +59,14 @@ public class ConveyorBeltSimulator extends Thread {
 					increaseElementCountByOne();
 				}
 				if (beltHasElements()) {
-					int velocity = manager
-							.getValueByName(ConveyorBeltManager.SPEED);
+					int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
 					if (running() && finalSensorInactive()) {
 						actualizoElElementoDeLaUltimaPosicionQueYaNoEsta();
-						System.out.println("muevo la cinta!:" + velocity);
+						Logger.println("muevo la cinta!:" + velocity);
 						move();
 						sleepExecution(velocity);
 					} else {
-						System.out.println("NO muevo la cinta!");
+						Logger.println("NO muevo la cinta!");
 						sleepExecution(velocity);
 					}
 				}
@@ -86,25 +82,21 @@ public class ConveyorBeltSimulator extends Thread {
 
 	private void sleepExecution(int velocity) throws InterruptedException {
 		if (velocity == 0) {
-			System.out.println("Speed set to 0");
+			Logger.println("Speed set to 0");
 		} else {
 			sleep(1000 / velocity);
 		}
 	}
 
-	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta()
-			throws ParallelPortException {
+	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta() throws ParallelPortException {
 		if (positionOccupied(0)) {
-			manager.setValueByName(ConveyorBeltManager.QUANTITY, manager
-					.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
+			manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
 			numberOfElements--;
 		}
 	}
 
-	private void setElementInInitialPositionInContents()
-			throws ParallelPortException {
-		contents[contents.length - 1] = manager
-				.getValueByName(ConveyorBeltManager.SENSOR_LOAD);
+	private void setElementInInitialPositionInContents() throws ParallelPortException {
+		contents[contents.length - 1] = manager.getValueByName(ConveyorBeltManager.SENSOR_LOAD);
 	}
 
 	private boolean beltHasElements() {
@@ -116,8 +108,7 @@ public class ConveyorBeltSimulator extends Thread {
 		if (newCapacity != capacity) {
 			capacity = newCapacity;
 			int residualCuantity = changeCapacity(newCapacity);
-			manager.setValueByName(ConveyorBeltManager.QUANTITY,
-					residualCuantity);
+			manager.setValueByName(ConveyorBeltManager.QUANTITY, residualCuantity);
 		}
 	}
 
@@ -134,8 +125,7 @@ public class ConveyorBeltSimulator extends Thread {
 	}
 
 	private void increaseElementCountByOne() throws ParallelPortException {
-		manager.setValueByName(ConveyorBeltManager.QUANTITY, manager
-				.getValueByName(ConveyorBeltManager.QUANTITY) + 1);
+		manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) + 1);
 		numberOfElements++;
 	}
 
@@ -195,10 +185,10 @@ public class ConveyorBeltSimulator extends Thread {
 
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
 		cbs.start();
-		System.out.println("hilos lanzados1");
+		Logger.println("hilos lanzados1");
 		// ATConveyorBelt atcb = new ATConveyorBelt(null, manager);
 		// atcb.start();
-		// System.out.println("hilos lanzados2");
+		// Logger.println("hilos lanzados2");
 	}
-	
+
 }

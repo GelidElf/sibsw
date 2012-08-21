@@ -14,7 +14,7 @@ import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
 
-public class Slave1Automata extends AutomataContainer<Slave1Input,Slave1Model> implements ModelListener {
+public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1Model> implements ModelListener {
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
@@ -105,7 +105,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input,Slave1Model> i
 			feedInput(Slave1Input.RESTART, message.isUrgent());
 			break;
 		case CONFIGURATION:
-			for (Attribute attribute:message.getAttributes()){
+			for (Attribute attribute : message.getAttributes()) {
 				changeConfigurationParameter(attribute);
 			}
 			break;
@@ -117,6 +117,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input,Slave1Model> i
 		return message.getType() == CommunicationMessageType.COMMAND;
 	}
 
+	@Override
 	public void startCommand() {
 		currentState = new Slave1State(this);
 		getCommunicationManager().initialize();

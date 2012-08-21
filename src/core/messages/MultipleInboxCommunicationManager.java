@@ -14,6 +14,7 @@ import java.util.concurrent.FutureTask;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.model.MasterModel;
+import core.utilities.log.Logger;
 
 public class MultipleInboxCommunicationManager implements CommunicationManager {
 
@@ -63,16 +64,16 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		while (connections.size() < numberOfIncoming) {
 			connectClient();
 		}
-		System.out.println("All conections stablished");
+		Logger.println("All conections stablished");
 	}
 
 	private void connectClient() throws IOException {
-		System.out.println(String.format("Waiting for connection n1 %d", connections.size()));
+		Logger.println(String.format("Waiting for connection n1 %d", connections.size()));
 		Socket socket = serverSocket.accept();
 		serverSocket.close();
 		serverSocket = new ServerSocket();
 		serverSocket.bind(new InetSocketAddress(serverPort));
-		System.out.println("new connection established");
+		Logger.println("new connection established");
 		manageNewSocketReceived(socket);
 	}
 
@@ -105,7 +106,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		ConnectionManager c = new ConnectionManager(socket, this, inbox);
 		CommunicationIds s = c.waitTilMessageReceivedAndReturnPeer();
 		connections.put(s, c);
-		System.out.println(String.format("%s connected", s));
+		Logger.println(String.format("%s connected", s));
 		c.enable();
 		startConnection(c);
 	}
@@ -147,7 +148,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 			connection = new ConnectionManager(socket, this, inbox);
 			connection.writeMessage(new Message(owner + ".CONNECT", null, false, null, null));
 		} catch (Exception e) {
-			System.out.println(String.format("Error connecting to server at %s:%s %s", address, port, e.getMessage()));
+			Logger.println(String.format("Error connecting to server at %s:%s %s", address, port, e.getMessage()));
 			e.printStackTrace();
 		}
 	}

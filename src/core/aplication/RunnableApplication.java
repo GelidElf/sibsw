@@ -6,6 +6,7 @@ package core.aplication;
 import core.file.ConfigurationFileReader;
 import core.utilities.args.Args;
 import core.utilities.args.ArgsException;
+import core.utilities.log.Logger;
 
 /**
  * @author gonzalo
@@ -15,40 +16,40 @@ public class RunnableApplication {
 
 	public static Configuration configuration = null;
 	private static final String usage = "a,f*";
-	
-	public static void initialize (String[] args,String configurationFilePath){
+
+	public static void initialize(String[] args, String configurationFilePath) {
 		configuration = new Configuration();
 		setConfigurationFileName(configurationFilePath);
 		processArguments(args);
 	}
-	
-	private static void processArguments(String [] args){
-		try { 
-			Args arg = new Args(usage, args); 
+
+	private static void processArguments(String[] args) {
+		try {
+			Args arg = new Args(usage, args);
 			boolean autoDiscovery = arg.getBoolean('a');
-			if (autoDiscovery){
+			if (autoDiscovery) {
 				configuration.autoDiscovery = "yes";
-				System.out.println("Using Autodiscovery.");
-			}else{
+				Logger.println("Using Autodiscovery.");
+			} else {
 				String confFileName = arg.getString('f');
-				if(!confFileName.equals("")){
+				if (!confFileName.equals("")) {
 					configuration.configurationFileName = confFileName;
 				}
-				System.out.println("Loading configuration from "+configuration.configurationFileName);	
+				Logger.println("Loading configuration from " + configuration.configurationFileName);
 				loadConfigurationFile();
 			}
-		} catch (ArgsException e) { 
-			System.out.printf("Argument error: %s\n", e.errorMessage()); 
-		} 
+		} catch (ArgsException e) {
+			Logger.println("Argument error: " + e.errorMessage());
+		}
 	}
-	
-	private static void loadConfigurationFile(){
+
+	private static void loadConfigurationFile() {
 		ConfigurationFileReader fileReader = new ConfigurationFileReader(configuration.configurationFileName);
-		 configuration = fileReader.readConfiguration();
+		configuration = fileReader.readConfiguration();
 	}
-	
-	protected static void setConfigurationFileName(String confFileName){
+
+	protected static void setConfigurationFileName(String confFileName) {
 		configuration.configurationFileName = confFileName;
 	}
-	
+
 }

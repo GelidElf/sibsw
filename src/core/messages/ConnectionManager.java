@@ -43,7 +43,7 @@ public class ConnectionManager extends Thread {
 			_oos = new ObjectOutputStream(this.socket.getOutputStream());
 			_ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
-			System.out.println("Error creating input and output streams from socket: " + e.getMessage());
+			Logger.println("Error creating input and output streams from socket: " + e.getMessage());
 			commManager.clientDisconnected(getPeer());
 		}
 	}

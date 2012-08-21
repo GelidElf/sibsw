@@ -13,6 +13,7 @@ import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 public class ConveyorBeltTest extends JFrame {
 
@@ -50,7 +51,7 @@ public class ConveyorBeltTest extends JFrame {
 
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
 		cbs.start();
-		System.out.println("ConveyorBelLanzado");
+		Logger.println("ConveyorBelLanzado");
 	}
 
 	private JButton creaBotonDeMeter() {
@@ -65,8 +66,7 @@ public class ConveyorBeltTest extends JFrame {
 		return jButton;
 	}
 
-	private class FeedActionListener implements ActionListener,
-			ParallelPortManagerObserver {
+	private class FeedActionListener implements ActionListener, ParallelPortManagerObserver {
 
 		private ConveyorBeltManager manager;
 		private JButton jButton;
@@ -104,8 +104,7 @@ public class ConveyorBeltTest extends JFrame {
 
 	}
 
-	private class RemoveActionListener implements ActionListener,
-			ParallelPortManagerObserver {
+	private class RemoveActionListener implements ActionListener, ParallelPortManagerObserver {
 
 		private ConveyorBeltManager manager;
 		private JButton jButton;

@@ -3,9 +3,9 @@ package core.sections.AssembyStation;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
-public class AssemblyStationManager extends ParallelPortManager{
-
+public class AssemblyStationManager extends ParallelPortManager {
 
 	// We create the names for the groups and pins, so that we can access the
 	// values later from other objects.
@@ -26,22 +26,22 @@ public class AssemblyStationManager extends ParallelPortManager{
 			this.setBitGroup(AssemblyStationManager.ASSEMBLING_TIME, 4, 15);
 			// continue
 		} catch (ParallelPortException e) {
-			System.out.println(e.getMessage());
+			Logger.println(e.getMessage());
 			e.printStackTrace();
 		}
 		ParallelPortState state = new ParallelPortState();
 		setState(state);
 	}
-	
-	public void configure(int assemblingTime){
+
+	public void configure(int assemblingTime) {
 		try {
 			setValueByName(ASSEMBLING_TIME, assemblingTime);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Boolean isEngaged(){
+
+	public Boolean isEngaged() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(ENGAGE);
@@ -50,8 +50,8 @@ public class AssemblyStationManager extends ParallelPortManager{
 		}
 		return value;
 	}
-	
-	public void setEngaged(Boolean value){
+
+	public void setEngaged(Boolean value) {
 		try {
 			setValueByNameAsBoolean(ENGAGE, value);
 		} catch (ParallelPortException e) {
@@ -59,9 +59,8 @@ public class AssemblyStationManager extends ParallelPortManager{
 			e.printStackTrace();
 		}
 	}
-	
-	
-	public Boolean isGearDetected(){
+
+	public Boolean isGearDetected() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(GEAR_DETECTED);
@@ -70,8 +69,8 @@ public class AssemblyStationManager extends ParallelPortManager{
 		}
 		return value;
 	}
-	
-	public Boolean isAxisDetected(){
+
+	public Boolean isAxisDetected() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(AXIS_DETECTED);
@@ -80,8 +79,8 @@ public class AssemblyStationManager extends ParallelPortManager{
 		}
 		return value;
 	}
-	
-	public Boolean isAPDetected(){
+
+	public Boolean isAPDetected() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(AP_DETECTED);
@@ -90,5 +89,5 @@ public class AssemblyStationManager extends ParallelPortManager{
 		}
 		return value;
 	}
-	
+
 }

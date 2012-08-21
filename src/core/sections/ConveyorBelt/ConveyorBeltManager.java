@@ -3,6 +3,7 @@ package core.sections.ConveyorBelt;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 /**
  * Example class implementing a specific manager for a parallel connection.
@@ -34,14 +35,14 @@ public class ConveyorBeltManager extends ParallelPortManager {
 			this.setBitGroup(ConveyorBeltManager.QUANTITY, 11, 15);
 			// continue
 		} catch (ParallelPortException e) {
-			System.out.println(e.getMessage());
+			Logger.println(e.getMessage());
 			e.printStackTrace();
 		}
 		ParallelPortState state = new ParallelPortState();
 		setState(state);
 	}
 
-	public void configure(int capacity, int speed){
+	public void configure(int capacity, int speed) {
 		try {
 			setValueByName(ConveyorBeltManager.CAPACITY, capacity);
 			setValueByName(ConveyorBeltManager.SPEED, speed);
@@ -49,16 +50,16 @@ public class ConveyorBeltManager extends ParallelPortManager {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setSensorInitial(Boolean value){
+
+	public void setSensorInitial(Boolean value) {
 		try {
 			setValueByNameAsBoolean(SENSOR_LOAD, value);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Boolean isSensorInitial(){
+
+	public Boolean isSensorInitial() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(SENSOR_LOAD);
@@ -67,16 +68,16 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 		return value;
 	}
-	
-	public void setSensorFinish(Boolean value){
+
+	public void setSensorFinish(Boolean value) {
 		try {
 			setValueByNameAsBoolean(SENSOR_UNLOAD, value);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Boolean isSensorFinish(){
+
+	public Boolean isSensorFinish() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(SENSOR_UNLOAD);
@@ -85,16 +86,16 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 		return value;
 	}
-	
-	public void setRunning(Boolean value){
+
+	public void setRunning(Boolean value) {
 		try {
 			setValueByNameAsBoolean(RUNNING, value);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public Boolean isRunning(){
+
+	public Boolean isRunning() {
 		Boolean value = null;
 		try {
 			value = getValueByNameAsBoolean(RUNNING);
@@ -103,14 +104,13 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 		return value;
 	}
-	
-	public Boolean isSensorUnloadMax(){
-		return isSensorFinish() && (getBitGroupValue(CAPACITY)==getBitGroupValue(QUANTITY));
+
+	public Boolean isSensorUnloadMax() {
+		return isSensorFinish() && (getBitGroupValue(CAPACITY) == getBitGroupValue(QUANTITY));
 	}
-	
-	public Boolean isEmpty(){
+
+	public Boolean isEmpty() {
 		return (getBitGroupValue(QUANTITY) == 0);
 	}
-	
-	
+
 }
