@@ -9,20 +9,24 @@ import javax.swing.JFrame;
 
 import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
+import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class AtConveyorBeltTest extends JFrame {
+public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObserver{
 
 	private static final long serialVersionUID = -2412052089713542223L;
 	private ATConveyorBelt atcb;
+	private JButton jButton;
 
 	public static void main(String[] args) {
 		new AtConveyorBeltTest();
 	}
 
 	public AtConveyorBeltTest() {
-		createModel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setLayout(new GridLayout(1, 1));
+		createModel();
 		add(creaBotonDeSacar());
 		pack();
 		setVisible(true);
@@ -32,11 +36,13 @@ public class AtConveyorBeltTest extends JFrame {
 	public void createModel() {
 		ConveyorBeltManager manager = new ConveyorBeltManager();
 		manager.configure(10, 2);
+		manager.registerObserver(this);
 		atcb = new ATConveyorBelt(null, manager);
+		atcb.startCommand();
 	}
 
 	private JButton creaBotonDeSacar() {
-		JButton jButton = new JButton("Saca");
+		jButton = new JButton("Saca");
 		jButton.addActionListener(new RemoveActionListener(jButton, atcb));
 		return jButton;
 	}
@@ -56,6 +62,19 @@ public class AtConveyorBeltTest extends JFrame {
 			atcb.piecePicked();
 		}
 
+	}
+
+	@Override
+	public void updateFromPortManager(ParallelPortManager manager) {
+		if (manager.getModifiedGroupName().equals(ConveyorBeltManager.SENSOR_UNLOAD)){
+			try {
+				boolean value = manager.getValueByNameAsBoolean(ConveyorBeltManager.SENSOR_UNLOAD);
+				jButton.setEnabled(value);
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 
 }
