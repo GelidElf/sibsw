@@ -10,11 +10,22 @@ import java.net.SocketException;
 import core.messages.enums.CommunicationIds;
 import core.utilities.log.Logger;
 
+/**
+ * Connection manager
+ * 
+ * This class contains the socket and is responsable for writting and reading
+ * objects from a stream This class includes the owner of the message when it
+ * writes it to the socket, deals with identification of the other peer,
+ * (Messages with type handshake), deals with broadcast messages
+ * 
+ * @author GelidElf
+ * 
+ */
 public class ConnectionManager extends Thread {
 
 	private Socket socket = null;
-	private ObjectOutputStream _oos = null;
-	private ObjectInputStream _ois = null;
+	private ObjectOutputStream oos = null;
+	private ObjectInputStream ois = null;
 	private Inbox inbox = null;
 	private CommunicationManager commManager = null;
 	private CommunicationIds owner = null;
@@ -31,6 +42,12 @@ public class ConnectionManager extends Thread {
 		createInputAndOutputStreamsFromSocket();
 	}
 
+	/**
+	 * This method waits until a message is received, identifies the other peer
+	 * by the messages owner and processes the message
+	 * 
+	 * @return the identification of the peer
+	 */
 	public CommunicationIds waitTilMessageReceivedAndReturnPeer() {
 		Message firstMessage = readMessageFromStream();
 		peer = firstMessage.getOwner();
@@ -38,16 +55,22 @@ public class ConnectionManager extends Thread {
 		return peer;
 	}
 
+	/**
+	 * Creates the input and output streams
+	 */
 	private void createInputAndOutputStreamsFromSocket() {
 		try {
-			_oos = new ObjectOutputStream(this.socket.getOutputStream());
-			_ois = new ObjectInputStream(this.socket.getInputStream());
+			oos = new ObjectOutputStream(this.socket.getOutputStream());
+			ois = new ObjectInputStream(this.socket.getInputStream());
 		} catch (IOException e) {
 			Logger.println("Error creating input and output streams from socket: " + e.getMessage());
 			commManager.clientDisconnected(getPeer());
 		}
 	}
 
+	/**
+	 * Overriden run method, reads a message from stream and processes it.
+	 */
 	@Override
 	public void run() {
 		while (keepRunning) {
@@ -56,6 +79,14 @@ public class ConnectionManager extends Thread {
 		}
 	}
 
+	/**
+	 * Processes the message, prints that a message was received in console, and
+	 * depending on the destination of the message is included in the inbox or
+	 * resent if we are the master
+	 * 
+	 * @param message
+	 *            the message to process
+	 */
 	private void trataMensajeRecibido(Message message) {
 		if (message == null) {
 			return;
@@ -73,25 +104,56 @@ public class ConnectionManager extends Thread {
 
 	}
 
+	/**
+	 * This method sends the message through the communication manager, this way
+	 * broadcast messages or particular messages will be handled by the
+	 * appropiate communication manager
+	 * 
+	 * @param message
+	 *            the message to resend
+	 */
 	private void reenviamos(Message message) {
 		Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
 		commManager.sendMessage(message);
 	}
 
+	/**
+	 * Method that identifies if the owner of this connection manager is the
+	 * master automata, used to allow to resend broadcast or messages intended
+	 * for other automatas
+	 * 
+	 * @return true if this connectionManager is owned by the master, false
+	 *         otherwise
+	 */
 	private boolean somosElMaster() {
 		return owner == CommunicationIds.MASTER;
 	}
 
+	/**
+	 * Method that will check if this connectionManager is the destination of
+	 * the message
+	 * 
+	 * @param message
+	 *            that contains the destination to evaluate
+	 * @return true if the destination in the message is the owner, or if the
+	 *         message is a broadcast
+	 */
 	private boolean somosDestinatariosDelMensaje(Message message) {
 		return message.isBroadcast() || (message.getDestination() == owner);
 	}
 
+	/**
+	 * Method that writes a message in the socket
+	 * 
+	 * @param message
+	 *            the message to write
+	 */
 	public synchronized void writeMessage(Message message) {
 		message.setOwner(owner);
 		try {
-			_oos.writeObject(message);
-			_oos.flush();
-			_oos.reset();
+			oos.writeObject(message);
+			oos.flush();
+			oos.reset();
 		} catch (IOException e) {
 			Logger.println("Error escribiendo el mensaje");
 		}
@@ -105,10 +167,16 @@ public class ConnectionManager extends Thread {
 		return peer;
 	}
 
+	/**
+	 * Method that reads a message from the socket and handles the disconnect
+	 * when speciffic exceptions occurr
+	 * 
+	 * @return the message read from the socket
+	 */
 	private Message readMessageFromStream() {
 		Object o;
 		try {
-			o = _ois.readObject();
+			o = ois.readObject();
 			if (o instanceof Message) {
 				return ((Message) o);
 			}
@@ -128,10 +196,20 @@ public class ConnectionManager extends Thread {
 		return null;
 	}
 
+	/**
+	 * Returns the inbox of this connection Manager
+	 * 
+	 * @return the inbox of this connection manager
+	 */
 	public Inbox getInbox() {
 		return this.inbox;
 	}
 
+	/**
+	 * Returns the message given by the inbox
+	 * 
+	 * @return the message read in the inbox, null if an error ocurred
+	 */
 	public Message readMessageFromInbox() {
 		try {
 			return this.inbox.getMessage();
@@ -156,10 +234,16 @@ public class ConnectionManager extends Thread {
 		this.messagesToRead = messagesToRead;
 	}
 
+	/**
+	 * Public method that disables the loop condition of the run method
+	 */
 	public void disable() {
 		keepRunning = false;
 	}
 
+	/**
+	 * Public method that enables the loop condition of the run method
+	 */
 	public void enable() {
 		keepRunning = true;
 	}
@@ -180,7 +264,8 @@ public class ConnectionManager extends Thread {
 	}
 
 	/**
-	 * @param peer the peer to set
+	 * @param peer
+	 *            the peer to set
 	 */
 	public void setPeer(CommunicationIds peer) {
 		this.peer = peer;

@@ -32,8 +32,8 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		this.conf = conf;
 		this.numberOfIncoming = numberOfIncoming;
 		inbox = new Inbox();
-		loadConfigurationFromFonfiguration();
-		setUpVariablesForMaster();
+		serverPort = this.conf.getServerPortAsInt();
+		createServerSocket();
 	}
 
 	@Override
@@ -45,11 +45,11 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		}
 	}
 
-	private void loadConfigurationFromFonfiguration() {
-		serverPort = conf.getServerPortAsInt();
-	}
-
-	private void setUpVariablesForMaster() {
+	/**
+	 * Initialices the array of connections and creates the server socket and
+	 * binds it to the server port
+	 */
+	private void createServerSocket() {
 		connections = new HashMap<CommunicationIds, ConnectionManager>(numberOfIncoming);
 		try {
 			serverSocket = new ServerSocket();
@@ -60,13 +60,25 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		}
 	}
 
-	public void waitForSocketsToConnect() throws IOException {
+	/**
+	 * Waits for each client to connect
+	 * 
+	 * @throws IOException
+	 *             if the connection had a problem
+	 */
+	private void waitForSocketsToConnect() throws IOException {
 		while (connections.size() < numberOfIncoming) {
 			connectClient();
 		}
 		Logger.println("All conections stablished");
 	}
 
+	/**
+	 * Manages the connection of a client creates the socket, and calls to
+	 * manage the client connection
+	 * 
+	 * @throws IOException
+	 */
 	private void connectClient() throws IOException {
 		Logger.println(String.format("Waiting for connection n1 %d", connections.size()));
 		Socket socket = serverSocket.accept();
@@ -77,6 +89,27 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		manageNewSocketReceived(socket);
 	}
 
+	/**
+	 * adds the socket to connections, waits for the peer information, notifies
+	 * that that client has connected and enables the connectionManager thread
+	 * 
+	 * @param socket
+	 */
+	private void manageNewSocketReceived(Socket socket) {
+		ConnectionManager c = new ConnectionManager(socket, this, inbox);
+		CommunicationIds s = c.waitTilMessageReceivedAndReturnPeer();
+		connections.put(s, c);
+		Logger.println(String.format("%s connected", s));
+		startConnection(c);
+	}
+
+	/**
+	 * Deals with the reconnection of the client using a new executor service so
+	 * that there is no wait in this thread until ir reconnects
+	 * 
+	 * @param commId
+	 *            the id of the client disconnected
+	 */
 	private void reconnectClient(CommunicationIds commId) {
 		ExecutorService executor = Executors.newFixedThreadPool(1);
 
@@ -102,15 +135,11 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		}
 	}
 
-	private void manageNewSocketReceived(Socket socket) {
-		ConnectionManager c = new ConnectionManager(socket, this, inbox);
-		CommunicationIds s = c.waitTilMessageReceivedAndReturnPeer();
-		connections.put(s, c);
-		Logger.println(String.format("%s connected", s));
-		c.enable();
-		startConnection(c);
-	}
-
+	/**
+	 * Disables the connectionManager thread, notifies the model of the
+	 * disconnection and launches the reconnection of the client
+	 */
+	@Override
 	public void clientDisconnected(CommunicationIds commId) {
 		connections.get(commId).disable();
 		MasterModel.getInstance().setModel(commId, null);
@@ -118,10 +147,18 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		reconnectClient(commId);
 	}
 
+	/**
+	 * Enables and starts the connectionManager thread
+	 * 
+	 * @param conn
+	 */
+	// FIXME: if something happens this will constantly call itself, use the same approach as with the client
 	private void startConnection(ConnectionManager conn) {
 		try {
+			conn.enable();
 			conn.start();
 		} catch (Exception e) {
+
 			startConnection(conn);
 		}
 	}
@@ -131,6 +168,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		return inbox;
 	}
 
+	@Override
 	public void sendMessage(Message message) {
 		if ((message.getDestination() == null) || (CommunicationIds.BROADCAST == message.getDestination())) {
 			for (ConnectionManager conn : connections.values()) {
@@ -141,6 +179,17 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		}
 	}
 
+	/**
+	 * Method to enable this server implementation of a communication manager to
+	 * be the client, tryes to connect to the specified adderes and port
+	 * 
+	 * Main use is to connect to the possible independent SCADA node
+	 * 
+	 * @param address
+	 *            the address to connect to
+	 * @param port
+	 *            the port to connect to
+	 */
 	public void createClientConnectionTo(String address, int port) {
 		Socket socket;
 		try {

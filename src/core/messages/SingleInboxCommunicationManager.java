@@ -7,6 +7,15 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
+/**
+ * Client communication manager, created for all the slaves
+ * 
+ * tries to connect to the server, and when connection is lost, tryes to
+ * reconnect
+ * 
+ * @author GelidElf
+ * 
+ */
 public class SingleInboxCommunicationManager implements CommunicationManager {
 
 	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;

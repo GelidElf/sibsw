@@ -2,16 +2,23 @@ package core.messages;
 
 import core.messages.enums.CommunicationIds;
 
+/**
+ * Dummy communication manager, just includes the Inbox
+ * 
+ * @author GelidElf
+ * 
+ */
 public class OfflineCommunicationManager implements CommunicationManager {
 
 	private Inbox inbox;
-	
+
 	public OfflineCommunicationManager() {
 		inbox = new Inbox();
 	}
-	
+
 	@Override
-	public void sendMessage(Message message) {}
+	public void sendMessage(Message message) {
+	}
 
 	@Override
 	public Inbox getInbox() {
@@ -39,6 +46,7 @@ public class OfflineCommunicationManager implements CommunicationManager {
 	}
 
 	@Override
-	public void clientDisconnected(CommunicationIds commId) {}
+	public void clientDisconnected(CommunicationIds commId) {
+	}
 
 }

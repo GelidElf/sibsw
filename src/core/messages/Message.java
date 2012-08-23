@@ -7,6 +7,15 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataModel;
 
+/**
+ * Object read and written in the Socket for communication is paremetrized with
+ * the owner of the message, the destination, the type of message, the input
+ * type (when Type is COMMAND), if it's urgent, and id for the message, and the
+ * contents
+ * 
+ * @author GelidElf
+ * 
+ */
 public class Message implements Serializable {
 
 	private CommunicationMessageType type = null;
@@ -28,6 +37,13 @@ public class Message implements Serializable {
 		this.type = type;
 	}
 
+	/**
+	 * Adds an attribute to the message, if contents was null, creates the
+	 * storage
+	 * 
+	 * @param att
+	 *            the attribute
+	 */
 	public void addAttribute(Attribute att) {
 		if (contents == null) {
 			contents = new ArrayList<Attribute>();
@@ -35,11 +51,17 @@ public class Message implements Serializable {
 		contents.add(att);
 	}
 
+	/**
+	 * creates a new attribute with the parametros and includes it in the
+	 * message
+	 * 
+	 * @param name
+	 *            the name and key of the attribute
+	 * @param value
+	 *            the value of the attribute
+	 */
 	public void addAttribute(String name, Object value) {
-		if (contents == null) {
-			contents = new ArrayList<Attribute>();
-		}
-		contents.add(new Attribute(name, value));
+		addAttribute(new Attribute(name, value));
 	}
 
 	public String getID() {
@@ -63,6 +85,15 @@ public class Message implements Serializable {
 		return contents.get(i);
 	}
 
+	/**
+	 * Returns the value of the attribute whose key maches the key passed in
+	 * parameter
+	 * 
+	 * @param key
+	 *            the key of the attribute
+	 * @return the value of the attribute with maching key, or null if there was
+	 *         none
+	 */
 	public Object getAttributeValue(String key) {
 		Attribute attribute = getAttribute(key);
 		if (attribute == null) {
@@ -72,6 +103,13 @@ public class Message implements Serializable {
 		}
 	}
 
+	/**
+	 * Returns the attribute whose key maches the key passed in parameter
+	 * 
+	 * @param key
+	 *            the key of the attribute
+	 * @return the attribute with maching key, or null if there was none
+	 */
 	public Attribute getAttribute(String key) {
 		if (contents == null) {
 			return null;
@@ -119,7 +157,8 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * @param owner the owner to set
+	 * @param owner
+	 *            the owner to set
 	 */
 	public void setOwner(CommunicationIds owner) {
 		this.owner = owner;
@@ -130,14 +169,16 @@ public class Message implements Serializable {
 	}
 
 	/**
-	 * @return the currentModel
+	 * @return the currentModel from the message contents, if it exist
 	 */
 	public AutomataModel getCurrentModel() {
 		return (AutomataModel) getAttributeValue(MODEL_KEY);
 	}
 
 	/**
-	 * @param currentModel the currentModel to set
+	 * @param currentModel
+	 *            the currentModel to set is added to the contents of the
+	 *            message
 	 */
 	public void setCurrentModel(AutomataModel currentModel) {
 		addAttribute(MODEL_KEY, currentModel);
