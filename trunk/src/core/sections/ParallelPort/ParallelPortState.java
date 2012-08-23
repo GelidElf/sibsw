@@ -1,13 +1,12 @@
 package core.sections.ParallelPort;
 
-
 public class ParallelPortState implements Cloneable {
 
-	private boolean[] _connectors = new boolean[16];
+	private boolean[] connectors = new boolean[16];
 	/**
 	 * Stores the position the last change was made
 	 */
-	private int _modifiedBit = -1;
+	private int modifiedBit = -1;
 
 	/**
 	 * Returns the position in witch the last change was made
@@ -15,11 +14,11 @@ public class ParallelPortState implements Cloneable {
 	 * @return
 	 */
 	public int getModifiedBit() {
-		return _modifiedBit;
+		return modifiedBit;
 	}
 
 	public void setModifiedBit(int modifiedBit) {
-		_modifiedBit = modifiedBit;
+		this.modifiedBit = modifiedBit;
 	}
 
 	public ParallelPortState() {
@@ -31,8 +30,8 @@ public class ParallelPortState implements Cloneable {
 	 */
 	private ParallelPortState(ParallelPortState other) {
 		int i = 0;
-		for (Boolean value : other._connectors) {
-			this._connectors[i] = value.booleanValue();
+		for (Boolean value : other.connectors) {
+			this.connectors[i] = value.booleanValue();
 		}
 	}
 
@@ -45,16 +44,16 @@ public class ParallelPortState implements Cloneable {
 	 * @return
 	 */
 	public boolean getValue(int position) {
-		return _connectors[position];
+		return connectors[position];
 	}
 
 	public void setValue(int position, boolean value) {
-		_modifiedBit = position;
-		_connectors[position] = Boolean.valueOf(value);
+		modifiedBit = position;
+		connectors[position] = Boolean.valueOf(value);
 	}
 
 	public boolean[] getConnectors() {
-		return _connectors;
+		return connectors;
 	}
 
 	@Override

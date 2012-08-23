@@ -37,7 +37,7 @@ public class ParallelPortManager {
 	/**
 	 * Bits of the connection
 	 */
-	private ParallelPortState _state = null;
+	private ParallelPortState state = null;
 	/**
 	 * Observers for the Managers
 	 */
@@ -48,7 +48,7 @@ public class ParallelPortManager {
 	 */
 	private ParallelPortPinGroup[] _connectorOwners = null;
 	/**
-	 * Quick access to the pin groups acrdingto their names
+	 * Quick access to the pin groups acording to their names
 	 */
 	private Hashtable<String, ParallelPortPinGroup> _connectorNames = null;
 
@@ -64,7 +64,7 @@ public class ParallelPortManager {
 	 * @return
 	 */
 	public ParallelPortState getCurrentState() {
-		return _state;
+		return state;
 	}
 
 	/**
@@ -74,14 +74,14 @@ public class ParallelPortManager {
 	 * @param state
 	 */
 	public synchronized void setState(ParallelPortState state) {
-		_state = state;
+		this.state = state;
 	}
 
 	/**
 	 * clears the current value stored in state
 	 */
 	public synchronized void clearState() {
-		_state = null;
+		state = null;
 	}
 
 	/**
@@ -90,8 +90,7 @@ public class ParallelPortManager {
 	 * @param observer
 	 * @return
 	 */
-	public synchronized boolean registerObserver(
-			ParallelPortManagerObserver observer) {
+	public synchronized boolean registerObserver(ParallelPortManagerObserver observer) {
 		return _observers.add(observer);
 	}
 
@@ -107,10 +106,8 @@ public class ParallelPortManager {
 	 * @throws IndexOutOfBoundsException
 	 *             if the pinout is incorrect
 	 */
-	public synchronized void setBitGroup(String name, int start, int end)
-			throws ParallelPortException {
-		ParallelPortPinGroup pinGroup = new ParallelPortPinGroup(this, name,
-				start, end);
+	public synchronized void setBitGroup(String name, int start, int end) throws ParallelPortException {
+		ParallelPortPinGroup pinGroup = new ParallelPortPinGroup(this, name, start, end);
 		if (_connectorNames == null) {
 			_connectorNames = new Hashtable<String, ParallelPortPinGroup>();
 		}
@@ -118,18 +115,15 @@ public class ParallelPortManager {
 			_connectorOwners = new ParallelPortPinGroup[16];
 		}
 		if ((start < 0) || (end < 0) || (start > 16) || (end > 16)) {
-			throw new IndexOutOfBoundsException(
-					"Index selected for pin group is out of bounds");
+			throw new IndexOutOfBoundsException("Index selected for pin group is out of bounds");
 		}
 		if ((name == null) || name.equals("")) {
-			throw new ParallelPortException(
-					"Name for pin group is empty or null");
+			throw new ParallelPortException("Name for pin group is empty or null");
 		}
 		_connectorNames.put(name, pinGroup);
 		for (int i = start; i <= end; i++) {
 			if (_connectorOwners[i] != null) {
-				throw new ParallelPortException(
-						"Position assigned to group already assigned");
+				throw new ParallelPortException("Position assigned to group already assigned");
 			}
 			_connectorOwners[i] = pinGroup;
 		}
@@ -147,21 +141,20 @@ public class ParallelPortManager {
 		}
 	}
 
-	
 	public synchronized void setBit(int position) {
-		_state.setValue(position, true);
+		state.setValue(position, true);
 	}
 
 	public synchronized void resetBit(int position) {
-		_state.setValue(position, false);
+		state.setValue(position, false);
 	}
 
 	public synchronized void setBitTo(int position, boolean value) {
-		_state.setValue(position, value);
+		state.setValue(position, value);
 	}
 
 	public synchronized void setBitTo(int position, int value) {
-		_state.setValue(position, (value == 1));
+		state.setValue(position, (value == 1));
 	}
 
 	/**
@@ -172,15 +165,14 @@ public class ParallelPortManager {
 	 * @return 1 if true, 0 otherwise
 	 */
 	public synchronized int getIntValue(int position) {
-		if (_state.getValue(position)) {
+		if (state.getValue(position)) {
 			return 1;
 		} else {
 			return 0;
 		}
 	}
 
-	public synchronized void setBitGroupValue(String name, int value)
-			throws ParallelPortException {
+	public synchronized void setBitGroupValue(String name, int value) throws ParallelPortException {
 		_connectorNames.get(name).setValue(value);
 	}
 
@@ -189,8 +181,8 @@ public class ParallelPortManager {
 	}
 
 	public synchronized String getModifiedPositionBitGroupName() {
-		if (_connectorOwners[_state.getModifiedBit()] != null) {
-			return _connectorOwners[_state.getModifiedBit()].getName();
+		if (_connectorOwners[state.getModifiedBit()] != null) {
+			return _connectorOwners[state.getModifiedBit()].getName();
 		} else {
 			return null;
 		}
@@ -203,7 +195,7 @@ public class ParallelPortManager {
 	 * @return te position that was modified
 	 */
 	public synchronized int getModifiedBitPosition() {
-		return _state.getModifiedBit();
+		return state.getModifiedBit();
 	}
 
 	/**
@@ -214,11 +206,9 @@ public class ParallelPortManager {
 	 * @throws ParallelPortException
 	 *             if groupName is null or empty
 	 */
-	public synchronized void resetBitGroupValue(String groupName)
-			throws ParallelPortException {
+	public synchronized void resetBitGroupValue(String groupName) throws ParallelPortException {
 		if ((groupName == null) || groupName.equals("")) {
-			throw new ParallelPortException(
-					"Name for pin group is empty or null");
+			throw new ParallelPortException("Name for pin group is empty or null");
 		}
 		try {
 			_connectorNames.get(groupName).setValue(0);
@@ -238,11 +228,9 @@ public class ParallelPortManager {
 	 *             if groupName is null or empty of if the value is to big for
 	 *             the group
 	 */
-	public synchronized void setValueByName(String groupName, int value)
-			throws ParallelPortException {
+	public synchronized void setValueByName(String groupName, int value) throws ParallelPortException {
 		if ((groupName == null) || groupName.equals("")) {
-			throw new ParallelPortException(
-					"Name for pin group is empty or null");
+			throw new ParallelPortException("Name for pin group is empty or null");
 		}
 		_connectorNames.get(groupName).setValue(value);
 		update();
@@ -258,37 +246,33 @@ public class ParallelPortManager {
 	 *             if groupName is null or empty or if there is no group with
 	 *             that name
 	 */
-	public synchronized int getValueByName(String groupName)
-			throws ParallelPortException {
+	public synchronized int getValueByName(String groupName) throws ParallelPortException {
 		if ((groupName == null) || groupName.equals("")) {
-			throw new ParallelPortException(
-					"Name for pin group is empty or null");
+			throw new ParallelPortException("Name for pin group is empty or null");
 		}
 		ParallelPortPinGroup pinGroup = _connectorNames.get(groupName);
 		if (pinGroup == null) {
-			throw new ParallelPortException(
-					"There is no group with that name stored");
+			throw new ParallelPortException("There is no group with that name stored");
 		} else {
 			return pinGroup.intValue();
 		}
 	}
 
 	public synchronized String getModifiedGroupName() {
-		if ((_state.getModifiedBit() < 0) && (_state.getModifiedBit() >= 16)) {
+		if ((state.getModifiedBit() < 0) && (state.getModifiedBit() >= 16)) {
 			return null;
 		} else {
-			return _connectorOwners[_state.getModifiedBit()].getName();
+			return _connectorOwners[state.getModifiedBit()].getName();
 		}
 	}
 
 	public synchronized int getModifedValue() {
-		if (_connectorOwners[_state.getModifiedBit()] == null) {
-			return getIntValue(_state.getModifiedBit());
+		if (_connectorOwners[state.getModifiedBit()] == null) {
+			return getIntValue(state.getModifiedBit());
 		} else {
-			return _connectorOwners[_state.getModifiedBit()].intValue();
+			return _connectorOwners[state.getModifiedBit()].intValue();
 		}
 	}
-
 
 	/**
 	 * Returns the boolean value of the group, if this group has only one element
@@ -296,10 +280,9 @@ public class ParallelPortManager {
 	 * @return TRUE if the pin group name value is 1, false if is 0
 	 * @throws ParallelPortException 
 	 */
-	public Boolean getValueByNameAsBoolean(String groupName) throws ParallelPortException{
-		if (_connectorNames.get(groupName).length() != 1){
-			throw new ParallelPortException(
-					"The pin group must have length 1 in order to obtain the boolean value");
+	public Boolean getValueByNameAsBoolean(String groupName) throws ParallelPortException {
+		if (_connectorNames.get(groupName).length() != 1) {
+			throw new ParallelPortException("The pin group must have length 1 in order to obtain the boolean value");
 		}
 		int value = -1;
 		try {
@@ -307,27 +290,26 @@ public class ParallelPortManager {
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
-		if (value == 1){
+		if (value == 1) {
 			return Boolean.TRUE;
 		}
-		if (value == 0){
+		if (value == 0) {
 			return Boolean.FALSE;
 		}
 		return null;
 	}
-	
-	public void setValueByNameAsBoolean(String groupName,Boolean value) throws ParallelPortException{
-		if (_connectorNames.get(groupName).length() != 1){
-			throw new ParallelPortException(
-					"The pin group must have length 1 in order to sey the value as boolean");
+
+	public void setValueByNameAsBoolean(String groupName, Boolean value) throws ParallelPortException {
+		if (_connectorNames.get(groupName).length() != 1) {
+			throw new ParallelPortException("The pin group must have length 1 in order to sey the value as boolean");
 		}
 		int intValue = -1;
-		if (value){
+		if (value) {
 			intValue = 1;
-		}else{
+		} else {
 			intValue = 0;
 		}
 		setValueByName(groupName, intValue);
 	}
-	
+
 }
