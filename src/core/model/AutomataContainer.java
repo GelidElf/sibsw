@@ -13,7 +13,7 @@ public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataMo
 	protected Configuration conf;
 	private CommunicationManager commManager;
 	protected AutomataContainer<?,?> father;
-	protected AS model;
+	private AS model;
 
 	public AutomataContainer(AutomataContainer<?,?> father, AS model, CommunicationManager commManager) {
 		this.father = father;
@@ -101,6 +101,13 @@ public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataMo
 	protected Message createDummyMessageForInput(T input, boolean isUrgent) {
 		Message message = new Message("FeededInputDummyMessage", getCommunicationManager().getOwner(), isUrgent, CommunicationMessageType.COMMAND, input);
 		return message;
+	}
+
+	/**
+	 * @return the model
+	 */
+	public AS getModel() {
+		return model;
 	}
 
 }

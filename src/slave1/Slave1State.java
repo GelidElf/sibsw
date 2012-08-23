@@ -1,6 +1,9 @@
 package slave1;
 
+import core.gui.satuspanel.ModeEnum;
 import core.model.State;
+import core.sections.AssembyStation.ATAssemblyStationInput;
+import core.sections.ConveyorBelt.ATConveyorBeltInput;
 
 public class Slave1State implements State<Slave1Input> {
 
@@ -10,7 +13,14 @@ public class Slave1State implements State<Slave1Input> {
 			protected states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case START:
-					currentState.getAutomata().getGearBelt();
+					//FIXME: Make the feed input execute the start command
+					currentState.getAutomata().getGearBelt().feedInput(ATConveyorBeltInput.START, true);
+					currentState.getAutomata().getAxisBelt().feedInput(ATConveyorBeltInput.START, true);
+					currentState.getAutomata().getAssemblyStation().feedInput(ATAssemblyStationInput.START, true);
+					currentState.getAutomata().getGearBelt().startCommand();
+					currentState.getAutomata().getAxisBelt().startCommand();
+					currentState.getAutomata().getAssemblyStation().startCommand();
+					currentState.getAutomata().getModel().setCurrentMode(ModeEnum.IDLE);
 					return IDDLE;
 				}
 				return super.executeInternal(currentState, input);

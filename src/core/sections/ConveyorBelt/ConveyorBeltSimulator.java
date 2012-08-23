@@ -42,11 +42,12 @@ public class ConveyorBeltSimulator extends Thread {
 	}
 
 	private void printContents(String text) {
-		Logger.print(text);
+		StringBuilder builder = new StringBuilder();
+		builder.append(text);
 		for (int i = 0; i < contents.length; i++) {
-			Logger.print(" " + contents[i]);
+			builder.append(" " + contents[i]);
 		}
-		Logger.println();
+		Logger.println(builder.toString());
 	}
 
 	@Override

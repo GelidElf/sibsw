@@ -1,5 +1,6 @@
 package core.sections.ConveyorBelt;
 
+import core.gui.satuspanel.ModeEnum;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.OfflineCommunicationManager;
@@ -98,6 +99,9 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, Dummy
 	@Override
 	protected void consume(Message message) {
 		switch ((ATConveyorBeltInput) message.getInputType()) {
+		case START:
+			getModel().setCurrentMode(ModeEnum.IDLE);
+			break;
 		case empty:
 			currentState.empty();
 			break;

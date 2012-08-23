@@ -1,5 +1,6 @@
 package core.sections.AssembyStation;
 
+import core.gui.satuspanel.ModeEnum;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.OfflineCommunicationManager;
@@ -40,6 +41,9 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 	@Override
 	protected void consume(Message message) {
 		switch ((ATAssemblyStationInput)message.getInputType()) {
+		case START:
+			getModel().setCurrentMode(ModeEnum.IDLE);
+			break;
 		case apDetectedFalse:
 			currentState.apDetectedFalse();
 			break;
