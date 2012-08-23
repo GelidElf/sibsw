@@ -31,13 +31,17 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1Model> 
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10, 2);
 		gearBelt = new ATConveyorBelt(this, gearManager);
+		getModel().setGearBeltModel(gearBelt.getModel());
 		ConveyorBeltManager axisManager = new ConveyorBeltManager();
 		axisManager.configure(10, 2);
 		axisBelt = new ATConveyorBelt(this, axisManager);
+		getModel().setAxisBeltModel(axisBelt.getModel());
 		AssemblyStationManager assemblyManager = new AssemblyStationManager();
 		assemblyManager.configure(10);
 		assemblyStation = new ATAssemblyStation(this, assemblyManager);
-		model.addListener(this);
+		getModel().setAssemblyStationModel(assemblyStation.getModel());
+		robot = new Robot();
+		getModel().addListener(this);
 	}
 
 	public void setInitialSettings(String settings) {
@@ -122,9 +126,6 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1Model> 
 		currentState = new Slave1State(this);
 		getCommunicationManager().initialize();
 		start();
-		gearBelt.startCommand();
-		axisBelt.startCommand();
-		assemblyStation.startCommand();
 	}
 
 	@Override

@@ -19,12 +19,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
+import slave1.Slave1Model;
+
 import master.ATMaster;
 import master.ATMasterInput;
 import core.file.ConfigurationFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.enums.CommunicationIds;
+import core.model.AutomataModel;
 import core.model.MasterModel;
 import core.model.ModelListener;
 
@@ -51,6 +54,16 @@ public class interfaz implements ModelListener {
 	private JTextField textField_13;
 	private final Action action = new SwingAction();
 
+	private StatusPanel axisStatusPanel;
+	private StatusPanel gearStatusPanel;
+	private StatusPanel assemblyStatusPanel;
+	private StatusPanel assembledStatusPanel;
+	private StatusPanel finisedStatusPanel;
+	private StatusPanel robot2StatusPanel;
+	private StatusPanel qualityStatusPanel;
+	private StatusPanel weldingStatusPanel;
+	private StatusPanel robot1StatusPanel;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -97,39 +110,41 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(mainView);
 		mainView.setLayout(null);
 
-		StatusPanel axisStatusPanel = new StatusPanel();
+		axisStatusPanel = new StatusPanel();
+		gearStatusPanel = new StatusPanel();
+		assemblyStatusPanel = new StatusPanel();
+		assembledStatusPanel = new StatusPanel();
+		finisedStatusPanel = new StatusPanel();
+		robot2StatusPanel = new StatusPanel();
+		qualityStatusPanel = new StatusPanel();
+		weldingStatusPanel = new StatusPanel();
+		robot1StatusPanel = new StatusPanel();
+
+		
 		axisStatusPanel.setBounds(731, 372, 14, 10);
 		mainView.add(axisStatusPanel);
 
-		StatusPanel gearStatusPanel = new StatusPanel();
 		gearStatusPanel.setBounds(731, 466, 14, 10);
 		mainView.add(gearStatusPanel);
 
-		StatusPanel assemblyStatusPanel = new StatusPanel();
 		assemblyStatusPanel.setBounds(814, 142, 14, 10);
 		mainView.add(assemblyStatusPanel);
 
-		StatusPanel assembledStatusPanel = new StatusPanel();
 		assembledStatusPanel.setBounds(468, 254, 14, 10);
 		mainView.add(assembledStatusPanel);
 
-		StatusPanel finisedStatusPanel = new StatusPanel();
 		finisedStatusPanel.setBounds(207, 444, 14, 10);
 		mainView.add(finisedStatusPanel);
 
-		StatusPanel robot2StatusPanel = new StatusPanel();
 		robot2StatusPanel.setBounds(303, 390, 14, 10);
 		mainView.add(robot2StatusPanel);
 
-		StatusPanel qualityStatusPanel = new StatusPanel();
 		qualityStatusPanel.setBounds(138, 279, 14, 10);
 		mainView.add(qualityStatusPanel);
 
-		StatusPanel weldingStatusPanel = new StatusPanel();
 		weldingStatusPanel.setBounds(387, 171, 14, 10);
 		mainView.add(weldingStatusPanel);
 
-		StatusPanel robot1StatusPanel = new StatusPanel();
 		robot1StatusPanel.setBounds(654, 390, 14, 10);
 		mainView.add(robot1StatusPanel);
 
@@ -488,9 +503,19 @@ public class interfaz implements ModelListener {
 		 */
 
 		setStatusPanelFor(CommunicationIds.SLAVE1);
+		updateStatusSlave1Sections();
 		setStatusPanelFor(CommunicationIds.SLAVE2);
 		setStatusPanelFor(CommunicationIds.SLAVE3);
 		frame.repaint();
+	}
+
+	private void updateStatusSlave1Sections() {
+		Slave1Model slave1Model = (Slave1Model) MasterModel.getInstance().getModel().get(CommunicationIds.SLAVE1);
+		if (slave1Model != null){
+			gearStatusPanel.setModo(slave1Model.getGearBeltModel().getCurrentMode());
+			axisStatusPanel.setModo(slave1Model.getAxisBeltModel().getCurrentMode());
+			assemblyStatusPanel.setModo(slave1Model.getAssemblyStationModel().getCurrentMode());
+		}
 	}
 
 	private void setStatusPanelFor(CommunicationIds commID) {
