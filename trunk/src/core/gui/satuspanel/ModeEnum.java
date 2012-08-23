@@ -11,27 +11,24 @@ import javax.swing.ImageIcon;
  */
 public enum ModeEnum {
 
-	READY ("Listo", Color.green, false),
-	RUNNING ("Corriendo", Color.green, true),
-	ESTOP ("Parada de emergencia", Color.red, true),
-	NSTOP ("Parada normal", Color.red, false),
-	IDLE ("Esperando",Color.blue, false);
-	
+	READY("Listo", Color.blue, false), RUNNING("Corriendo", Color.green, true), ESTOP("Parada de emergencia", Color.red, true), NSTOP("Parada normal", Color.red, false), IDLE("Esperando",
+			Color.green, false);
+
 	private String literal;
 	private Color color;
 	private boolean blink;
-	
-	ModeEnum(String literal, ImageIcon image){
-		
+
+	ModeEnum(String literal, ImageIcon image) {
+
 	}
-	
-	ModeEnum(String literal, Color color, boolean blink){
+
+	ModeEnum(String literal, Color color, boolean blink) {
 		this.literal = literal;
 		this.color = color;
 		this.blink = blink;
 	}
-	
-	public String getLiteral(){
+
+	public String getLiteral() {
 		return literal;
 	}
 
@@ -50,5 +47,5 @@ public enum ModeEnum {
 	public void setBlink(boolean blink) {
 		this.blink = blink;
 	}
-	
+
 }
