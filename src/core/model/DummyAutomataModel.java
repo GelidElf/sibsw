@@ -1,33 +1,41 @@
 package core.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import core.gui.satuspanel.ModeEnum;
 
 public class DummyAutomataModel implements AutomataModel {
 
 	private static final long serialVersionUID = -3041854356947485337L;
 
+	private ModeEnum currentMode;
+	private List<ModelListener> listeners;
+
+	public DummyAutomataModel() {
+		listeners = new ArrayList<ModelListener>();
+		currentMode = ModeEnum.READY;
+	}
+
 	@Override
 	public ModeEnum getCurrentMode() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentMode;
 	}
 
 	@Override
 	public void setCurrentMode(ModeEnum currentMode) {
-		// TODO Auto-generated method stub
-
+		this.currentMode = currentMode;
 	}
 
 	@Override
 	public void addListener(ModelListener listener) {
-		// TODO Auto-generated method stub
-
+		listeners.add(listener);
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
-
+		for (ModelListener listener : listeners) {
+			listener.updateOnModelChange();
+		}
 	}
-
 }
