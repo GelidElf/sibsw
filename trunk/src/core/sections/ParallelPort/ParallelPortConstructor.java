@@ -6,16 +6,15 @@ package core.sections.ParallelPort;
  * @author GelidElf
  *
  */
+@Deprecated
 public class ParallelPortConstructor {
 
 	/*
-	 * Example method for creating speciffic managers
+	 * Example method for creating specific managers
 	 */
-	public static ParallelPortManager createConveyorBeltManager(){
+	public static ParallelPortManager createConveyorBeltManager() {
 		ParallelPortManager manager = new ParallelPortManager();
-		
-		
-		
+
 		return manager;
 	}
 }

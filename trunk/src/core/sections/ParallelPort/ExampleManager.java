@@ -8,7 +8,7 @@ import core.utilities.log.Logger;
  * @author GelidElf
  *
  */
-
+@Deprecated
 public class ExampleManager extends ParallelPortManager {
 
 	//We create the names for the groups and pins, so that we can access the values later from other objects.
