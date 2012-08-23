@@ -19,15 +19,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
-import slave1.Slave1Model;
-
 import master.ATMaster;
 import master.ATMasterInput;
+import slave1.Slave1Model;
 import core.file.ConfigurationFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.enums.CommunicationIds;
-import core.model.AutomataModel;
 import core.model.MasterModel;
 import core.model.ModelListener;
 
@@ -63,7 +61,7 @@ public class interfaz implements ModelListener {
 	private StatusPanel qualityStatusPanel;
 	private StatusPanel weldingStatusPanel;
 	private StatusPanel robot1StatusPanel;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -120,7 +118,6 @@ public class interfaz implements ModelListener {
 		weldingStatusPanel = new StatusPanel();
 		robot1StatusPanel = new StatusPanel();
 
-		
 		axisStatusPanel.setBounds(731, 372, 14, 10);
 		mainView.add(axisStatusPanel);
 
@@ -502,24 +499,24 @@ public class interfaz implements ModelListener {
 		 * ().get(CommunicationIds.SLAVE1)?0:1); slave1comboBox.validate();
 		 */
 
-		setStatusPanelFor(CommunicationIds.SLAVE1);
-		updateStatusSlave1Sections();
-		setStatusPanelFor(CommunicationIds.SLAVE2);
-		setStatusPanelFor(CommunicationIds.SLAVE3);
+		MasterModel model = MasterModel.getInstance();
+		setStatusPanelFor(CommunicationIds.SLAVE1, model);
+		updateStatusSlave1Sections(model);
+		setStatusPanelFor(CommunicationIds.SLAVE2, model);
+		setStatusPanelFor(CommunicationIds.SLAVE3, model);
 		frame.repaint();
 	}
 
-	private void updateStatusSlave1Sections() {
-		Slave1Model slave1Model = (Slave1Model) MasterModel.getInstance().getModel().get(CommunicationIds.SLAVE1);
-		if (slave1Model != null){
-			gearStatusPanel.setModo(slave1Model.getGearBeltModel().getCurrentMode());
-			axisStatusPanel.setModo(slave1Model.getAxisBeltModel().getCurrentMode());
-			assemblyStatusPanel.setModo(slave1Model.getAssemblyStationModel().getCurrentMode());
+	private void updateStatusSlave1Sections(MasterModel model) {
+		Slave1Model slave1Model = (Slave1Model) model.getModel().get(CommunicationIds.SLAVE1);
+		if (slave1Model != null) {
+			gearStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getGearBeltModel().getCurrentMode() : null);
+			axisStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getAxisBeltModel().getCurrentMode() : null);
+			assemblyStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getAssemblyStationModel().getCurrentMode() : null);
 		}
 	}
 
-	private void setStatusPanelFor(CommunicationIds commID) {
-		MasterModel model = MasterModel.getInstance();
+	private void setStatusPanelFor(CommunicationIds commID, MasterModel model) {
 		statusPanels.get(commID).setModo(model.isConnected(commID) ? model.getModel().get(commID).getCurrentMode() : null);
 	}
 }
