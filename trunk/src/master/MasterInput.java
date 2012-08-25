@@ -1,6 +1,6 @@
 package master;
 
-public enum ATMasterInput {
+public enum MasterInput {
 	START,
 	EMPTY_TRANSFER_CB,
 	FEED_AXIS,

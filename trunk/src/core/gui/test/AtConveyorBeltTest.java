@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
@@ -16,7 +16,7 @@ import core.sections.ParallelPort.Utils.ParallelPortException;
 public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObserver{
 
 	private static final long serialVersionUID = -2412052089713542223L;
-	private ATConveyorBelt atcb;
+	private ConveyorBeltAutomata atcb;
 	private JButton jButton;
 
 	public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObs
 		ConveyorBeltManager manager = new ConveyorBeltManager();
 		manager.configure(10, 2);
 		manager.registerObserver(this);
-		atcb = new ATConveyorBelt(null, manager);
+		atcb = new ConveyorBeltAutomata(null, manager);
 		atcb.startCommand();
 	}
 
@@ -49,10 +49,10 @@ public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObs
 
 	private class RemoveActionListener implements ActionListener {
 
-		private ATConveyorBelt atcb;
+		private ConveyorBeltAutomata atcb;
 		private JButton jButton;
 
-		public RemoveActionListener(JButton jButton, ATConveyorBelt atcb) {
+		public RemoveActionListener(JButton jButton, ConveyorBeltAutomata atcb) {
 			this.atcb = atcb;
 			this.jButton = jButton;
 		}

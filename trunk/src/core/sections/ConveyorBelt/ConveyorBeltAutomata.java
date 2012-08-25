@@ -1,32 +1,26 @@
 package core.sections.ConveyorBelt;
 
-import core.gui.satuspanel.ModeEnum;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
-import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
-public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, ConveyorBeltState, ConveyorBeltModel> implements ParallelPortManagerObserver {
+public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, ConveyorBeltState, ConveyorBeltModel> implements ParallelPortManagerObserver {
 
 	private ConveyorBeltManager manager = null;
-	private AutomataStateCB currentState = null;
 	private ConveyorBeltSimulator simulator;
 
 	private ConveyorBeltRandomFiller fillerThread = null;
 
-	public ATConveyorBelt(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager) {
+	public ConveyorBeltAutomata(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager) {
 		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
 		this.manager = manager;
 		manager.registerObserver(this);
-		if (currentState == null) {
-			currentState = AutomataStateCB.estadoInicial(manager.getBitGroupValue(ConveyorBeltManager.CAPACITY));
-		}
 		simulator = new ConveyorBeltSimulator(this.manager);
 		Logger.println("AT CB Created");
 		fillerThread = new ConveyorBeltRandomFiller(manager);
@@ -66,7 +60,7 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, Conve
 	public static void main(String[] args) {
 		ConveyorBeltManager m = new ConveyorBeltManager();
 		m.configure(10, 2);
-		ATConveyorBelt atcb = new ATConveyorBelt(null, m);
+		ConveyorBeltAutomata atcb = new ConveyorBeltAutomata(null, m);
 		atcb.startCommand();
 		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(ConveyorBeltManager.CAPACITY, "32"));
@@ -79,53 +73,25 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, Conve
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
 		if (this.manager.isSensorInitial()) {
-			feedInput(ATConveyorBeltInput.loadSensorTrue, false);
+			feedInput(ConveyorBeltInput.loadSensorTrue, false);
 		}
 		if (this.manager.isSensorFinish()) {
-			feedInput(ATConveyorBeltInput.unloadSensorTrue, false);
+			feedInput(ConveyorBeltInput.unloadSensorTrue, false);
 		}
 		if (!this.manager.isSensorFinish()) {
-			feedInput(ATConveyorBeltInput.unloadSensorFalse, false);
+			feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 		}
 		if (this.manager.isSensorUnloadMax()) {
-			feedInput(ATConveyorBeltInput.unloadSensorTrueMax, false);
+			feedInput(ConveyorBeltInput.unloadSensorTrueMax, false);
 		}
 		if (this.manager.isEmpty()) {
-			feedInput(ATConveyorBeltInput.empty, false);
+			feedInput(ConveyorBeltInput.empty, false);
 		}
 	}
 
 	@Override
 	protected void consume(Message message) {
-		switch ((ATConveyorBeltInput) message.getInputType()) {
-		case START:
-			getModel().setCurrentMode(ModeEnum.IDLE);
-			break;
-		case empty:
-			currentState.empty();
-			break;
-		case loadSensorTrue:
-			currentState.loadSensorTrue();
-			break;
-		case estop:
-			currentState.estop();
-			break;
-		case nstop:
-			currentState.nstop();
-			break;
-		case restart:
-			currentState.restart();
-			break;
-		case unloadSensorFalse:
-			currentState.unloadSensorFalse();
-			break;
-		case unloadSensorTrue:
-			currentState.unloadSensorTrue();
-			break;
-		case unloadSensorTrueMax:
-			currentState.unloadSensorTrueMax();
-			break;
-		}
+		//TODO
 	}
 
 	@Override

@@ -9,18 +9,18 @@ import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
 
-public class ATMaster extends AutomataContainer<ATMasterInput, MasterState, MasterModel> {
+public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, MasterModel> {
 
 	private static final int NUMBEROFINBOXES = 1;
 
-	public ATMaster(Configuration conf) {
+	public MasterAutomata(Configuration conf) {
 		super(null, MasterModel.getInstance(), new MultipleInboxCommunicationManager(CommunicationIds.MASTER, conf, NUMBEROFINBOXES));
 	}
 
 	@Override
 	protected void consume(Message message) {
 		if (message.getType() == CommunicationMessageType.COMMAND) {
-			switch ((ATMasterInput) message.getInputType()) {
+			switch ((MasterInput) message.getInputType()) {
 			case START:
 				sendBroadCastMessage(CommunicationMessageType.START);
 				break;

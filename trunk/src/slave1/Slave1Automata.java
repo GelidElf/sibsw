@@ -8,18 +8,18 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.model.ModelListener;
-import core.sections.AssembyStation.ATAssemblyStation;
+import core.sections.AssembyStation.AssemblyStationAutomata;
 import core.sections.AssembyStation.AssemblyStationManager;
-import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
 
 public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, Slave1Model> implements ModelListener {
 
-	private ATConveyorBelt gearBelt;
-	private ATConveyorBelt axisBelt;
+	private ConveyorBeltAutomata gearBelt;
+	private ConveyorBeltAutomata axisBelt;
 	private Slave1State currentState;
-	private ATAssemblyStation assemblyStation;
+	private AssemblyStationAutomata assemblyStation;
 	private Robot robot;
 
 	public Slave1State getCurrentState() {
@@ -30,15 +30,15 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		super(null, new Slave1Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE1, conf));
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10, 2);
-		gearBelt = new ATConveyorBelt(this, gearManager);
+		gearBelt = new ConveyorBeltAutomata(this, gearManager);
 		getModel().setGearBeltModel(gearBelt.getModel());
 		ConveyorBeltManager axisManager = new ConveyorBeltManager();
 		axisManager.configure(10, 2);
-		axisBelt = new ATConveyorBelt(this, axisManager);
+		axisBelt = new ConveyorBeltAutomata(this, axisManager);
 		getModel().setAxisBeltModel(axisBelt.getModel());
 		AssemblyStationManager assemblyManager = new AssemblyStationManager();
 		assemblyManager.configure(10);
-		assemblyStation = new ATAssemblyStation(this, assemblyManager);
+		assemblyStation = new AssemblyStationAutomata(this, assemblyManager);
 		getModel().setAssemblyStationModel(assemblyStation.getModel());
 		robot = new Robot();
 		getModel().addListener(this);
@@ -53,27 +53,27 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	}
 
-	public ATConveyorBelt getGearBelt() {
+	public ConveyorBeltAutomata getGearBelt() {
 		return gearBelt;
 	}
 
-	public void setGearBelt(ATConveyorBelt gearBelt) {
+	public void setGearBelt(ConveyorBeltAutomata gearBelt) {
 		this.gearBelt = gearBelt;
 	}
 
-	public ATConveyorBelt getAxisBelt() {
+	public ConveyorBeltAutomata getAxisBelt() {
 		return axisBelt;
 	}
 
-	public void setAxisBelt(ATConveyorBelt axisBelt) {
+	public void setAxisBelt(ConveyorBeltAutomata axisBelt) {
 		this.axisBelt = axisBelt;
 	}
 
-	public ATAssemblyStation getAssemblyStation() {
+	public AssemblyStationAutomata getAssemblyStation() {
 		return assemblyStation;
 	}
 
-	public void setAssemblyStation(ATAssemblyStation assemblyStation) {
+	public void setAssemblyStation(AssemblyStationAutomata assemblyStation) {
 		this.assemblyStation = assemblyStation;
 	}
 

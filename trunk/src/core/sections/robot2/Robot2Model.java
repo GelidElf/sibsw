@@ -4,7 +4,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
-public class Robot2Model implements AutomataModel<ATRobot2Input, core.sections.robot2.Robot2State> {
+public class Robot2Model implements AutomataModel<Robot2Input, core.sections.robot2.Robot2State> {
 
 	private static final long serialVersionUID = 1258560192891249135L;
 

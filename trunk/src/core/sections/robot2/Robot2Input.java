@@ -1,5 +1,5 @@
 package core.sections.robot2;
 
-public enum ATRobot2Input {
+public enum Robot2Input {
 
 }

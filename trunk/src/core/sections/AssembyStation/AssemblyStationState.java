@@ -2,10 +2,10 @@ package core.sections.AssembyStation;
 
 import core.model.State;
 
-public class AssemblyStationState implements State<ATAssemblyStationInput> {
+public class AssemblyStationState implements State<AssemblyStationInput> {
 
 	@Override
-	public void execute(ATAssemblyStationInput input) {
+	public void execute(AssemblyStationInput input) {
 		// TODO Auto-generated method stub
 
 	}

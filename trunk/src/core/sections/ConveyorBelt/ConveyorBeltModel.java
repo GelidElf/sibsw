@@ -4,7 +4,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
-public class ConveyorBeltModel implements AutomataModel<ATConveyorBeltInput, ConveyorBeltState> {
+public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, ConveyorBeltState> {
 
 	private static final long serialVersionUID = 695493474794614418L;
 

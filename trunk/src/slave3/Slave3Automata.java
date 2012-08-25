@@ -6,22 +6,22 @@ import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
-import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.QualityStation.ATQualityStation;
 
-public class ATslave3 extends AutomataContainer<Slave3Input, Slave3State, Slave3Model> {
+public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, Slave3Model> {
 
-	private ATConveyorBelt conveyorBelt;
+	private ConveyorBeltAutomata conveyorBelt;
 	private ATQualityStation qualityStation;
 	private Slave3State currentState;
 	private Message messageToSend;
 
-	public ATslave3(Configuration conf) {
+	public Slave3Automata(Configuration conf) {
 		super(null, new Slave3Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3, conf));
 		//		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
 	}
 
-	public void setATConveyorbelt(ATConveyorBelt cb) {
+	public void setATConveyorbelt(ConveyorBeltAutomata cb) {
 		conveyorBelt = cb;
 	}
 

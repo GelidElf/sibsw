@@ -19,8 +19,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
-import master.ATMaster;
-import master.ATMasterInput;
+import master.MasterAutomata;
+import master.MasterInput;
 import master.MasterModel;
 import slave1.Slave1Model;
 import core.file.ConfigurationFileReader;
@@ -31,7 +31,7 @@ import core.model.ModelListener;
 
 public class interfaz implements ModelListener {
 
-	private ATMaster master;
+	private MasterAutomata master;
 
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
@@ -70,7 +70,7 @@ public class interfaz implements ModelListener {
 			public void run() {
 				try {
 					ConfigurationFileReader confReader = new ConfigurationFileReader("master.ini");
-					interfaz window = new interfaz(new ATMaster(confReader.readConfiguration()));
+					interfaz window = new interfaz(new MasterAutomata(confReader.readConfiguration()));
 					window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,7 +82,7 @@ public class interfaz implements ModelListener {
 	/**
 	 * Create the application.
 	 */
-	public interfaz(ATMaster master) {
+	public interfaz(MasterAutomata master) {
 		this.master = master;
 		initialize();
 		MasterModel.getInstance().addListener(this);
@@ -199,7 +199,7 @@ public class interfaz implements ModelListener {
 		btnEmergencyStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(ATMasterInput.ESTOP, true);
+				master.feedInput(MasterInput.ESTOP, true);
 			}
 		});
 
@@ -208,7 +208,7 @@ public class interfaz implements ModelListener {
 		btnStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(ATMasterInput.NSTOP, true);
+				master.feedInput(MasterInput.NSTOP, true);
 			}
 		});
 		btnStop.setForeground(Color.RED);
@@ -222,7 +222,7 @@ public class interfaz implements ModelListener {
 		btnStart.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				master.feedInput(ATMasterInput.START, true);
+				master.feedInput(MasterInput.START, true);
 			}
 		});
 		frame.getContentPane().add(btnStart);

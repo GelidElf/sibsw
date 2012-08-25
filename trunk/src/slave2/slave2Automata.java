@@ -1,28 +1,21 @@
 package slave2;
 
-import slave2.States.AutomataStateSlave;
-import slave2.States.Idle;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
-import core.sections.AssembyStation.ATAssemblyStation;
-import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.AssembyStation.AssemblyStationAutomata;
+import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.robot1.Robot;
 
 public class slave2Automata extends AutomataContainer<Slave2Input, Slave2State, Slave2Model> {
 
-	private ATConveyorBelt gearBelt;
-	private ATConveyorBelt axisBelt;
-	private AutomataStateSlave currentState;
-	private ATAssemblyStation assemblyStation;
+	private ConveyorBeltAutomata gearBelt;
+	private ConveyorBeltAutomata axisBelt;
+	private AssemblyStationAutomata assemblyStation;
 	private core.sections.robot1.Robot robot;
-
-	public AutomataStateSlave getCurrentState() {
-		return currentState;
-	}
 
 	public slave2Automata(Configuration conf) {
 		super(null, new Slave2Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE2, conf));
@@ -73,35 +66,27 @@ public class slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 	}
 
-	public void setCurrentState(AutomataStateSlave state) {
-		if ((currentState == null) || (state == null)) {
-			currentState = new Idle();
-		} else {
-			currentState = state;
-		}
-	}
-
-	public ATConveyorBelt getGearBelt() {
+	public ConveyorBeltAutomata getGearBelt() {
 		return gearBelt;
 	}
 
-	public void setGearBelt(ATConveyorBelt gearBelt) {
+	public void setGearBelt(ConveyorBeltAutomata gearBelt) {
 		this.gearBelt = gearBelt;
 	}
 
-	public ATConveyorBelt getAxisBelt() {
+	public ConveyorBeltAutomata getAxisBelt() {
 		return axisBelt;
 	}
 
-	public void setAxisBelt(ATConveyorBelt axisBelt) {
+	public void setAxisBelt(ConveyorBeltAutomata axisBelt) {
 		this.axisBelt = axisBelt;
 	}
 
-	public ATAssemblyStation getAssemblyStation() {
+	public AssemblyStationAutomata getAssemblyStation() {
 		return assemblyStation;
 	}
 
-	public void setAssemblyStation(ATAssemblyStation assemblyStation) {
+	public void setAssemblyStation(AssemblyStationAutomata assemblyStation) {
 		this.assemblyStation = assemblyStation;
 	}
 
