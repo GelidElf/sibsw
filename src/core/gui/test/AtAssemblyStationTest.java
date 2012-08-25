@@ -10,13 +10,13 @@ import javax.swing.JFrame;
 import core.messages.Attribute;
 import core.messages.Message;
 import core.messages.enums.CommunicationMessageType;
-import core.sections.AssembyStation.ATAssemblyStation;
+import core.sections.AssembyStation.AssemblyStationAutomata;
 import core.sections.AssembyStation.AssemblyStationManager;
 
 public class AtAssemblyStationTest extends JFrame {
 
 	private static final long serialVersionUID = -2412052089713542223L;
-	private ATAssemblyStation atas;
+	private AssemblyStationAutomata atas;
 
 	public static void main(String[] args) {
 		new AtAssemblyStationTest();
@@ -37,7 +37,7 @@ public class AtAssemblyStationTest extends JFrame {
 	public void createModel() {
 		AssemblyStationManager manager = new AssemblyStationManager();
 		manager.configure(10);
-		atas = new ATAssemblyStation(null, manager);
+		atas = new AssemblyStationAutomata(null, manager);
 		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
 		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME,"32"));
 		atas.injectMessage(mess);
@@ -65,10 +65,10 @@ public class AtAssemblyStationTest extends JFrame {
 	
 	private class EjeActionListener implements ActionListener {
 
-		private ATAssemblyStation atas;
+		private AssemblyStationAutomata atas;
 		private JButton jButton;
 
-		public EjeActionListener(JButton jButton, ATAssemblyStation atas) {
+		public EjeActionListener(JButton jButton, AssemblyStationAutomata atas) {
 			this.atas = atas;
 			this.jButton = jButton;
 		}
@@ -82,10 +82,10 @@ public class AtAssemblyStationTest extends JFrame {
 
 	private class EngranajeActionListener implements ActionListener {
 
-		private ATAssemblyStation atas;
+		private AssemblyStationAutomata atas;
 		private JButton jButton;
 
-		public EngranajeActionListener(JButton jButton, ATAssemblyStation atas) {
+		public EngranajeActionListener(JButton jButton, AssemblyStationAutomata atas) {
 			this.atas = atas;
 			this.jButton = jButton;
 		}
@@ -99,10 +99,10 @@ public class AtAssemblyStationTest extends JFrame {
 	
 	private class PiezaCompletaActionListener implements ActionListener {
 
-		private ATAssemblyStation atas;
+		private AssemblyStationAutomata atas;
 		private JButton jButton;
 
-		public PiezaCompletaActionListener(JButton jButton, ATAssemblyStation atas) {
+		public PiezaCompletaActionListener(JButton jButton, AssemblyStationAutomata atas) {
 			this.atas = atas;
 			this.jButton = jButton;
 		}

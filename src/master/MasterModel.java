@@ -10,7 +10,7 @@ import core.messages.enums.CommunicationIds;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
-public class MasterModel implements AutomataModel<ATMasterInput, MasterState> {
+public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	private static final long serialVersionUID = -5649471149764787709L;
 	private static MasterModel instance;

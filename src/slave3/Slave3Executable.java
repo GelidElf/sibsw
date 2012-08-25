@@ -1,6 +1,6 @@
 package slave3;
 import core.aplication.RunnableApplication;
-import core.sections.ConveyorBelt.ATConveyorBelt;
+import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ConveyorBelt.ConveyorBeltSimulator;
 import core.sections.QualityStation.ATQualityStation;
@@ -13,14 +13,14 @@ public class Slave3Executable extends RunnableApplication {
 	public static void main (String []args){
 		initialize(args,"slave3.ini");
 
-		ATslave3 slave3 = new ATslave3(configuration);
+		Slave3Automata slave3 = new Slave3Automata(configuration);
 		//		createAndSetQualityStation(slave3);
 		//		createAndSetConveyorBelt(slave3);
 
 //		slave3.start();
 	}
 
-	private static void createAndSetQualityStation(ATslave3 slave3) {
+	private static void createAndSetQualityStation(Slave3Automata slave3) {
 		QualityStationManager manager = new QualityStationManager();
 		ATQualityStation atQCS = new ATQualityStation(slave3,manager);
 		slave3.setATQualityStation(atQCS);
@@ -29,9 +29,9 @@ public class Slave3Executable extends RunnableApplication {
 		atQCS.start();
 	}
 
-	private static void createAndSetConveyorBelt(ATslave3 slave3) {
+	private static void createAndSetConveyorBelt(Slave3Automata slave3) {
 		ConveyorBeltManager manager = new ConveyorBeltManager();
-		ATConveyorBelt atcb = new ATConveyorBelt(slave3,manager);
+		ConveyorBeltAutomata atcb = new ConveyorBeltAutomata(slave3,manager);
 		slave3.setATConveyorbelt(atcb);
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
 		cbs.start();

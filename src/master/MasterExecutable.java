@@ -5,11 +5,11 @@ import core.gui.interfaz;
 
 public class MasterExecutable extends RunnableApplication{
 
-	private static ATMaster master; 
+	private static MasterAutomata master; 
 	
 	public static void main(String[] args) {
 		initialize(args,"master.ini");
-		master = new ATMaster(configuration);
+		master = new MasterAutomata(configuration);
 		interfaz window = new interfaz(master);
 		window.getFrame().setVisible(true);
 		master.startCommand();

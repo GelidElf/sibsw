@@ -4,7 +4,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
-public class AssemblyStationModel implements AutomataModel<ATAssemblyStationInput, AssemblyStationState> {
+public class AssemblyStationModel implements AutomataModel<AssemblyStationInput, AssemblyStationState> {
 
 	private static final long serialVersionUID = -9137179190722641534L;
 

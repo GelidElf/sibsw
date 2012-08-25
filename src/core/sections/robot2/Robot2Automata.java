@@ -7,9 +7,9 @@ import core.model.AutomataContainer;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 
-public class ATRobot2 extends AutomataContainer<ATRobot2Input, core.sections.robot2.Robot2State, Robot2Model> implements ParallelPortManagerObserver {
+public class Robot2Automata extends AutomataContainer<Robot2Input, core.sections.robot2.Robot2State, Robot2Model> implements ParallelPortManagerObserver {
 
-	public ATRobot2(AutomataContainer<?, ?, ?> father) {
+	public Robot2Automata(AutomataContainer<?, ?, ?> father) {
 		super(father, new Robot2Model(), new OfflineCommunicationManager());
 		// TODO Auto-generated constructor stub
 	}
