@@ -8,14 +8,14 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
-public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataModel> extends Thread {
+public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends State<INPUT>, MODEL extends AutomataModel<INPUT, STATE>> extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
-	protected AutomataContainer<?,?> father;
-	private AS model;
+	protected AutomataContainer<?, ?, ?> father;
+	private MODEL model;
 
-	public AutomataContainer(AutomataContainer<?,?> father, AS model, CommunicationManager commManager) {
+	public AutomataContainer(AutomataContainer<?, ?, ?> father, MODEL model, CommunicationManager commManager) {
 		this.father = father;
 		this.commManager = commManager;
 		this.model = model;
@@ -77,8 +77,10 @@ public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataMo
 	protected abstract void changeConfigurationParameter(Attribute attribute);
 
 	/**
-	 * Debe de ser sobrecargado en aquellos hijos que tengan que reaccionar cuando el estado del otro automata cambie (Master)
-	 * @param commId 
+	 * Debe de ser sobrecargado en aquellos hijos que tengan que reaccionar
+	 * cuando el estado del otro automata cambie (Master)
+	 * 
+	 * @param commId
 	 * @param model
 	 */
 	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model) {
@@ -90,15 +92,20 @@ public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataMo
 	}
 
 	/**
-	 * alimenta un input al automata, se usa para comunicar automatas del mismo slave, entrada de usuario y el resto de comunicacion que no sea a través de mensajes
-	 * @param input el input del automata a incluir en el inbox
-	 * @param isUrgent si es urgente
+	 * alimenta un input al automata, se usa para comunicar automatas del mismo
+	 * slave, entrada de usuario y el resto de comunicacion que no sea a través
+	 * de mensajes
+	 * 
+	 * @param input
+	 *            el input del automata a incluir en el inbox
+	 * @param isUrgent
+	 *            si es urgente
 	 */
-	public synchronized void feedInput(T input, boolean isUrgent) {
+	public synchronized void feedInput(INPUT input, boolean isUrgent) {
 		commManager.feed(createDummyMessageForInput(input, isUrgent));
 	}
 
-	protected Message createDummyMessageForInput(T input, boolean isUrgent) {
+	protected Message createDummyMessageForInput(INPUT input, boolean isUrgent) {
 		Message message = new Message("FeededInputDummyMessage", getCommunicationManager().getOwner(), isUrgent, CommunicationMessageType.COMMAND, input);
 		return message;
 	}
@@ -106,7 +113,7 @@ public abstract class AutomataContainer<T extends Enum<T>, AS extends AutomataMo
 	/**
 	 * @return the model
 	 */
-	public AS getModel() {
+	public MODEL getModel() {
 		return model;
 	}
 

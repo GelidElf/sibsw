@@ -8,20 +8,19 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
-import core.model.MasterModel;
 
-public class ATMaster extends AutomataContainer<ATMasterInput,MasterModel> {
+public class ATMaster extends AutomataContainer<ATMasterInput, MasterState, MasterModel> {
 
 	private static final int NUMBEROFINBOXES = 1;
 
 	public ATMaster(Configuration conf) {
-		super(null, MasterModel.getInstance(),new MultipleInboxCommunicationManager(CommunicationIds.MASTER,conf,NUMBEROFINBOXES));
+		super(null, MasterModel.getInstance(), new MultipleInboxCommunicationManager(CommunicationIds.MASTER, conf, NUMBEROFINBOXES));
 	}
 
 	@Override
 	protected void consume(Message message) {
-		if (message.getType() == CommunicationMessageType.COMMAND){
-			switch ((ATMasterInput)message.getInputType()) {
+		if (message.getType() == CommunicationMessageType.COMMAND) {
+			switch ((ATMasterInput) message.getInputType()) {
 			case START:
 				sendBroadCastMessage(CommunicationMessageType.START);
 				break;
@@ -38,7 +37,7 @@ public class ATMaster extends AutomataContainer<ATMasterInput,MasterModel> {
 				break;
 			}
 		}
-		
+
 	}
 
 	protected void sendBroadCastMessage(CommunicationMessageType messageType) {
@@ -54,7 +53,7 @@ public class ATMaster extends AutomataContainer<ATMasterInput,MasterModel> {
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

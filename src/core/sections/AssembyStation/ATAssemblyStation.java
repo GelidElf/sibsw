@@ -6,22 +6,21 @@ import core.messages.Message;
 import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
-import core.model.DummyAutomataModel;
 import core.sections.AssembyStation.States.AutomataStateAssemblyStation;
 import core.sections.AssembyStation.States.Idle;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 
-public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,DummyAutomataModel> implements ParallelPortManagerObserver{
+public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput, AssemblyStationState, AssemblyStationModel> implements ParallelPortManagerObserver {
 
 	private AssemblyStationManager manager;
 	private AssemblyStationSimulator simulator;
 	private AutomataStateAssemblyStation currentState;
-	
-	public ATAssemblyStation(AutomataContainer<?,?> father, AssemblyStationManager manager) {
-		super(father, new DummyAutomataModel(), new OfflineCommunicationManager());
-		this.manager = manager;	
+
+	public ATAssemblyStation(AutomataContainer<?, ?, ?> father, AssemblyStationManager manager) {
+		super(father, new AssemblyStationModel(), new OfflineCommunicationManager());
+		this.manager = manager;
 		manager.registerObserver(this);
 		currentState = AutomataStateAssemblyStation.createState(Idle.class, null);
 		simulator = new AssemblyStationSimulator(this.manager);
@@ -32,15 +31,15 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 		m.configure(10);
 		ATAssemblyStation atcb = new ATAssemblyStation(null, m);
 		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
-		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME,"32"));
+		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME, "32"));
 		atcb.injectMessage(mess);
 		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
 		atcb.injectMessage(mess2);
 	}
-	
+
 	@Override
 	protected void consume(Message message) {
-		switch ((ATAssemblyStationInput)message.getInputType()) {
+		switch ((ATAssemblyStationInput) message.getInputType()) {
 		case START:
 			getModel().setCurrentMode(ModeEnum.IDLE);
 			break;
@@ -70,12 +69,12 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 			break;
 		case gearDetectedTrue:
 			currentState.gearDetectedTrue();
-			break;	
+			break;
 		case restart:
 			currentState.restart();
-			break;	
+			break;
 		}
-		
+
 	}
 
 	@Override
@@ -86,8 +85,8 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		try {
-			if (attribute.getName().equals(AssemblyStationManager.ASSEMBLING_TIME)){
-				manager.setValueByName(AssemblyStationManager.ASSEMBLING_TIME, Integer.parseInt((String)attribute.getValue()));
+			if (attribute.getName().equals(AssemblyStationManager.ASSEMBLING_TIME)) {
+				manager.setValueByName(AssemblyStationManager.ASSEMBLING_TIME, Integer.parseInt((String) attribute.getValue()));
 			}
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
@@ -100,20 +99,20 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (!this.manager.isAPDetected()){
-			consume(createDummyMessageForInput(ATAssemblyStationInput.apDetectedFalse,false));
+		if (!this.manager.isAPDetected()) {
+			consume(createDummyMessageForInput(ATAssemblyStationInput.apDetectedFalse, false));
 		}
-		if (this.manager.isAxisDetected()){
-			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedTrue,false));
-		}else{
-			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedFalse,false));
+		if (this.manager.isAxisDetected()) {
+			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedTrue, false));
+		} else {
+			consume(createDummyMessageForInput(ATAssemblyStationInput.axisDetectedFalse, false));
 		}
-		if (this.manager.isGearDetected()){
-			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedTrue,false));
-		}else{
-			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedFalse,false));
+		if (this.manager.isGearDetected()) {
+			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedTrue, false));
+		} else {
+			consume(createDummyMessageForInput(ATAssemblyStationInput.gearDetectedFalse, false));
 		}
-		
+
 	}
 
 	public void putAxis() {
@@ -132,7 +131,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void sacaPieza() {
@@ -142,7 +141,7 @@ public class ATAssemblyStation extends AutomataContainer<ATAssemblyStationInput,
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }

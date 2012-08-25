@@ -6,14 +6,13 @@ import core.messages.Message;
 import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
-import core.model.DummyAutomataModel;
 import core.sections.ConveyorBelt.States.AutomataStateCB;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
-public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, DummyAutomataModel> implements ParallelPortManagerObserver {
+public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, ConveyorBeltState, ConveyorBeltModel> implements ParallelPortManagerObserver {
 
 	private ConveyorBeltManager manager = null;
 	private AutomataStateCB currentState = null;
@@ -21,8 +20,8 @@ public class ATConveyorBelt extends AutomataContainer<ATConveyorBeltInput, Dummy
 
 	private ConveyorBeltRandomFiller fillerThread = null;
 
-	public ATConveyorBelt(AutomataContainer<?, ?> father, ConveyorBeltManager manager) {
-		super(father, new DummyAutomataModel(), new OfflineCommunicationManager());
+	public ATConveyorBelt(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager) {
+		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
 		this.manager = manager;
 		manager.registerObserver(this);
 		if (currentState == null) {
