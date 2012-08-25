@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import master.MasterModel;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
-import core.model.MasterModel;
 import core.utilities.log.Logger;
 
 public class MultipleInboxCommunicationManager implements CommunicationManager {

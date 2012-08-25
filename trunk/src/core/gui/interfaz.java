@@ -21,12 +21,12 @@ import javax.swing.border.EtchedBorder;
 
 import master.ATMaster;
 import master.ATMasterInput;
+import master.MasterModel;
 import slave1.Slave1Model;
 import core.file.ConfigurationFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.enums.CommunicationIds;
-import core.model.MasterModel;
 import core.model.ModelListener;
 
 public class interfaz implements ModelListener {

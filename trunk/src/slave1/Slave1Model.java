@@ -5,10 +5,11 @@ import java.util.List;
 
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataModel;
-import core.model.DummyAutomataModel;
 import core.model.ModelListener;
+import core.sections.AssembyStation.AssemblyStationModel;
+import core.sections.ConveyorBelt.ConveyorBeltModel;
 
-public class Slave1Model implements AutomataModel {
+public class Slave1Model implements AutomataModel<Slave1Input, Slave1State> {
 
 	private static final long serialVersionUID = -7533088185929981996L;
 
@@ -34,15 +35,15 @@ public class Slave1Model implements AutomataModel {
 	}
 
 	private ModeEnum currentMode;
-	private AutomataModel gearBeltModel;
-	private AutomataModel axisBeltModel;
-	private AutomataModel assemblyStationModel;
+	private ConveyorBeltModel gearBeltModel;
+	private ConveyorBeltModel axisBeltModel;
+	private AssemblyStationModel assemblyStationModel;
 
 	public Slave1Model() {
 		currentMode = ModeEnum.READY;
-		gearBeltModel = new DummyAutomataModel();
-		axisBeltModel = new DummyAutomataModel();
-		assemblyStationModel = new DummyAutomataModel();
+		gearBeltModel = new ConveyorBeltModel();
+		axisBeltModel = new ConveyorBeltModel();
+		assemblyStationModel = new AssemblyStationModel();
 	}
 
 	@Override
@@ -56,28 +57,40 @@ public class Slave1Model implements AutomataModel {
 		notifyObservers();
 	}
 
-	public void setGearBeltModel(AutomataModel model) {
+	public void setGearBeltModel(ConveyorBeltModel model) {
 		this.gearBeltModel = model;
 	}
 
-	public AutomataModel getGearBeltModel(){
+	public ConveyorBeltModel getGearBeltModel() {
 		return gearBeltModel;
 	}
-	
-	public void setAxisBeltModel(AutomataModel model) {
+
+	public void setAxisBeltModel(ConveyorBeltModel model) {
 		this.axisBeltModel = model;
 	}
 
-	public AutomataModel getAxisBeltModel(){
+	public ConveyorBeltModel getAxisBeltModel() {
 		return axisBeltModel;
 	}
-	
-	public void setAssemblyStationModel(AutomataModel model) {
+
+	public void setAssemblyStationModel(AssemblyStationModel model) {
 		this.assemblyStationModel = model;
 	}
-	
-	public AutomataModel getAssemblyStationModel() {
+
+	public AssemblyStationModel getAssemblyStationModel() {
 		return assemblyStationModel;
 	}
-	
+
+	@Override
+	public Slave1State getState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setState(Slave1State state) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -1,4 +1,4 @@
-package core.model;
+package master;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +7,10 @@ import java.util.Map;
 
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
+import core.model.AutomataModel;
+import core.model.ModelListener;
 
-public class MasterModel implements AutomataModel {
+public class MasterModel implements AutomataModel<ATMasterInput, MasterState> {
 
 	private static final long serialVersionUID = -5649471149764787709L;
 	private static MasterModel instance;
@@ -47,10 +49,10 @@ public class MasterModel implements AutomataModel {
 		}
 	}
 
-	private Map<CommunicationIds, AutomataModel> models = new HashMap<CommunicationIds, AutomataModel>();
+	private Map<CommunicationIds, AutomataModel<?, ?>> models = new HashMap<CommunicationIds, AutomataModel<?, ?>>();
 	private ModeEnum currentMode;
 
-	public void setModel(CommunicationIds id, AutomataModel model) {
+	public void setModel(CommunicationIds id, AutomataModel<?, ?> model) {
 		if (model != null) {
 			connected.put(id, true);
 			models.put(id, model);
@@ -60,7 +62,7 @@ public class MasterModel implements AutomataModel {
 		notifyObservers();
 	}
 
-	public Map<CommunicationIds, AutomataModel> getModel() {
+	public Map<CommunicationIds, AutomataModel<?, ?>> getModel() {
 		return models;
 	}
 
@@ -73,6 +75,18 @@ public class MasterModel implements AutomataModel {
 	public void setCurrentMode(ModeEnum currentMode) {
 		this.currentMode = currentMode;
 		notifyObservers();
+	}
+
+	@Override
+	public MasterState getState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setState(MasterState state) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

@@ -14,7 +14,7 @@ import core.sections.ConveyorBelt.ATConveyorBelt;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.robot1.Robot;
 
-public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1Model> implements ModelListener {
+public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, Slave1Model> implements ModelListener {
 
 	private ATConveyorBelt gearBelt;
 	private ATConveyorBelt axisBelt;
