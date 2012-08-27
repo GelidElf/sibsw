@@ -1,6 +1,7 @@
 package core.sections.robot2;
 
 import core.gui.satuspanel.ModeEnum;
+import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
@@ -33,13 +34,13 @@ public class Robot2Model implements AutomataModel<Robot2Input, core.sections.rob
 	}
 
 	@Override
-	public void setCurrentMode(ModeEnum currentMode) {
+	public void setState(Robot2State state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setState(Robot2State state) {
+	public void setAutomata(AutomataContainer<Robot2Input, Robot2State, ? extends AutomataModel<Robot2Input, Robot2State>> automata) {
 		// TODO Auto-generated method stub
 
 	}

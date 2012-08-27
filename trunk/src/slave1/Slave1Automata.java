@@ -3,6 +3,7 @@ package slave1;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.OfflineCommunicationManager;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
@@ -12,18 +13,18 @@ import core.sections.AssembyStation.AssemblyStationAutomata;
 import core.sections.AssembyStation.AssemblyStationManager;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
-import core.sections.robot1.Robot;
+import core.sections.robot1.Robot1Automata;
+import core.sections.robot1.Robot1Model;
 
 public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, Slave1Model> implements ModelListener {
 
 	private ConveyorBeltAutomata gearBelt;
 	private ConveyorBeltAutomata axisBelt;
-	private Slave1State currentState;
 	private AssemblyStationAutomata assemblyStation;
-	private Robot robot;
+	private Robot1Automata robot;
 
 	public Slave1State getCurrentState() {
-		return currentState;
+		return getModel().getState();
 	}
 
 	public Slave1Automata(Configuration conf) {
@@ -40,7 +41,9 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		assemblyManager.configure(10);
 		assemblyStation = new AssemblyStationAutomata(this, assemblyManager);
 		getModel().setAssemblyStationModel(assemblyStation.getModel());
-		robot = new Robot();
+		robot = new Robot1Automata(this, new Robot1Model(), new OfflineCommunicationManager());
+		getModel().setRobot1Model(robot.getModel());
+		getModel().setAutomata(this);
 		getModel().addListener(this);
 	}
 
@@ -77,19 +80,11 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		this.assemblyStation = assemblyStation;
 	}
 
-	public Robot getRobot() {
-		return robot;
-	}
-
-	public void setRobot(Robot robot) {
-		this.robot = robot;
-	}
-
 	@Override
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			currentState.execute((Slave1Input) message.getInputType());
+			getModel().getState().execute((Slave1Input) message.getInputType());
 		}
 
 	}
@@ -123,7 +118,6 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	@Override
 	public void startCommand() {
-		currentState = new Slave1State(this);
 		getCommunicationManager().initialize();
 		start();
 	}
@@ -137,5 +131,13 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	@Override
 	public void updateOnModelChange() {
 		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
+	}
+
+	public void setRobot(Robot1Automata robot) {
+		this.robot = robot;
+	}
+
+	public Robot1Automata getRobot() {
+		return robot;
 	}
 }

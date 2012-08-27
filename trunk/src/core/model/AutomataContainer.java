@@ -117,4 +117,8 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 		return model;
 	}
 
+	public AutomataContainer<?, ?, ?> getFather() {
+		return father;
+	}
+
 }

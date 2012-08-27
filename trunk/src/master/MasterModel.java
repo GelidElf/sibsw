@@ -7,6 +7,7 @@ import java.util.Map;
 
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
+import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
@@ -72,12 +73,6 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	}
 
 	@Override
-	public void setCurrentMode(ModeEnum currentMode) {
-		this.currentMode = currentMode;
-		notifyObservers();
-	}
-
-	@Override
 	public MasterState getState() {
 		// TODO Auto-generated method stub
 		return null;
@@ -85,6 +80,12 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	@Override
 	public void setState(MasterState state) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setAutomata(AutomataContainer<MasterInput, MasterState, ? extends AutomataModel<MasterInput, MasterState>> automata) {
 		// TODO Auto-generated method stub
 
 	}

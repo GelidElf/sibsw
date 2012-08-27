@@ -8,14 +8,12 @@ import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
 import core.sections.AssembyStation.AssemblyStationAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
-import core.sections.robot1.Robot;
 
 public class slave2Automata extends AutomataContainer<Slave2Input, Slave2State, Slave2Model> {
 
 	private ConveyorBeltAutomata gearBelt;
 	private ConveyorBeltAutomata axisBelt;
 	private AssemblyStationAutomata assemblyStation;
-	private core.sections.robot1.Robot robot;
 
 	public slave2Automata(Configuration conf) {
 		super(null, new Slave2Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE2, conf));
@@ -88,14 +86,6 @@ public class slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 	public void setAssemblyStation(AssemblyStationAutomata assemblyStation) {
 		this.assemblyStation = assemblyStation;
-	}
-
-	public Robot getRobot() {
-		return robot;
-	}
-
-	public void setRobot(Robot robot) {
-		this.robot = robot;
 	}
 
 	@Override
