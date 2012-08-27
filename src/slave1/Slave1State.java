@@ -20,7 +20,6 @@ public class Slave1State implements State<Slave1Input> {
 					currentState.getAutomata().getGearBelt().startCommand();
 					currentState.getAutomata().getAxisBelt().startCommand();
 					currentState.getAutomata().getAssemblyStation().startCommand();
-					currentState.getAutomata().getModel().setCurrentMode(ModeEnum.IDLE);
 					return IDDLE;
 				}
 				return super.executeInternal(currentState, input);
@@ -29,14 +28,7 @@ public class Slave1State implements State<Slave1Input> {
 		IDDLE {
 			@Override
 			protected states executeInternal(Slave1State currentState, Slave1Input input) {
-				switch (input) {
-				case AS_EMPTY:
 
-					break;
-
-				default:
-					break;
-				}
 				return super.executeInternal(currentState, input);
 			}
 		},
@@ -62,6 +54,12 @@ public class Slave1State implements State<Slave1Input> {
 
 	public Slave1Automata getAutomata() {
 		return slave1;
+	}
+
+	@Override
+	public ModeEnum getMode() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

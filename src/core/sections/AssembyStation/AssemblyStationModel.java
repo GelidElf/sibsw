@@ -1,6 +1,7 @@
 package core.sections.AssembyStation;
 
 import core.gui.satuspanel.ModeEnum;
+import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
@@ -33,15 +34,15 @@ public class AssemblyStationModel implements AutomataModel<AssemblyStationInput,
 	}
 
 	@Override
-	public void setCurrentMode(ModeEnum currentMode) {
+	public void setState(AssemblyStationState state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setState(AssemblyStationState state) {
+	public void setAutomata(AutomataContainer<AssemblyStationInput, AssemblyStationState, ? extends AutomataModel<AssemblyStationInput, AssemblyStationState>> automata) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 }

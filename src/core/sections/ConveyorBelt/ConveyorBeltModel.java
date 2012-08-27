@@ -1,6 +1,7 @@
 package core.sections.ConveyorBelt;
 
 import core.gui.satuspanel.ModeEnum;
+import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
@@ -33,13 +34,13 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 	}
 
 	@Override
-	public void setCurrentMode(ModeEnum currentMode) {
+	public void setState(ConveyorBeltState state) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void setState(ConveyorBeltState state) {
+	public void setAutomata(AutomataContainer<ConveyorBeltInput, ConveyorBeltState, ? extends AutomataModel<ConveyorBeltInput, ConveyorBeltState>> automata) {
 		// TODO Auto-generated method stub
 
 	}

@@ -12,11 +12,10 @@ public interface AutomataModel<INPUT extends Enum<INPUT>, STATE extends State<IN
 
 	ModeEnum getCurrentMode();
 
-	@Deprecated
-	void setCurrentMode(ModeEnum currentMode);
-
 	void addListener(ModelListener listener);
 
 	void notifyObservers();
+
+	void setAutomata(AutomataContainer<INPUT, STATE, ? extends AutomataModel<INPUT, STATE>> automata);
 
 }

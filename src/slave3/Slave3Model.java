@@ -1,6 +1,7 @@
 package slave3;
 
 import core.gui.satuspanel.ModeEnum;
+import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
@@ -12,12 +13,6 @@ public class Slave3Model implements AutomataModel<Slave3Input, Slave3State> {
 	public ModeEnum getCurrentMode() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void setCurrentMode(ModeEnum currentMode) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -42,6 +37,12 @@ public class Slave3Model implements AutomataModel<Slave3Input, Slave3State> {
 	public Slave3State getState() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setAutomata(AutomataContainer<Slave3Input, Slave3State, ? extends AutomataModel<Slave3Input, Slave3State>> automata) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
