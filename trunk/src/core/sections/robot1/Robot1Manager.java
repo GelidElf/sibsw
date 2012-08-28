@@ -36,9 +36,16 @@ public class Robot1Manager extends ParallelPortManager {
 		}
 	}
 
-	public void configure() {
-		// TODO Auto-generated method stub
-
+	public void configure(int speed, int timeToAxisGear, int timeToTransport, int timeToAssembled) {
+		try {
+			setValueByName(Robot1Manager.SPEED, speed);
+			setValueByName(Robot1Manager.TIME_TO_AXIS_GEAR, timeToAxisGear);
+			setValueByName(Robot1Manager.TIME_TO_TRANSPORT, timeToTransport);
+			setValueByName(Robot1Manager.TIME_TO_ASSEMBLED, timeToAssembled);
+			clearJobTypes();
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setJobDone() {
