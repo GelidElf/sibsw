@@ -17,7 +17,7 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 	public Robot1Automata(AutomataContainer<?, ?, ?> father, Robot1Model model, CommunicationManager commManager) {
 		super(father, model, commManager);
 		manager = new Robot1Manager();
-		manager.configure();
+		manager.configure(7, 7, 7, 7);
 		manager.registerObserver(this);
 		simulator = new Robot1Simulator(manager);
 		getModel().setAutomata(this);
