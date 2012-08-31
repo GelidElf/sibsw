@@ -32,4 +32,26 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		}
 	}
 
+	public boolean isEnabled(){
+		boolean isEnabled = false;
+		try {
+			isEnabled = getValueByNameAsBoolean(ENABLE);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return isEnabled;
+	}
+
+	public int getCapacity() {
+		int capacity = 0;
+		try {
+			capacity = getValueByName(ConveyorBeltManager.CAPACITY);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return capacity;
+	}
+	
+	
 }
