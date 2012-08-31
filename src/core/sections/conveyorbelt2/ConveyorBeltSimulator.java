@@ -49,6 +49,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 					for (int i =0;i<currentConfiguredCapacity;i++){
 						auxContents[i] = contents[i];
 					}
+					
+					
 				}
 			}
 		}
