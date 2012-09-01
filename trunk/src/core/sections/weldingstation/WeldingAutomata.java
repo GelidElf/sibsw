@@ -1,0 +1,91 @@
+package core.sections.weldingstation;
+
+import core.messages.Attribute;
+import core.messages.CommunicationManager;
+import core.messages.Message;
+import core.messages.enums.CommunicationMessageType;
+import core.model.AutomataContainer;
+import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
+import core.sections.ParallelPort.Utils.ParallelPortException;
+
+public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingState, WeldingModel> implements ParallelPortManagerObserver {
+
+	private WeldingSimulator simulator;
+	private WeldingManager manager;
+
+	public WeldingAutomata(AutomataContainer<?, ?, ?> father, WeldingModel model, CommunicationManager commManager) {
+		super(father, model, commManager);
+		manager = new WeldingManager();
+		manager.configure(7, 7, 7, 7);
+		manager.registerObserver(this);
+		simulator = new WeldingSimulator(manager);
+		getModel().setAutomata(this);
+		//		getModel().addListener(this);
+	}
+
+	@Override
+	protected void changeConfigurationParameter(Attribute attribute) {
+		try {
+			if (attribute.getName().equals("WELDINGTIME")) {
+				manager.setValueByName(WeldingManager.TIME_TO_WELD, (Integer) attribute.getValue());
+			}
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	@Override
+	protected void consume(Message message) {
+		reaccionaPorTipoDeMensaje(message);
+		if (debeReaccionaPorTipoEntrada(message)) {
+			reactToInput((WeldingInput) message.getInputType());
+		}
+	}
+
+	private void reactToInput(WeldingInput input) {
+		getModel().getState().execute(input);
+	}
+
+	private boolean debeReaccionaPorTipoEntrada(Message message) {
+		return message.getType() == CommunicationMessageType.COMMAND;
+	}
+
+	private void reaccionaPorTipoDeMensaje(Message message) {
+		switch (message.getType()) {
+		case START:
+			reactToInput(WeldingInput.START);
+			break;
+		case NSTOP:
+			reactToInput(WeldingInput.NSTOP);
+			break;
+		case ESTOP:
+			reactToInput(WeldingInput.ESTOP);
+			break;
+		case RESTART:
+			reactToInput(WeldingInput.RESTART);
+			break;
+		case CONFIGURATION:
+			for (Attribute attribute : message.getAttributes()) {
+				changeConfigurationParameter(attribute);
+			}
+			break;
+		}
+	}
+
+	@Override
+	public void startCommand() {
+		simulator.start();
+		this.start();
+	}
+
+	@Override
+	public void updateFromPortManager(ParallelPortManager manager) {
+		if (manager.getModifiedGroupName().equals(WeldingManager.ENABLE) && !((WeldingManager) manager).jobToBeDone()) {
+			feedInput(WeldingInput.JobDone, false);
+		}
+
+	}
+
+}
