@@ -25,6 +25,7 @@ public class Inbox {
 
 	private final LinkedList<Message> inbox = new LinkedList<Message>();
 	private final LinkedList<Message> priorityInbox = new LinkedList<Message>();
+	private final LinkedList<Message> remainders = new LinkedList<Message>();
 	private Lock lock = new ReentrantLock();
 	private Condition notEmpty = lock.newCondition();
 
@@ -69,8 +70,14 @@ public class Inbox {
 			}
 			if (priorityInbox.size() > 0) {
 				message = priorityInbox.removeFirst();
+				remainders.add(message);
 			} else if (inbox.size() > 0) {
 				message = inbox.removeFirst();
+				remainders.add(message);
+			} else {
+				if (remainders.size() > 0) {
+					message = remainders.removeFirst();
+				}
 			}
 			return message;
 		} finally {
@@ -84,6 +91,26 @@ public class Inbox {
 	 * @return the sum total of the messages stored in the queues
 	 */
 	public synchronized int messagesCount() {
-		return inbox.size() + priorityInbox.size();
+		return inbox.size() + priorityInbox.size() + remainders.size();
+	}
+
+	/**
+	 * Removes the message from this inbox
+	 * 
+	 * @param message
+	 *            the message to be removed.
+	 */
+	public void remove(Message message) {
+		if (priorityInbox.contains(message)) {
+			priorityInbox.remove(message);
+		} else {
+			if (inbox.contains(message)) {
+				priorityInbox.remove(message);
+			} else {
+				if (remainders.contains(message)) {
+					remainders.remove(message);
+				}
+			}
+		}
 	}
 }

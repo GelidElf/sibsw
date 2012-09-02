@@ -73,8 +73,4 @@ public abstract class AutomataState implements Serializable {
 		return methods;
 	}
 
-	private static String stateIdentificator(String stateName) {
-		return nombreGrupo + "." + stateName;
-	}
-
 }

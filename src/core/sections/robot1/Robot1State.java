@@ -9,6 +9,8 @@ import core.model.State;
 
 public class Robot1State implements State<Robot1Input> {
 
+	private static final long serialVersionUID = 740645352145252464L;
+
 	private enum states implements AutomataStatesInternalImplementation<Robot1Input, Robot1State> {
 		Started(ModeEnum.READY) {
 			@Override
@@ -16,6 +18,8 @@ public class Robot1State implements State<Robot1Input> {
 				switch (input) {
 				case START:
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -34,6 +38,8 @@ public class Robot1State implements State<Robot1Input> {
 					return IdleStop;
 				case ESTOP:
 					return IdleStop;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -44,6 +50,8 @@ public class Robot1State implements State<Robot1Input> {
 				switch (input) {
 				case RESTART:
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -59,6 +67,8 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.AXIS_IN_AS, false);
 					}
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -69,6 +79,8 @@ public class Robot1State implements State<Robot1Input> {
 				switch (input) {
 				case RESTART:
 					return DeliveringAxis;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -84,6 +96,8 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.GEAR_IN_AS, false);
 					}
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -94,6 +108,8 @@ public class Robot1State implements State<Robot1Input> {
 				switch (input) {
 				case RESTART:
 					return DeliveringGear;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -109,6 +125,8 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.AS_IN_TRANSPORT, false);
 					}
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -119,6 +137,8 @@ public class Robot1State implements State<Robot1Input> {
 				switch (input) {
 				case RESTART:
 					return DeliveringAssembled;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -130,6 +150,7 @@ public class Robot1State implements State<Robot1Input> {
 			this.mode = mode;
 		}
 
+		@Override
 		public ModeEnum getMode() {
 			return mode;
 		}
@@ -141,15 +162,16 @@ public class Robot1State implements State<Robot1Input> {
 
 	}
 
-	private Robot1Automata automata;
+	private transient Robot1Automata automata;
 	private states currentState;
 
 	@Override
 	public void execute(Robot1Input input) {
-		currentState.executeInternal(this, input);
+		currentState = (states) currentState.executeInternal(this, input);
 	}
 
 	public Robot1State(Robot1Automata automata) {
+		currentState = states.Started;
 		this.automata = automata;
 	}
 

@@ -19,6 +19,7 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 		this.manager = manager;
 		manager.registerObserver(this);
 		simulator = new AssemblyStationSimulator(this.manager);
+		getModel().setAutomata(this);
 	}
 
 	public static void main(String[] args) {

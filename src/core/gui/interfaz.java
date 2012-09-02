@@ -470,7 +470,6 @@ public class interfaz implements ModelListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
 				JFrame reports = new JFrame();
 				reports.setBounds(100, 100, 751, 646);
 				reports.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -494,11 +493,6 @@ public class interfaz implements ModelListener {
 
 	@Override
 	public void updateOnModelChange() {
-		/*
-		 * slave1comboBox.setSelectedIndex(MasterModel.getInstance().getConnected
-		 * ().get(CommunicationIds.SLAVE1)?0:1); slave1comboBox.validate();
-		 */
-
 		MasterModel model = MasterModel.getInstance();
 		setStatusPanelFor(CommunicationIds.SLAVE1, model);
 		updateStatusSlave1Sections(model);
@@ -509,10 +503,16 @@ public class interfaz implements ModelListener {
 
 	private void updateStatusSlave1Sections(MasterModel model) {
 		Slave1Model slave1Model = (Slave1Model) model.getModel().get(CommunicationIds.SLAVE1);
-		if (slave1Model != null) {
-			gearStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getGearBeltModel().getCurrentMode() : null);
-			axisStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getAxisBeltModel().getCurrentMode() : null);
-			assemblyStatusPanel.setModo(model.isConnected(CommunicationIds.SLAVE1) ? slave1Model.getAssemblyStationModel().getCurrentMode() : null);
+		if (slave1Model != null && model.isConnected(CommunicationIds.SLAVE1)) {
+			gearStatusPanel.setModo(slave1Model.getGearBeltModel().getCurrentMode());
+			axisStatusPanel.setModo(slave1Model.getAxisBeltModel().getCurrentMode());
+			assemblyStatusPanel.setModo(slave1Model.getAssemblyStationModel().getCurrentMode());
+			robot1StatusPanel.setModo(slave1Model.getRobo1Model().getCurrentMode());
+		}else{
+			gearStatusPanel.setModo(null);
+			axisStatusPanel.setModo(null);
+			assemblyStatusPanel.setModo(null);
+			robot1StatusPanel.setModo(null);
 		}
 	}
 

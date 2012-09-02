@@ -12,7 +12,7 @@ public class Robot1Model implements AutomataModel<Robot1Input, Robot1State> {
 
 	private static final long serialVersionUID = -9139889456417544981L;
 
-	private List<ModelListener> listeners;
+	private transient List<ModelListener> listeners;
 	private Robot1State state;
 
 	public Robot1Model() {
@@ -49,6 +49,7 @@ public class Robot1Model implements AutomataModel<Robot1Input, Robot1State> {
 	@Override
 	public void setAutomata(AutomataContainer<Robot1Input, Robot1State, ? extends AutomataModel<Robot1Input, Robot1State>> automata) {
 		state = new Robot1State((Robot1Automata) automata);
+		notifyObservers();
 	}
 
 }

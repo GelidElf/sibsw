@@ -71,6 +71,8 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 				changeConfigurationParameter(attribute);
 			}
 			break;
+		default:
+			break;
 		}
 	}
 

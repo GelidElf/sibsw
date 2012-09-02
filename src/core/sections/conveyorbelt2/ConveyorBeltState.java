@@ -6,6 +6,8 @@ import core.model.State;
 
 public class ConveyorBeltState implements State<ConveyorBeltInput> {
 
+	private static final long serialVersionUID = 5264201109006201874L;
+
 	private enum states implements AutomataStatesInternalImplementation<ConveyorBeltInput, ConveyorBeltState> {
 		Started(ModeEnum.READY) {
 			@Override
@@ -13,6 +15,8 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 				switch (input) {
 				case START:
 					return Moving;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}

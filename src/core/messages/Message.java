@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataModel;
+import core.model.State;
 
 /**
  * Object read and written in the Socket for communication is paremetrized with
@@ -26,6 +27,8 @@ public class Message implements Serializable {
 	private String messageId = null;
 	private CommunicationIds destination = null;
 	private CommunicationIds owner = null;
+	private transient Inbox container;
+	
 
 	private Boolean urgent = null;
 
@@ -171,8 +174,8 @@ public class Message implements Serializable {
 	/**
 	 * @return the currentModel from the message contents, if it exist
 	 */
-	public AutomataModel getCurrentModel() {
-		return (AutomataModel) getAttributeValue(MODEL_KEY);
+	public AutomataModel<? extends Enum<?>,? extends State<? extends Enum<?>>> getCurrentModel() {
+		return (AutomataModel<?,?>) getAttributeValue(MODEL_KEY);
 	}
 
 	/**
@@ -180,10 +183,25 @@ public class Message implements Serializable {
 	 *            the currentModel to set is added to the contents of the
 	 *            message
 	 */
-	public void setCurrentModel(AutomataModel currentModel) {
+	public void setCurrentModel(AutomataModel<?,?> currentModel) {
 		addAttribute(MODEL_KEY, currentModel);
 	}
 
+	/**
+	 * Sets the inbox 
+	 * @param container
+	 */
+	public void setContainer(Inbox container){
+		this.container = container;
+	}
+		
+	/**
+	 * Removes de message from the inbox Used when the message has been used.
+	 */
+	public void consume(){
+		container.remove(this);
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
