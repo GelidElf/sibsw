@@ -8,13 +8,13 @@ public class Robot1Manager extends ParallelPortManager {
 
 	// We create the names for the groups and pins, so that we can access the
 	// values later from other objects.
-	public static final String DELIVER_GEAR = "DELIVER_GEAR";
+	public static final String DELIVER_GEAR = "DELIVER_GEAR"; //command
 	public static final String DELIVER_AXIS = "DELIVER_AXIS";
 	public static final String DELIVER_ASSEMBLED = "DELIVER_ASSEMBLED";
 	public static final String ENABLE = "BUSY";
-	public static final String SPEED = "SPEED";
-	public static final String TIME_TO_AXIS_GEAR = "TIME_TO_AXIS_GEAR";
-	public static final String TIME_TO_TRANSPORT = "TIME_TO_TRANSPORT";
+	//public static final String SPEED = "SPEED";
+	public static final String TIME_TO_AXIS_GEAR = "TIME_TO_AXIS_GEAR"; 
+	public static final String TIME_TO_TRANSPORT = "TIME_TO_TRANSPORT"; 
 	public static final String TIME_TO_ASSEMBLED = "TIME_TO_ASSEMBLED";
 
 	public Robot1Manager() {
@@ -25,10 +25,10 @@ public class Robot1Manager extends ParallelPortManager {
 			this.setBitGroup(Robot1Manager.DELIVER_AXIS, 1, 1);
 			this.setBitGroup(Robot1Manager.DELIVER_ASSEMBLED, 2, 2);
 			this.setBitGroup(Robot1Manager.ENABLE, 3, 3);
-			this.setBitGroup(Robot1Manager.SPEED, 4, 6);
-			this.setBitGroup(Robot1Manager.TIME_TO_AXIS_GEAR, 7, 9);
-			this.setBitGroup(Robot1Manager.TIME_TO_TRANSPORT, 10, 12);
-			this.setBitGroup(Robot1Manager.TIME_TO_ASSEMBLED, 13, 15);
+			//this.setBitGroup(Robot1Manager.SPEED, 4, 6);
+			this.setBitGroup(Robot1Manager.TIME_TO_AXIS_GEAR, 4, 7);
+			this.setBitGroup(Robot1Manager.TIME_TO_TRANSPORT, 8, 11);
+			this.setBitGroup(Robot1Manager.TIME_TO_ASSEMBLED, 12, 15);
 			// continue
 		} catch (ParallelPortException e) {
 			Logger.println(e.getMessage());
@@ -36,9 +36,9 @@ public class Robot1Manager extends ParallelPortManager {
 		}
 	}
 
-	public void configure(int speed, int timeToAxisGear, int timeToTransport, int timeToAssembled) {
+	public void configure(int timeToAxisGear, int timeToTransport, int timeToAssembled) {
 		try {
-			setValueByName(Robot1Manager.SPEED, speed);
+			//setValueByName(Robot1Manager.SPEED, speed);
 			setValueByName(Robot1Manager.TIME_TO_AXIS_GEAR, timeToAxisGear);
 			setValueByName(Robot1Manager.TIME_TO_TRANSPORT, timeToTransport);
 			setValueByName(Robot1Manager.TIME_TO_ASSEMBLED, timeToAssembled);
