@@ -8,5 +8,11 @@ public enum MasterInput {
 	AUTO_FEED_AXIS_ON,
 	AUTO_FEED_AXIS_OFF,
 	AUTO_FEED_GEAR_ON,
-	AUTO_FEED_GEAR_OFF, ESTOP, NSTOP, RESUME
+	AUTO_FEED_GEAR_OFF, 
+	AP_IN_WS, //assembled piece in welding station
+	WP_IN_QS, //welded piece in quality station
+	CP_IN_CB, //checked piece in conveyor belt
+	ESTOP, 
+	NSTOP, 
+	RESUME
 }

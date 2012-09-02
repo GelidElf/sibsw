@@ -3,42 +3,77 @@ package core.sections.robot2;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 public class Robot2Simulator extends Thread implements ParallelPortManagerObserver {
 
-	private Robot2Manager _manager = null;
-	
-	public Robot2Simulator(){
-		_manager = new Robot2Manager();
+	private static final long DEFAULT_WAIT_TIME = 2;
+	private long currentJobTime;
+	private Robot2Manager manager;
+
+	public Robot2Simulator(Robot2Manager manager) {
+		this.manager = manager;
+		manager.registerObserver(this);
 	}
-	
-	public ParallelPortManager getManager() {
-		return _manager;
+
+	public void move() {
+		Logger.println("MOVIENDO ROBOT!!");
 	}
 
 	@Override
 	public void run() {
-		while(true){
-			try {
-				if(_manager.getValueByName(Robot2Manager.ENABLED) == 1){
-					sleep(_manager.getValueByName(Robot2Manager.TIME_WORKING)*1000);
-					_manager.setValueByName(Robot2Manager.ENABLED,0);
-				}
-			} catch (ParallelPortException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		boolean isEnabled = false;
+		while (true) {
+			isEnabled = manager.jobToBeDone();
+			if (isEnabled) {
+				move();
+				sleepSeconds(currentJobTime);
+				manager.setJobDone();
+			} else {
+				sleepSeconds(DEFAULT_WAIT_TIME);
 			}
 		}
-		
+	}
+
+	private void sleepSeconds(long seconds) {
+		try {
+			sleep(1000 * seconds);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		// TODO Auto-generated method stub
-		
+		String modifiedGroup = manager.getModifiedGroupName();
+		if (modifiedGroup.equals(Robot2Manager.DELIVER_ASSEMBLED_PIECE)) {
+			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P));
+			startJob(manager);
+			return;
+		}
+		if (modifiedGroup.equals(Robot2Manager.DELIVER_WELDED_PIECE)) {
+			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_WELDED));
+			startJob(manager);
+			return;
+		}
+		if (modifiedGroup.equals(Robot2Manager.DELIVER_CHECKED_PIECE)) {
+			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_CB));
+			startJob(manager);
+			return;
+		}
+	}
+
+	private void startJob(ParallelPortManager manager) {
+		try {
+			manager.setValueByNameAsBoolean(Robot2Manager.ENABLE, true);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	private void setTimeToComplete(long i) {
+		currentJobTime = i;
 	}
 
 }

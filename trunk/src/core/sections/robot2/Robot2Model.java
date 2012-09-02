@@ -1,48 +1,55 @@
 package core.sections.robot2;
 
+import java.util.ArrayList;
+import java.util.List;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
 
+
 public class Robot2Model implements AutomataModel<Robot2Input, core.sections.robot2.Robot2State> {
 
 	private static final long serialVersionUID = 1258560192891249135L;
 
+	private List<ModelListener> listeners;
+	private Robot2State state;
+
+	public Robot2Model() {
+		listeners = new ArrayList<ModelListener>();
+	}
+
 	@Override
 	public void addListener(ModelListener listener) {
-		// TODO Auto-generated method stub
-
+		listeners.add(listener);
 	}
 
 	@Override
 	public ModeEnum getCurrentMode() {
-		// TODO Auto-generated method stub
-		return null;
+		return getState().getMode();
 	}
 
 	@Override
 	public Robot2State getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return state;
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
-
+		for (ModelListener listener : listeners) {
+			listener.updateOnModelChange();
+		}
 	}
 
 	@Override
 	public void setState(Robot2State state) {
-		// TODO Auto-generated method stub
-
+		this.state = state;
 	}
 
 	@Override
 	public void setAutomata(AutomataContainer<Robot2Input, Robot2State, ? extends AutomataModel<Robot2Input, Robot2State>> automata) {
-		// TODO Auto-generated method stub
-
+		state = new Robot2State((Robot2Automata) automata);
 	}
+
 
 }
