@@ -56,6 +56,7 @@ public class ParallelPortManager {
 	 * Protected constructor so that sons can access it
 	 */
 	protected ParallelPortManager() {
+		state = new ParallelPortState();
 	}
 
 	/**

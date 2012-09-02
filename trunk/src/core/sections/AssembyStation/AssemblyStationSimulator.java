@@ -34,8 +34,7 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 			}
 			}else{
 				try {
-					sleep(200);
-					Logger.println("sleeping");
+					sleep(2000);
 				} catch (InterruptedException e) {
 					Logger.println("error during sleep");
 				}

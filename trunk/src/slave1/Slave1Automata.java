@@ -42,6 +42,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		assemblyStation = new AssemblyStationAutomata(this, assemblyManager);
 		getModel().setAssemblyStationModel(assemblyStation.getModel());
 		robot = new Robot1Automata(this, new Robot1Model(), new OfflineCommunicationManager());
+		robot.getModel().addListener(this);
 		getModel().setRobot1Model(robot.getModel());
 		getModel().setAutomata(this);
 		getModel().addListener(this);
@@ -84,7 +85,25 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			getModel().getState().execute((Slave1Input) message.getInputType());
+			Slave1Input input = (Slave1Input) message.getInputType();
+			//If input is a shortcut, try it here
+			switch (input) {
+			case AUTO_FEED_AXIS_OFF:
+				
+				break;
+			case AUTO_FEED_AXIS_ON:
+				
+				break;
+			case AUTO_FEED_GEAR_OFF:
+				
+				break;
+			case AUTO_FEED_GEAR_ON:
+				
+				break;
+			default:
+				getModel().getState().execute(input);
+				break;
+			}
 		}
 
 	}
@@ -107,6 +126,8 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			for (Attribute attribute : message.getAttributes()) {
 				changeConfigurationParameter(attribute);
 			}
+			break;
+		default:
 			break;
 		}
 

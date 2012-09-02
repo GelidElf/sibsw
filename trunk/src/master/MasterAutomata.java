@@ -57,7 +57,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 	}
 
 	@Override
-	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model) {
+	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel<?,?> model) {
 		MasterModel.getInstance().setModel(commId, model);
 	}
 

@@ -53,5 +53,15 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		return capacity;
 	}
 	
+	public int getCuantity() {
+		int quantity = 0;
+		try {
+			quantity = getValueByName(ConveyorBeltManager.QUANTITY);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return quantity;
+	}
+	
 	
 }

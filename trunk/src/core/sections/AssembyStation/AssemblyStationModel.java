@@ -1,5 +1,8 @@
 package core.sections.AssembyStation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
@@ -9,40 +12,43 @@ public class AssemblyStationModel implements AutomataModel<AssemblyStationInput,
 
 	private static final long serialVersionUID = -9137179190722641534L;
 
+	private List<ModelListener> listeners;
+	private AssemblyStationState currentState;
+
+	public AssemblyStationModel() {
+		listeners = new ArrayList<ModelListener>();
+	}
+
 	@Override
 	public void addListener(ModelListener listener) {
-		// TODO Auto-generated method stub
-
+		listeners.add(listener);
 	}
 
 	@Override
 	public ModeEnum getCurrentMode() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState.getMode();
 	}
 
 	@Override
 	public AssemblyStationState getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState;
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
-
+		for (ModelListener listener : listeners) {
+			listener.updateOnModelChange();
+		}
 	}
 
 	@Override
 	public void setState(AssemblyStationState state) {
-		// TODO Auto-generated method stub
-
+		currentState = state;
 	}
 
 	@Override
 	public void setAutomata(AutomataContainer<AssemblyStationInput, AssemblyStationState, ? extends AutomataModel<AssemblyStationInput, AssemblyStationState>> automata) {
-		// TODO Auto-generated method stub
-		
+		currentState = new AssemblyStationState((AssemblyStationAutomata) automata);
 	}
 
 }

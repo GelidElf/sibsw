@@ -8,7 +8,8 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
-public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends State<INPUT>, MODEL extends AutomataModel<INPUT, STATE>> extends Thread {
+public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends State<INPUT>, MODEL extends AutomataModel<INPUT, STATE>>
+		extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
@@ -34,7 +35,7 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 
 	@Override
 	public void run() {
-		sendPeerInformation(); //TODO: Comprobar este cambio!
+		sendPeerInformation(); // TODO: Comprobar este cambio!
 		super.run();
 		while (true) {
 			try {
@@ -49,15 +50,15 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 	}
 
 	private void sendPeerInformation() {
-		Message message = new Message("IDENTIFICATION", CommunicationIds.BROADCAST, true, CommunicationMessageType.HANDSHAKE, null);
-		message.setCurrentModel(model);
+		Message message = new Message("IDENTIFICATION", CommunicationIds.BROADCAST, true,
+				CommunicationMessageType.HANDSHAKE, null);
 		sendMessage(message);
 	}
 
 	private void actualizarEstadoConModeloRemoto(Message message) {
 		if (mensajeConModeloYDebemosActualizarConElCambio(message)) {
-			//			model = message.getCurrentModel();
-			updateWithModelFromMessage(message.getOwner(), message.getCurrentModel());
+			AutomataModel<?,?> messageModel = message.getCurrentModel();
+			updateWithModelFromMessage(message.getOwner(), messageModel);
 		}
 	}
 
@@ -80,10 +81,11 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 	 * Debe de ser sobrecargado en aquellos hijos que tengan que reaccionar
 	 * cuando el estado del otro automata cambie (Master)
 	 * 
-	 * @param commId
-	 * @param model
+	 * @param commId el identificador del due–o del modelo
+	 * @param model cualquier modelo que nos llegue por mensaje
 	 */
-	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel model) {
+	protected void updateWithModelFromMessage(CommunicationIds commId, AutomataModel<?, ?> model) {
+		//EMPTY CODE; OVERRIDE IN SUBCLASS IF NECESSARY
 	}
 
 	public void sendMessage(Message message) {
@@ -106,7 +108,8 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 	}
 
 	protected Message createDummyMessageForInput(INPUT input, boolean isUrgent) {
-		Message message = new Message("FeededInputDummyMessage", getCommunicationManager().getOwner(), isUrgent, CommunicationMessageType.COMMAND, input);
+		Message message = new Message("FeededInputDummyMessage", getCommunicationManager().getOwner(), isUrgent,
+				CommunicationMessageType.COMMAND, input);
 		return message;
 	}
 

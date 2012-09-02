@@ -2,6 +2,6 @@ package core.sections.ConveyorBelt;
 
 public enum ConveyorBeltInput {
 
-	START, estop, restart, nstop, loadSensorTrue, unloadSensorTrue, unloadSensorTrueMax, unloadSensorFalse, empty
+	START, ESTOP, RESTART, NSTOP, loadSensorTrue, unloadSensorTrue, unloadSensorTrueMax, unloadSensorFalse, empty
 
 }

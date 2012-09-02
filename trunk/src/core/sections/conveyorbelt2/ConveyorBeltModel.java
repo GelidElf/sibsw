@@ -48,8 +48,7 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 
 	@Override
 	public void setState(ConveyorBeltState state) {
-		// TODO Auto-generated method stub
-
+		currentState = state;
 	}
 
 }

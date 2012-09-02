@@ -64,7 +64,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
 		if (manager.getModifiedGroupName().equals(ConveyorBeltManager.ENABLE)) {
-			// if ()
+			
 		}
 
 	}
