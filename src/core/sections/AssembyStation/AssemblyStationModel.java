@@ -12,7 +12,7 @@ public class AssemblyStationModel implements AutomataModel<AssemblyStationInput,
 
 	private static final long serialVersionUID = -9137179190722641534L;
 
-	private List<ModelListener> listeners;
+	private transient List<ModelListener> listeners;
 	private AssemblyStationState currentState;
 
 	public AssemblyStationModel() {

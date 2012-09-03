@@ -2,6 +2,7 @@ package core.sections.conveyorbelt2;
 
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 
 public class ConveyorBeltSimulator extends Thread implements ParallelPortManagerObserver {
 
@@ -36,24 +37,39 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 
 	private void updateCapacityIfNeccesary() {
 		int currentConfiguredCapacity = manager.getCapacity();
+		int newQuantity = 0;
 		if (currentConfiguredCapacity != currentCapacity){
-			if (currentConfiguredCapacity > currentCapacity){
+			newQuantity = updateCapacityAndGetQuantity(currentConfiguredCapacity, newQuantity);
+			try {
+				manager.setValueByName(ConveyorBeltManager.QUANTITY, newQuantity);
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	private int updateCapacityAndGetQuantity(int currentConfiguredCapacity, int newQuantity) {
+		if (currentConfiguredCapacity > currentCapacity) {
+			boolean[] auxContents = new boolean[currentConfiguredCapacity];
+			for (int i = 0; i < currentConfiguredCapacity; i++) {
+				auxContents[i] = contents[i];
+				if (contents[i]) {
+					newQuantity++;
+				}
+			}
+
+		} else {
+			if (currentConfiguredCapacity < currentCapacity) {
 				boolean[] auxContents = new boolean[currentConfiguredCapacity];
 				for (int i =0;i<currentConfiguredCapacity;i++){
 					auxContents[i] = contents[i];
-				}
-				
-			}else{
-				if (currentConfiguredCapacity < currentCapacity){
-					boolean[] auxContents = new boolean[currentConfiguredCapacity];
-					for (int i =0;i<currentConfiguredCapacity;i++){
-						auxContents[i] = contents[i];
+					if (contents[i]) {
+						newQuantity++;
 					}
-					
-					
 				}
 			}
 		}
+		return newQuantity;
 	}
 
 	private void move() {

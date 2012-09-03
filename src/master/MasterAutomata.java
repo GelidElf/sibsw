@@ -15,6 +15,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 
 	public MasterAutomata(Configuration conf) {
 		super(null, MasterModel.getInstance(), new MultipleInboxCommunicationManager(CommunicationIds.MASTER, conf, NUMBEROFINBOXES));
+		getModel().setAutomata(this);
 	}
 
 	@Override
@@ -23,15 +24,19 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 			switch ((MasterInput) message.getInputType()) {
 			case START:
 				sendBroadCastMessage(CommunicationMessageType.START);
+				message.setConsumed(getModel().getState().execute(MasterInput.START));
 				break;
 			case NSTOP:
 				sendBroadCastMessage(CommunicationMessageType.NSTOP);
+				message.setConsumed(getModel().getState().execute(MasterInput.NSTOP));
 				break;
 			case ESTOP:
 				sendBroadCastMessage(CommunicationMessageType.ESTOP);
+				message.setConsumed(getModel().getState().execute(MasterInput.ESTOP));
 				break;
 			case RESUME:
 				sendBroadCastMessage(CommunicationMessageType.RESTART);
+				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
 				break;
 			default:
 				break;

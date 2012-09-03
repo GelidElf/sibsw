@@ -33,12 +33,14 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		super(null, new Slave1Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE1, conf));
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10, 2);
-		gearBelt = new ConveyorBeltAutomata(this, gearManager);
+		gearBelt = new ConveyorBeltAutomata(this, gearManager, Slave1Input.MOVE_GEAR);
 		getModel().setGearBeltModel(gearBelt.getModel());
+		gearBelt.enableAutoFeed();
 		ConveyorBeltManager axisManager = new ConveyorBeltManager();
 		axisManager.configure(10, 2);
-		axisBelt = new ConveyorBeltAutomata(this, axisManager);
+		axisBelt = new ConveyorBeltAutomata(this, axisManager, Slave1Input.MOVE_AXIS);
 		getModel().setAxisBeltModel(axisBelt.getModel());
+		axisBelt.enableAutoFeed();
 		AssemblyStationManager assemblyManager = new AssemblyStationManager();
 		assemblyManager.configure(10);
 		assemblyStation = new AssemblyStationAutomata(this, assemblyManager);
@@ -91,19 +93,24 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			//If input is a shortcut, try it here
 			switch (input) {
 			case AUTO_FEED_AXIS_OFF:
-
+				axisBelt.disableAutoFeed();
+				message.consumeMessage();
 				break;
 			case AUTO_FEED_AXIS_ON:
-
+				axisBelt.enableAutoFeed();
+				message.consumeMessage();
 				break;
 			case AUTO_FEED_GEAR_OFF:
-
+				gearBelt.disableAutoFeed();
+				message.consumeMessage();
 				break;
 			case AUTO_FEED_GEAR_ON:
-
+				gearBelt.enableAutoFeed();
+				message.consumeMessage();
 				break;
 			default:
-				getModel().getState().execute(input);
+				// Input is a normal state command, use the state.
+				message.setConsumed(getModel().getState().execute(input));
 				break;
 			}
 		}
@@ -111,18 +118,19 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	}
 
 	private void reaccionaPorTipoDeMensaje(Message message) {
+		message.consumeMessage();
 		switch (message.getType()) {
 		case START:
-			feedInput(Slave1Input.START, message.isUrgent());
+			message.setConsumed(getModel().getState().execute(Slave1Input.START));
 			break;
 		case NSTOP:
-			feedInput(Slave1Input.NSTOP, message.isUrgent());
+			message.setConsumed(getModel().getState().execute(Slave1Input.NSTOP));
 			break;
 		case ESTOP:
-			feedInput(Slave1Input.ESTOP, message.isUrgent());
+			message.setConsumed(getModel().getState().execute(Slave1Input.ESTOP));
 			break;
 		case RESTART:
-			feedInput(Slave1Input.RESTART, message.isUrgent());
+			message.setConsumed(getModel().getState().execute(Slave1Input.RESTART));
 			break;
 		case CONFIGURATION:
 			for (Attribute attribute : message.getAttributes()) {
@@ -130,6 +138,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			}
 			break;
 		default:
+			message.didNotConsumeMessage();
 			break;
 		}
 

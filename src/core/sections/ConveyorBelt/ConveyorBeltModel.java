@@ -1,5 +1,7 @@
 package core.sections.ConveyorBelt;
 
+import java.util.List;
+
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
@@ -9,40 +11,39 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 
 	private static final long serialVersionUID = 695493474794614418L;
 
+	private transient List<ModelListener> listeners;
+	private ConveyorBeltState currentState;
+
 	@Override
 	public void addListener(ModelListener listener) {
-		// TODO Auto-generated method stub
-
+		listeners.add(listener);
 	}
 
 	@Override
 	public ModeEnum getCurrentMode() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState.getMode();
 	}
 
 	@Override
 	public ConveyorBeltState getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState;
 	}
 
 	@Override
 	public void notifyObservers() {
-		// TODO Auto-generated method stub
-
+		for (ModelListener listener: listeners){
+			listener.updateOnModelChange();
+		}
 	}
 
 	@Override
 	public void setState(ConveyorBeltState state) {
-		// TODO Auto-generated method stub
-
+		currentState = state;
 	}
 
 	@Override
 	public void setAutomata(AutomataContainer<ConveyorBeltInput, ConveyorBeltState, ? extends AutomataModel<ConveyorBeltInput, ConveyorBeltState>> automata) {
-		// TODO Auto-generated method stub
-
+		currentState = new ConveyorBeltState((ConveyorBeltAutomata) automata);
 	}
 
 }

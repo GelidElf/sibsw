@@ -52,7 +52,7 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 	}
 
 	private states currentState;
-	private ConveyorBeltAutomata automata;
+	private transient ConveyorBeltAutomata automata;
 
 	public ConveyorBeltState(ConveyorBeltAutomata automata) {
 		currentState = states.Started;
@@ -64,8 +64,10 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 	}
 
 	@Override
-	public void execute(ConveyorBeltInput input) {
+	public boolean execute(ConveyorBeltInput input) {
+		states oldstate = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
+		return oldstate != currentState;
 	}
 
 	@Override

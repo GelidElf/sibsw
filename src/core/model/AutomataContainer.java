@@ -42,6 +42,10 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 				Message message = commManager.getInbox().getMessage();
 				actualizarEstadoConModeloRemoto(message);
 				consume(message);
+				if (message.getConsumed()) {
+					commManager.getInbox().remove(message);
+					model.notifyObservers();
+				}
 			} catch (InterruptedException e) {
 				Logger.println("error reading messages");
 				e.printStackTrace();
@@ -105,6 +109,12 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 	 */
 	public synchronized void feedInput(INPUT input, boolean isUrgent) {
 		commManager.feed(createDummyMessageForInput(input, isUrgent));
+	}
+
+	public void feedInputObject(Enum<?> input, boolean isUrgent) {
+		Message message = new Message("FeededInputObjectDummyMessage", getCommunicationManager().getOwner(), isUrgent,
+				CommunicationMessageType.COMMAND, input);
+		commManager.feed(message);
 	}
 
 	protected Message createDummyMessageForInput(INPUT input, boolean isUrgent) {

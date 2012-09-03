@@ -104,8 +104,10 @@ public class QualityStationState implements State<QualityStationInput> {
 	private states currentState;
 
 	@Override
-	public void execute(QualityStationInput input) {
+	public boolean execute(QualityStationInput input) {
+		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public QualityStationState(QualityStationAutomata automata) {

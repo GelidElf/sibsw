@@ -24,10 +24,12 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		return instance;
 	}
 
+	@Override
 	public void addListener(ModelListener listener) {
 		modelListeners.add(listener);
 	}
 
+	@Override
 	public void notifyObservers() {
 		for (ModelListener listener : modelListeners) {
 			listener.updateOnModelChange();
@@ -51,7 +53,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	}
 
 	private Map<CommunicationIds, AutomataModel<?, ?>> models = new HashMap<CommunicationIds, AutomataModel<?, ?>>();
-	private ModeEnum currentMode;
+	private MasterState currentState;
 
 	public void setModel(CommunicationIds id, AutomataModel<?, ?> model) {
 		if (model != null) {
@@ -69,24 +71,22 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	@Override
 	public ModeEnum getCurrentMode() {
-		return currentMode;
+		return currentState.getMode();
 	}
 
 	@Override
 	public MasterState getState() {
-		// TODO Auto-generated method stub
-		return null;
+		return currentState;
 	}
 
 	@Override
 	public void setState(MasterState state) {
-		// TODO Auto-generated method stub
-
+		currentState = state;
 	}
 
 	@Override
 	public void setAutomata(AutomataContainer<MasterInput, MasterState, ? extends AutomataModel<MasterInput, MasterState>> automata) {
-		// TODO Auto-generated method stub
+		currentState = new MasterState((MasterAutomata) automata);
 
 	}
 

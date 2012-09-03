@@ -166,8 +166,10 @@ public class Robot1State implements State<Robot1Input> {
 	private states currentState;
 
 	@Override
-	public void execute(Robot1Input input) {
+	public boolean execute(Robot1Input input) {
+		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public Robot1State(Robot1Automata automata) {
