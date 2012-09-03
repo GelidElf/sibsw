@@ -1,5 +1,7 @@
 package core.sections.ConveyorBelt;
 
+import core.sections.ParallelPort.ParallelPortManager;
+import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
@@ -8,7 +10,7 @@ import core.utilities.log.Logger;
  * @author GelidElf
  * 
  */
-public class ConveyorBeltSimulator extends Thread {
+public class ConveyorBeltSimulator extends Thread implements ParallelPortManagerObserver {
 
 	private int[] contents = null;
 	private ConveyorBeltManager manager = null;
@@ -53,28 +55,28 @@ public class ConveyorBeltSimulator extends Thread {
 	public void run() {
 		while (true) {
 			try {
+				int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
 				updateCapacity();
-				if (initialSensorActive()) {
-					setElementInInitialPositionInContents();
-					increaseElementCountByOne();
-				}
-				if (beltHasElements()) {
-					int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
-					if (running() && finalSensorInactive()) {
-						actualizoElElementoDeLaUltimaPosicionQueYaNoEsta();
-						Logger.println("muevo la cinta!:" + velocity);
-						move();
-						sleepExecution(velocity);
-					} else {
-						Logger.println("NO muevo la cinta!");
-						sleepExecution(velocity);
+				if (running()) {
+					if (initialSensorActive()) {
+						setElementInInitialPositionInContents();
+						increaseElementCountByOne();
+					}
+					if (beltHasElements()) {
+						if (finalSensorInactive()) {
+							actualizoElElementoDeLaUltimaPosicionQueYaNoEsta();
+							Logger.println("muevo la cinta!:" + velocity);
+							move();
+						} else {
+							Logger.println("Paramos la cinta!");
+							manager.setRunning(false);
+						}
 					}
 				}
+				sleepExecution(velocity);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (ParallelPortException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -168,6 +170,11 @@ public class ConveyorBeltSimulator extends Thread {
 
 	public ConveyorBeltManager getManager() {
 		return manager;
+	}
+
+	@Override
+	public void updateFromPortManager(ParallelPortManager manager) {
+
 	}
 
 }

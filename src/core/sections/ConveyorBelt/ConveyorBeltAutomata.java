@@ -125,9 +125,9 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	@Override
 	public void startCommand() {
-		manager.setRunning(true);
 		simulator.start();
 		fillerThread.start();
+		this.start();
 	}
 
 	@Override
@@ -148,6 +148,10 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	public void disableAutoFeed() {
 		fillerThread.setEnabled(false);
+	}
+
+	public Enum<?> getJobDoneInput() {
+		return jobDone;
 	}
 
 	public void setLength(int length) {

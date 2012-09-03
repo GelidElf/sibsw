@@ -42,6 +42,7 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 	@Override
 	public void startCommand() {
 		simulator.start();
+		this.start();
 	}
 
 	@Override
