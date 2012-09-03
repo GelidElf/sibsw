@@ -16,6 +16,7 @@ import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.robot1.Robot1Automata;
+import core.sections.robot1.Robot1Manager;
 import core.sections.robot1.Robot1Model;
 
 public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, Slave1Model> implements ModelListener {
@@ -157,8 +158,8 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		
-		/*CB_AXIS_LENGTH,
-	CB_GEARS_LENGTH,*/
+		/* Falta CB_AXIS_LENGTH,
+	CB_GEARS_LENGTH !!!!!!!!!!!!!!!!1*/
 		
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
@@ -169,12 +170,25 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 					break;
 				case CB_AXIS_SPEED:
 					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					break;
 				case CB_GEARS_CAPACITY:
 					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
+					break;
 				case CB_GEARS_SPEED:
 					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					break;
 				case ACTIVATION_TIME_AS:
 					assemblyStation.getManager().setBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME, (Integer) attribute.getValue());
+					break;
+				case PICK_TIME_AXIS_GEAR:
+					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR, (Integer) attribute.getValue());
+					break;
+				case TRANSPORT_PLACE_TIME_AXIS_GEAR:
+					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_ASSEMBLED, (Integer) attribute.getValue());
+					break;
+				case TRANSPORT_PLACE_TIME_ASSEMBLED:
+					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_TRANSPORT, (Integer) attribute.getValue());
+					break;
 				default:
 					break;
 				}

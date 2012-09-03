@@ -1,5 +1,13 @@
 package slave2;
 
 public enum Slave2Input {
+	START, 
+	NSTOP, 
+	ESTOP, 
+	RESTART, 
+	LOAD_ASSEMBLED_TCB,
+	UNLOAD_ASSEMBLED_TCB,
+	ASSEMBLED_READY,
+	WELDED_PIECE;
 
 }
