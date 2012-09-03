@@ -106,4 +106,8 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 
 	}
 
+	public AssemblyStationManager getManager() {
+		return manager;
+	}
+
 }

@@ -51,7 +51,7 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 	}
 	
 	private states currentState;
-	private AssemblyStationAutomata automata;
+	private transient AssemblyStationAutomata automata;
 	
 	public AssemblyStationState(AssemblyStationAutomata automata) {
 		this.automata = automata;
@@ -59,8 +59,10 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 	}
 
 	@Override
-	public void execute(AssemblyStationInput input) {
+	public boolean execute(AssemblyStationInput input) {
+		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public AssemblyStationAutomata getAutomata(){

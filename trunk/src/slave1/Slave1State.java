@@ -25,23 +25,28 @@ public class Slave1State implements State<Slave1Input> {
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.START, true);
 					//startCommand should start the sections on ready so that the start command is heard
+					currentState.getAutomata().getRobot().startCommand();
+					currentState.getAutomata().getGearBelt().startCommand();
+					currentState.getAutomata().getAxisBelt().startCommand();
 					currentState.getAutomata().getAssemblyStation().startCommand();
-					return IDDLE;
+					return Idle;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		},
-		IDDLE(ModeEnum.IDLE) {
+		Idle(ModeEnum.IDLE) {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch(input){
 				case MOVE_AXIS:
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
+					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return AXIS_LOADING;
 				case MOVE_GEAR:
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
+					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return GEAR_LOADING;
 				case GEAR_IN_AS:
 					currentState.getAutomata().getAssemblyStation()
@@ -51,8 +56,33 @@ public class Slave1State implements State<Slave1Input> {
 					currentState.getAutomata().getAssemblyStation()
 							.feedInput(AssemblyStationInput.axisDetectedTrue, false);
 					return LOADING_AS;
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.NSTOP, true);
+					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.NSTOP, true);
+					return IdleStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.ESTOP, true);
+					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.ESTOP, true);
+					return IdleStop;
 
 					// Complete
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		IdleStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case RESTART:
+					return Idle;
+
 				default:
 					break;
 				}
@@ -87,8 +117,10 @@ public class Slave1State implements State<Slave1Input> {
 	}
 
 	@Override
-	public void execute(Slave1Input input) {
+	public boolean execute(Slave1Input input) {
+		states oldState = currentState;
 		currentState = currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public Slave1Automata getAutomata() {

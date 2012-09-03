@@ -52,8 +52,10 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 	}
 
 	@Override
-	public void execute(ConveyorBeltInput input) {
+	public boolean execute(ConveyorBeltInput input) {
+		states oldState = currentState;
 		currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	@Override

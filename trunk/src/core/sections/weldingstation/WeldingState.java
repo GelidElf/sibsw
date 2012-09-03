@@ -76,6 +76,7 @@ public class WeldingState implements State<WeldingInput> {
 			this.mode = mode;
 		}
 
+		@Override
 		public ModeEnum getMode() {
 			return mode;
 		}
@@ -90,8 +91,10 @@ public class WeldingState implements State<WeldingInput> {
 	private states currentState;
 
 	@Override
-	public void execute(WeldingInput input) {
+	public boolean execute(WeldingInput input) {
+		states oldState = currentState;
 		currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public WeldingState(WeldingAutomata automata) {

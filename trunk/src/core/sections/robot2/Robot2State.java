@@ -130,6 +130,7 @@ public class Robot2State implements State<Robot2Input> {
 			this.mode = mode;
 		}
 
+		@Override
 		public ModeEnum getMode() {
 			return mode;
 		}
@@ -145,8 +146,10 @@ public class Robot2State implements State<Robot2Input> {
 	private states currentState;
 
 	@Override
-	public void execute(Robot2Input input) {
+	public boolean execute(Robot2Input input) {
+		states oldState = currentState;
 		currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public Robot2State(Robot2Automata automata) {

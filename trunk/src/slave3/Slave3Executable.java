@@ -31,7 +31,7 @@ public class Slave3Executable extends RunnableApplication {
 
 	private static void createAndSetConveyorBelt(Slave3Automata slave3) {
 		ConveyorBeltManager manager = new ConveyorBeltManager();
-		ConveyorBeltAutomata atcb = new ConveyorBeltAutomata(slave3,manager);
+		ConveyorBeltAutomata atcb = new ConveyorBeltAutomata(slave3, manager, null); // FIXME
 		slave3.setATConveyorbelt(atcb);
 		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
 		cbs.start();

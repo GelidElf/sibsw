@@ -1,6 +1,5 @@
 package core.sections.ConveyorBelt;
 
-import core.sections.ParallelPort.ParallelPortState;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
@@ -169,27 +168,6 @@ public class ConveyorBeltSimulator extends Thread {
 
 	public ConveyorBeltManager getManager() {
 		return manager;
-	}
-
-	public static void main(String[] args) {
-
-		ConveyorBeltManager manager = new ConveyorBeltManager();
-		ParallelPortState state = new ParallelPortState();
-		manager.setState(state);
-		try {
-			manager.setValueByName(ConveyorBeltManager.RUNNING, 1);
-			manager.setValueByName(ConveyorBeltManager.CAPACITY, 10);
-			manager.setValueByName(ConveyorBeltManager.SPEED, 2);
-		} catch (ParallelPortException e) {
-			e.printStackTrace();
-		}
-
-		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
-		cbs.start();
-		Logger.println("hilos lanzados1");
-		// ATConveyorBelt atcb = new ATConveyorBelt(null, manager);
-		// atcb.start();
-		// Logger.println("hilos lanzados2");
 	}
 
 }

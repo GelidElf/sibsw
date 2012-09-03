@@ -53,6 +53,7 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 	}
 
 	private void reaccionaPorTipoDeMensaje(Message message) {
+		message.consumeMessage();
 		switch (message.getType()) {
 		case START:
 			reactToInput(Robot1Input.START);
@@ -70,6 +71,9 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 			for (Attribute attribute : message.getAttributes()) {
 				changeConfigurationParameter(attribute);
 			}
+			break;
+		default:
+			message.didNotConsumeMessage();
 			break;
 		}
 	}

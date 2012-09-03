@@ -76,7 +76,7 @@ public class Inbox {
 				remainders.add(message);
 			} else {
 				if (remainders.size() > 0) {
-					message = remainders.removeFirst();
+					message = remainders.getFirst();
 				}
 			}
 			return message;
@@ -101,16 +101,13 @@ public class Inbox {
 	 *            the message to be removed.
 	 */
 	public void remove(Message message) {
-		if (priorityInbox.contains(message)) {
-			priorityInbox.remove(message);
-		} else {
-			if (inbox.contains(message)) {
-				priorityInbox.remove(message);
-			} else {
-				if (remainders.contains(message)) {
-					remainders.remove(message);
-				}
-			}
+		if (!message.getConsumed()) {
+			return;
 		}
+		lock.lock();
+		if (remainders.contains(message)) {
+			remainders.remove(message);
+		}
+		lock.unlock();
 	}
 }

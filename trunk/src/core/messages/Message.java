@@ -27,7 +27,7 @@ public class Message implements Serializable {
 	private String messageId = null;
 	private CommunicationIds destination = null;
 	private CommunicationIds owner = null;
-	private transient Inbox container;
+	private transient boolean consumed;
 	
 
 	private Boolean urgent = null;
@@ -187,19 +187,21 @@ public class Message implements Serializable {
 		addAttribute(MODEL_KEY, currentModel);
 	}
 
-	/**
-	 * Sets the inbox 
-	 * @param container
-	 */
-	public void setContainer(Inbox container){
-		this.container = container;
+	public void consumeMessage() {
+		consumed = true;
 	}
-		
-	/**
-	 * Removes de message from the inbox Used when the message has been used.
-	 */
-	public void consume(){
-		container.remove(this);
+
+	public void didNotConsumeMessage() {
+		consumed = false;
+
+	}
+
+	public void setConsumed(boolean consumed) {
+		this.consumed = consumed;
+	}
+
+	public boolean getConsumed() {
+		return consumed;
 	}
 	
 	@Override
