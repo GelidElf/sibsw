@@ -26,13 +26,20 @@ import slave1.Slave1Model;
 import core.file.ConfigurationFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
+import core.messages.Message;
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
+import core.messages.enums.ConfigurationParameters;
 import core.model.ModelListener;
+import java.awt.FlowLayout;
+
 
 public class interfaz implements ModelListener {
 
 	private MasterAutomata master;
-
+	
+	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
+	
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
 	private MainView mainView;
@@ -61,7 +68,23 @@ public class interfaz implements ModelListener {
 	private StatusPanel qualityStatusPanel;
 	private StatusPanel weldingStatusPanel;
 	private StatusPanel robot1StatusPanel;
+	private JTextField textField_17;
+	private JTextField textField_18;
+	private JTextField textField_14;
+	private JTextField textField_15;
+	private JTextField textField_16;
+	private JTextField textField_19;
 
+	/**
+	 * Fill the map with the configuration parameter and its value from the interface
+	 */
+	private void fillMap(ConfigurationParameters parameter, Integer newValue){
+		this.map.put(parameter, newValue);
+		Message message = new Message("ConfigurationParameterChange", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
+		message.addAttribute(parameter.name(), newValue);
+		master.sendMessage(message);
+	}
+	
 	/**
 	 * Launch the application.
 	 */
@@ -98,7 +121,7 @@ public class interfaz implements ModelListener {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1091, 802);
+		frame.setBounds(100, 100, 1104, 802);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -192,7 +215,7 @@ public class interfaz implements ModelListener {
 		lblComponents.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
-		btnEmergencyStop.setBounds(926, 236, 139, 51);
+		btnEmergencyStop.setBounds(926, 236, 152, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -227,45 +250,61 @@ public class interfaz implements ModelListener {
 		});
 		frame.getContentPane().add(btnStart);
 
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(10, 557, 349, 196);
-		frame.getContentPane().add(tabbedPane);
+		JTabbedPane configuration = new JTabbedPane(JTabbedPane.TOP);
+		configuration.setBounds(10, 557, 390, 196);
+		frame.getContentPane().add(configuration);
 
 		JPanel Master = new JPanel();
-		tabbedPane.addTab("Master", null, Master, null);
+		configuration.addTab("Master", null, Master, null);
 		Master.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Time to pick assembled piece");
+		JLabel lblNewLabel = new JLabel("Time to pick assembled piece (sec.)");
 		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel.setBounds(10, 51, 176, 28);
+		lblNewLabel.setBounds(10, 51, 215, 28);
 		Master.add(lblNewLabel);
 
 		textField = new JTextField();
+		textField.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, Integer.parseInt(textField.getText()));
+			}
+		});
+		
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField.setBounds(271, 55, 42, 20);
+		textField.setBounds(307, 55, 42, 20);
 		Master.add(textField);
 		textField.setColumns(10);
 
-		JLabel lblTimeToTransport = new JLabel("Time to transport and place assembled piece");
+		JLabel lblTimeToTransport = new JLabel("Time to transport and place assembled piece (sec.)");
 		lblTimeToTransport.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTimeToTransport.setBounds(10, 90, 253, 28);
+		lblTimeToTransport.setBounds(10, 90, 287, 28);
 		Master.add(lblTimeToTransport);
 
 		textField_1 = new JTextField();
+		textField_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS, Integer.parseInt(textField_1.getText()));
+			}
+		});
 		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_1.setColumns(10);
-		textField_1.setBounds(271, 94, 42, 20);
+		textField_1.setBounds(307, 94, 42, 20);
 		Master.add(textField_1);
 
-		JLabel lblTimeToTransport_1 = new JLabel("Time to transport and place welded piece");
+		JLabel lblTimeToTransport_1 = new JLabel("Time to transport and place welded piece (sec.)");
 		lblTimeToTransport_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblTimeToTransport_1.setBounds(10, 129, 253, 28);
+		lblTimeToTransport_1.setBounds(10, 129, 287, 28);
 		Master.add(lblTimeToTransport_1);
 
 		textField_2 = new JTextField();
+		textField_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED, Integer.parseInt(textField_2.getText()));
+			}
+		});
 		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_2.setColumns(10);
-		textField_2.setBounds(271, 134, 42, 20);
+		textField_2.setBounds(307, 133, 42, 20);
 		Master.add(textField_2);
 
 		JLabel lblRobot = new JLabel("Robot 2");
@@ -275,11 +314,11 @@ public class interfaz implements ModelListener {
 		Master.add(lblRobot);
 
 		JPanel Slave1 = new JPanel();
-		tabbedPane.addTab("Slave 1", null, Slave1, null);
+		configuration.addTab("Slave 1", null, Slave1, null);
 		Slave1.setLayout(null);
 
 		JTabbedPane tabbedPane_1 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_1.setBounds(0, 0, 344, 168);
+		tabbedPane_1.setBounds(0, 0, 385, 168);
 		Slave1.add(tabbedPane_1);
 
 		JPanel Robot1 = new JPanel();
@@ -292,35 +331,50 @@ public class interfaz implements ModelListener {
 		lblRobot_1.setFont(new Font("Tahoma", Font.BOLD, 12));
 		Robot1.add(lblRobot_1);
 
-		JLabel lblTimeToPick = new JLabel("Time to pick axis/gear");
+		JLabel lblTimeToPick = new JLabel("Time to pick axis/gear (sec.)");
 		lblTimeToPick.setBounds(5, 39, 161, 15);
 		lblTimeToPick.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToPick);
 
 		textField_3 = new JTextField();
-		textField_3.setBounds(278, 36, 51, 21);
+		textField_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.PICK_TIME_AXIS_GEAR, Integer.parseInt(textField_3.getText()));
+			}
+		});
+		textField_3.setBounds(319, 36, 51, 21);
 		textField_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_3.setColumns(10);
 		Robot1.add(textField_3);
 
-		JLabel lblTimeToTransport_2 = new JLabel("Time to transport and place axis/gear");
+		JLabel lblTimeToTransport_2 = new JLabel("Time to transport and place axis/gear (sec.)");
 		lblTimeToTransport_2.setBounds(5, 71, 246, 15);
 		lblTimeToTransport_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_2);
 
 		textField_4 = new JTextField();
-		textField_4.setBounds(278, 68, 51, 21);
+		textField_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR, Integer.parseInt(textField_4.getText()));
+			}
+		});
+		textField_4.setBounds(319, 68, 51, 21);
 		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_4.setColumns(10);
 		Robot1.add(textField_4);
 
-		JLabel lblTimeToTransport_3 = new JLabel("Time to transport and place assembled piece");
-		lblTimeToTransport_3.setBounds(5, 109, 246, 15);
+		JLabel lblTimeToTransport_3 = new JLabel("Time to transport and place assembled piece (sec.)");
+		lblTimeToTransport_3.setBounds(5, 109, 290, 15);
 		lblTimeToTransport_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_3);
 
 		textField_5 = new JTextField();
-		textField_5.setBounds(278, 106, 51, 21);
+		textField_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED, Integer.parseInt(textField_5.getText()));
+			}
+		});
+		textField_5.setBounds(319, 106, 51, 21);
 		textField_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField_5.setColumns(10);
 		Robot1.add(textField_5);
@@ -345,16 +399,31 @@ public class interfaz implements ModelListener {
 		CBAxis.add(lblCapacity);
 
 		textField_6 = new JTextField();
+		textField_6.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_LENGTH, Integer.parseInt(textField_6.getText()));
+			}
+		});
 		textField_6.setBounds(185, 26, 47, 20);
 		CBAxis.add(textField_6);
 		textField_6.setColumns(10);
 
 		textField_7 = new JTextField();
+		textField_7.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_SPEED, Integer.parseInt(textField_7.getText()));
+			}
+		});
 		textField_7.setColumns(10);
 		textField_7.setBounds(185, 63, 47, 20);
 		CBAxis.add(textField_7);
 
 		textField_8 = new JTextField();
+		textField_8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_CAPACITY, Integer.parseInt(textField_8.getText()));
+			}
+		});
 		textField_8.setColumns(10);
 		textField_8.setBounds(185, 96, 47, 20);
 		CBAxis.add(textField_8);
@@ -379,68 +448,179 @@ public class interfaz implements ModelListener {
 		CBGears.add(label_2);
 
 		textField_10 = new JTextField();
+		textField_10.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_CAPACITY, Integer.parseInt(textField_10.getText()));
+			}
+		});
 		textField_10.setBounds(198, 98, 45, 20);
 		textField_10.setColumns(10);
 		CBGears.add(textField_10);
 
 		textField_9 = new JTextField();
+		textField_9.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_SPEED, Integer.parseInt(textField_9.getText()));
+			}
+		});
 		textField_9.setBounds(198, 67, 45, 20);
 		textField_9.setColumns(10);
 		CBGears.add(textField_9);
 
 		textField_11 = new JTextField();
+		textField_11.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_LENGTH, Integer.parseInt(textField_11.getText()));
+			}
+		});
 		textField_11.setBounds(198, 36, 45, 20);
 		textField_11.setColumns(10);
 		CBGears.add(textField_11);
+		
+		JPanel AssemblingStation = new JPanel();
+		AssemblingStation.setLayout(null);
+		tabbedPane_1.addTab("Assembling Station", null, AssemblingStation, null);
+		
+		JLabel lblActivationTimeMounting = new JLabel("Activation time mounting hydraulic cylinder valve (sec.)");
+		lblActivationTimeMounting.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblActivationTimeMounting.setBounds(10, 22, 319, 15);
+		AssemblingStation.add(lblActivationTimeMounting);
+		
+		textField_17 = new JTextField();
+		textField_17.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_AS, Integer.parseInt(textField_17.getText()));
+			}
+		});
+		textField_17.setColumns(10);
+		textField_17.setBounds(30, 48, 45, 20);
+		AssemblingStation.add(textField_17);
 
 		JPanel Slave2 = new JPanel();
-		tabbedPane.addTab("Slave 2", null, Slave2, null);
+		configuration.addTab("Slave 2", null, Slave2, null);
 		Slave2.setLayout(null);
 
-		JLabel lblCbLength = new JLabel("CB length");
+		JLabel lblCbLength = new JLabel("CB transport length");
 		lblCbLength.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblCbLength.setBounds(10, 40, 79, 15);
+		lblCbLength.setBounds(10, 40, 123, 15);
 		Slave2.add(lblCbLength);
 
-		JLabel lblCbSpeed = new JLabel("CB speed");
+		JLabel lblCbSpeed = new JLabel("CB transport speed");
 		lblCbSpeed.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblCbSpeed.setBounds(10, 78, 79, 15);
+		lblCbSpeed.setBounds(10, 78, 123, 15);
 		Slave2.add(lblCbSpeed);
 
 		textField_12 = new JTextField();
-		textField_12.setBounds(101, 38, 46, 20);
+		textField_12.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_TRANSFER_LENGTH, Integer.parseInt(textField_12.getText()));
+			}
+		});
+		textField_12.setBounds(157, 38, 46, 20);
 		Slave2.add(textField_12);
 		textField_12.setColumns(10);
 
 		textField_13 = new JTextField();
+		textField_13.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_TRANSFER_SPEED, Integer.parseInt(textField_12.getText()));
+			}
+		});
 		textField_13.setColumns(10);
-		textField_13.setBounds(99, 76, 46, 20);
+		textField_13.setBounds(157, 76, 46, 20);
 		Slave2.add(textField_13);
+		
+		JLabel lblActivationTimeAnd = new JLabel("Activation time welding station(sec.)");
+		lblActivationTimeAnd.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblActivationTimeAnd.setBounds(10, 115, 324, 15);
+		Slave2.add(lblActivationTimeAnd);
+		
+		textField_18 = new JTextField();
+		textField_18.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_WS, Integer.parseInt(textField_18.getText()));
+			}
+		});
+		textField_18.setColumns(10);
+		textField_18.setBounds(233, 113, 46, 20);
+		Slave2.add(textField_18);
 
 		JPanel Slave3 = new JPanel();
-		tabbedPane.addTab("Slave 3", null, Slave3, null);
+		configuration.addTab("Slave 3", null, Slave3, null);
 		Slave3.setLayout(null);
-
-		JLabel lblNewLabel_1 = new JLabel("Activation time (seconds)");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblNewLabel_1.setBounds(10, 55, 152, 14);
-		Slave3.add(lblNewLabel_1);
-
-		JLabel lblQualityControlStation = new JLabel("Quality control station and OK Conveyor Belt");
-		lblQualityControlStation.setHorizontalAlignment(SwingConstants.CENTER);
-		lblQualityControlStation.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblQualityControlStation.setBounds(33, 11, 282, 29);
-		Slave3.add(lblQualityControlStation);
-
-		JLabel lblLength_1 = new JLabel("Length (meters)");
-		lblLength_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblLength_1.setBounds(10, 80, 152, 14);
-		Slave3.add(lblLength_1);
-
-		JLabel lblSpeed_1 = new JLabel("Speed (meters/minute)");
-		lblSpeed_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSpeed_1.setBounds(10, 106, 152, 14);
-		Slave3.add(lblSpeed_1);
+		
+		JTabbedPane tabbedPane_3 = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane_3.setBounds(0, 0, 385, 168);
+		Slave3.add(tabbedPane_3);
+		
+		JPanel QCS = new JPanel();
+		tabbedPane_3.addTab("Quality Control Station", null, QCS, null);
+		
+		JLabel lblActivationTimeQuality = new JLabel("Activation Time Quality Control Station (sec.)");
+		lblActivationTimeQuality.setHorizontalAlignment(SwingConstants.LEFT);
+		lblActivationTimeQuality.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		QCS.add(lblActivationTimeQuality);
+		
+		textField_14 = new JTextField();
+		textField_14.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_QCS, Integer.parseInt(textField_14.getText()));
+			}
+		});
+		QCS.add(textField_14);
+		textField_14.setColumns(10);
+		
+		JPanel CBOk = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) CBOk.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		tabbedPane_3.addTab("CB Ok", null, CBOk, null);
+		tabbedPane_3.setEnabledAt(1, true);
+		
+		JLabel lblSpeedmetersminute = new JLabel("      Speed (meters/minute)  ");
+		lblSpeedmetersminute.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		CBOk.add(lblSpeedmetersminute);
+		
+		textField_15 = new JTextField();
+		textField_15.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_OK_SPEED, Integer.parseInt(textField_15.getText()));
+			}
+		});
+		textField_15.setColumns(10);
+		CBOk.add(textField_15);
+		
+		JLabel lblLengthmeters = new JLabel("            Length (meters)      ");
+		lblLengthmeters.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		CBOk.add(lblLengthmeters);
+		
+		textField_16 = new JTextField();
+		textField_16.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_OK_LENGTH, Integer.parseInt(textField_16.getText()));
+			}
+		});
+		textField_16.setColumns(10);
+		CBOk.add(textField_16);
+		
+		JPanel CBWrong = new JPanel();
+		FlowLayout flowLayout_1 = (FlowLayout) CBWrong.getLayout();
+		flowLayout_1.setAlignment(FlowLayout.LEFT);
+		tabbedPane_3.addTab("CB Wrong", null, CBWrong, null);
+		
+		JLabel label_5 = new JLabel("Length (meters)");
+		label_5.setHorizontalAlignment(SwingConstants.LEFT);
+		label_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		CBWrong.add(label_5);
+		
+		textField_19 = new JTextField();
+		textField_19.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				fillMap(ConfigurationParameters.CB_WRONG_LENGTH, Integer.parseInt(textField_19.getText()));
+			}
+		});
+		textField_19.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_19.setColumns(10);
+		CBWrong.add(textField_19);
 
 		JButton btnReports = new JButton("Reports");
 		btnReports.setAction(action);
