@@ -19,16 +19,9 @@ public class Slave1State implements State<Slave1Input> {
 				case START:
 					//FIXME: Make the feed input execute the start command
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.START, true);
-					//Tested code above
-					
 					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.START, true);
-					//startCommand should start the sections on ready so that the start command is heard
-					currentState.getAutomata().getRobot().startCommand();
-					currentState.getAutomata().getGearBelt().startCommand();
-					currentState.getAutomata().getAxisBelt().startCommand();
-					currentState.getAutomata().getAssemblyStation().startCommand();
 					return Idle;
 				default:
 					break;
@@ -48,14 +41,6 @@ public class Slave1State implements State<Slave1Input> {
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
 					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return GEAR_LOADING;
-				case GEAR_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.gearDetectedTrue, false);
-					return LOADING_AS;
-				case AXIS_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.axisDetectedTrue, false);
-					return LOADING_AS;
 				case NSTOP:
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.NSTOP, true);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.NSTOP, true);
@@ -89,7 +74,62 @@ public class Slave1State implements State<Slave1Input> {
 				return super.executeInternal(currentState, input);
 			}
 		},
-		AS_UNLOAD(ModeEnum.RUNNING), LOADING_TRANSFER_CB(ModeEnum.RUNNING), UNLOADING_AS(ModeEnum.RUNNING), LOADING_AS(ModeEnum.RUNNING), GEAR_UNLOAD(ModeEnum.RUNNING), GEAR_LOADING(ModeEnum.RUNNING), AXIS_UNLOAD(ModeEnum.RUNNING), AXIS_LOADING(ModeEnum.RUNNING);
+		GEAR_LOADING(ModeEnum.RUNNING) {
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case GEAR_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+							.feedInput(AssemblyStationInput.gearDetectedTrue, false);
+					return Idle;
+				case NSTOP:
+					return GEAR_LOADING_STOP;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		GEAR_LOADING_STOP(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case RESTART:
+					return GEAR_LOADING;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		AXIS_LOADING(ModeEnum.RUNNING) {
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case AXIS_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+							.feedInput(AssemblyStationInput.axisDetectedTrue, false);
+					return Idle;
+				case NSTOP:
+					return AXIS_LOADING_STOP;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		AXIS_LOADING_STOP(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case RESTART:
+					return AXIS_LOADING;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		};
 
 		@Override
 		public states executeInternal(Slave1State currentState, Slave1Input input) {

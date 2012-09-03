@@ -15,19 +15,76 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 					ConveyorBeltState currentState, ConveyorBeltInput input) {
 				switch (input) {
 				case START:
-					currentState.getAutomata().startCommand();
-					return Idle;
+					currentState.getAutomata().getManager().setRunning(true);
+					return Running;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		},
-		Idle(ModeEnum.IDLE) {
+		Running(ModeEnum.RUNNING) {
 			@Override
 			public AutomataStatesInternalImplementation<ConveyorBeltInput, ConveyorBeltState> executeInternal(
 					ConveyorBeltState currentState, ConveyorBeltInput input) {
-				// TODO
+				switch (input) {
+				case NSTOP:
+					return RunningStop;
+				case ESTOP:
+					return RunningStop;
+				case unloadSensorTrue:
+					currentState.getAutomata().getManager().setRunning(false);
+					Enum<?> jobDoneInput = currentState.getAutomata().getJobDoneInput();
+					currentState.getAutomata().getFather().feedInputObject(jobDoneInput, false);
+					return WaitingForPickup;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		RunningStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<ConveyorBeltInput, ConveyorBeltState> executeInternal(
+					ConveyorBeltState currentState, ConveyorBeltInput input) {
+				switch (input) {
+				case RESTART:
+					return Running;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForPickup(ModeEnum.IDLE) {
+			@Override
+			public AutomataStatesInternalImplementation<ConveyorBeltInput, ConveyorBeltState> executeInternal(
+					ConveyorBeltState currentState, ConveyorBeltInput input) {
+				switch (input) {
+				case unloadSensorFalse:
+					currentState.getAutomata().getManager().setSensorFinish(false);
+					currentState.getAutomata().getManager().setRunning(true);
+					break;
+				case NSTOP:
+					return WaitingForPickupStop;
+				case ESTOP:
+					return WaitingForPickupStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForPickupStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<ConveyorBeltInput, ConveyorBeltState> executeInternal(
+					ConveyorBeltState currentState, ConveyorBeltInput input) {
+				switch (input) {
+				case RESTART:
+					return WaitingForPickup;
+				default:
+					break;
+				}
 				return super.executeInternal(currentState, input);
 			}
 		};

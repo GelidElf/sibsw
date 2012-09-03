@@ -152,7 +152,11 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	@Override
 	public void startCommand() {
 		getCommunicationManager().initialize();
-		start();
+		getGearBelt().startCommand();
+		getAxisBelt().startCommand();
+		getAssemblyStation().startCommand();
+		getRobot().startCommand();
+		this.start();
 	}
 
 	@Override

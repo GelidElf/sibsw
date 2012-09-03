@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 
 public class Robot1State implements State<Robot1Input> {
 
@@ -29,10 +30,34 @@ public class Robot1State implements State<Robot1Input> {
 			public AutomataStatesInternalImplementation<Robot1Input, Robot1State> executeInternal(Robot1State currentState, Robot1Input input) {
 				switch (input) {
 				case DeliverAxis:
+					try {
+						currentState.getAutomata().getManager()
+								.setValueByNameAsBoolean(Robot1Manager.DELIVER_AXIS, true);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringAxis;
 				case DeliverGear:
+					try {
+						currentState.getAutomata().getManager()
+								.setValueByNameAsBoolean(Robot1Manager.DELIVER_GEAR, true);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringGear;
 				case DeliverAssembledPiece:
+					try {
+						currentState.getAutomata().getManager()
+								.setValueByNameAsBoolean(Robot1Manager.DELIVER_ASSEMBLED, true);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringAssembled;
 				case NSTOP:
 					return IdleStop;
