@@ -92,4 +92,8 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 
 	}
 
+	public ParallelPortManager getManager() {
+		return manager;
+	}
+
 }
