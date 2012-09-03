@@ -7,12 +7,14 @@ import core.messages.OfflineCommunicationManager;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
+import core.messages.enums.ConfigurationParameters;
 import core.model.AutomataContainer;
 import core.model.ModelListener;
 import core.sections.AssembyStation.AssemblyStationAutomata;
 import core.sections.AssembyStation.AssemblyStationManager;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.robot1.Robot1Automata;
 import core.sections.robot1.Robot1Model;
 
@@ -89,16 +91,16 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			//If input is a shortcut, try it here
 			switch (input) {
 			case AUTO_FEED_AXIS_OFF:
-				
+
 				break;
 			case AUTO_FEED_AXIS_ON:
-				
+
 				break;
 			case AUTO_FEED_GEAR_OFF:
-				
+
 				break;
 			case AUTO_FEED_GEAR_ON:
-				
+
 				break;
 			default:
 				getModel().getState().execute(input);
@@ -145,8 +147,21 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
-		// TODO Auto-generated method stub
+		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
+		if (parameter != null) {
+			try {
+				switch (parameter) {
+				case CB_AXIS_CAPACITY:
+					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
+					break;
 
+				default:
+					break;
+				}
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
