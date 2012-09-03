@@ -147,6 +147,10 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
+		
+		/*CB_AXIS_LENGTH,
+	CB_GEARS_LENGTH,*/
+		
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {
@@ -154,7 +158,14 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 				case CB_AXIS_CAPACITY:
 					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
 					break;
-
+				case CB_AXIS_SPEED:
+					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+				case CB_GEARS_CAPACITY:
+					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
+				case CB_GEARS_SPEED:
+					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+				case ACTIVATION_TIME_AS:
+					assemblyStation.getManager().setBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME, (Integer) attribute.getValue());
 				default:
 					break;
 				}
