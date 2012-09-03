@@ -27,5 +27,35 @@ public class QualityStationManager extends ParallelPortManager {
 			e.printStackTrace();
 		}
 	}
+	
+	public void configure(int activationTime, int failurePercentage) {
+		try {
+			//setValueByName(Robot1Manager.SPEED, speed);
+			setValueByName(QualityStationManager.ACTIVATION_TIME, activationTime);
+			setValueByName(QualityStationManager.FAILURE_PERCENTAGE, failurePercentage);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void setJobDone() {
+		try {
+			setValueByNameAsBoolean(QualityStationManager.ENABLED, false);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+
+	public boolean jobToBeDone() {
+		boolean isEnabled = true;
+		try {
+			isEnabled = getValueByNameAsBoolean(QualityStationManager.ENABLED);
+		} catch (ParallelPortException e) {
+			e.printStackTrace();
+		}
+		return isEnabled;
+	}
 
 }
