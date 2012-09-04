@@ -2,24 +2,24 @@ package core.gui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
 
 import core.messages.enums.ReportValues;
 
 public class Report extends JDialog {
 
 	private static final long serialVersionUID = -184902000216862811L;
-	
+
 	private final JPanel contentPanel = new JPanel();
 	private JTextField textField;
 	private JTextField textField_1;
@@ -28,24 +28,24 @@ public class Report extends JDialog {
 	private JTextField textField_4;
 	private JTextField textField_5;
 	private JTextField textField_6;
-	
+
 	private Map<ReportValues, Integer> map = new HashMap<ReportValues, Integer>();
 	private Map<ReportValues, Integer> mapTotales = new HashMap<ReportValues, Integer>();
-	
+
 	/**
 	 * Store report values
 	 */
-	public void receiveSignal(ReportValues signal){
-		map.put(signal, map.get(signal)+1);
-		mapTotales.put(signal, mapTotales.get(signal)+1);
+	public void receiveSignal(ReportValues signal) {
+		map.put(signal, map.get(signal) + 1);
+		mapTotales.put(signal, mapTotales.get(signal) + 1);
 	}
-	
+
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			Report dialog = new Report();
+			Report dialog = new Report(new JFrame());
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -56,13 +56,13 @@ public class Report extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Report() {
-		
-		for(ReportValues parameter:ReportValues.values()){
+	public Report(JFrame father) {
+		super(father);
+		for (ReportValues parameter : ReportValues.values()) {
 			map.put(parameter, 0);
 			mapTotales.put(parameter, 0);
 		}
-		
+
 		setBounds(100, 100, 382, 524);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -194,5 +194,4 @@ public class Report extends JDialog {
 			}
 		}
 	}
-
 }
