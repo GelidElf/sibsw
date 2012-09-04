@@ -2,9 +2,12 @@ package core.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,17 +32,13 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.messages.enums.ConfigurationParameters;
 import core.model.ModelListener;
-import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
 
 public class interfaz implements ModelListener {
 
 	private MasterAutomata master;
-	
+
 	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
-	
+
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
 	private MainView mainView;
@@ -75,15 +74,16 @@ public class interfaz implements ModelListener {
 	private JTextField textField_19;
 
 	/**
-	 * Fill the map with the configuration parameter and its value from the interface
+	 * Fill the map with the configuration parameter and its value from the
+	 * interface
 	 */
-	private void fillMap(ConfigurationParameters parameter, Integer newValue){
+	private void fillMap(ConfigurationParameters parameter, Integer newValue) {
 		this.map.put(parameter, newValue);
 		Message message = new Message("ConfigurationParameterChange", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
 		message.addAttribute(parameter.name(), newValue);
 		master.sendMessage(message);
 	}
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -268,7 +268,7 @@ public class interfaz implements ModelListener {
 				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, Integer.parseInt(textField.getText()));
 			}
 		});
-		
+
 		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		textField.setBounds(307, 55, 42, 20);
 		Master.add(textField);
@@ -475,16 +475,16 @@ public class interfaz implements ModelListener {
 		textField_11.setBounds(198, 36, 45, 20);
 		textField_11.setColumns(10);
 		CBGears.add(textField_11);
-		
+
 		JPanel AssemblingStation = new JPanel();
 		AssemblingStation.setLayout(null);
 		tabbedPane_1.addTab("Assembling Station", null, AssemblingStation, null);
-		
+
 		JLabel lblActivationTimeMounting = new JLabel("Activation time mounting hydraulic cylinder valve (sec.)");
 		lblActivationTimeMounting.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeMounting.setBounds(10, 22, 319, 15);
 		AssemblingStation.add(lblActivationTimeMounting);
-		
+
 		textField_17 = new JTextField();
 		textField_17.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -528,12 +528,12 @@ public class interfaz implements ModelListener {
 		textField_13.setColumns(10);
 		textField_13.setBounds(157, 76, 46, 20);
 		Slave2.add(textField_13);
-		
+
 		JLabel lblActivationTimeAnd = new JLabel("Activation time welding station(sec.)");
 		lblActivationTimeAnd.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeAnd.setBounds(10, 115, 324, 15);
 		Slave2.add(lblActivationTimeAnd);
-		
+
 		textField_18 = new JTextField();
 		textField_18.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -547,19 +547,19 @@ public class interfaz implements ModelListener {
 		JPanel Slave3 = new JPanel();
 		configuration.addTab("Slave 3", null, Slave3, null);
 		Slave3.setLayout(null);
-		
+
 		JTabbedPane tabbedPane_3 = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane_3.setBounds(0, 0, 385, 168);
 		Slave3.add(tabbedPane_3);
-		
+
 		JPanel QCS = new JPanel();
 		tabbedPane_3.addTab("Quality Control Station", null, QCS, null);
-		
+
 		JLabel lblActivationTimeQuality = new JLabel("Activation Time Quality Control Station (sec.)");
 		lblActivationTimeQuality.setHorizontalAlignment(SwingConstants.LEFT);
 		lblActivationTimeQuality.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		QCS.add(lblActivationTimeQuality);
-		
+
 		textField_14 = new JTextField();
 		textField_14.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -568,17 +568,17 @@ public class interfaz implements ModelListener {
 		});
 		QCS.add(textField_14);
 		textField_14.setColumns(10);
-		
+
 		JPanel CBOk = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) CBOk.getLayout();
 		flowLayout.setAlignment(FlowLayout.LEFT);
 		tabbedPane_3.addTab("CB Ok", null, CBOk, null);
 		tabbedPane_3.setEnabledAt(1, true);
-		
+
 		JLabel lblSpeedmetersminute = new JLabel("      Speed (meters/minute)  ");
 		lblSpeedmetersminute.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBOk.add(lblSpeedmetersminute);
-		
+
 		textField_15 = new JTextField();
 		textField_15.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -587,11 +587,11 @@ public class interfaz implements ModelListener {
 		});
 		textField_15.setColumns(10);
 		CBOk.add(textField_15);
-		
+
 		JLabel lblLengthmeters = new JLabel("            Length (meters)      ");
 		lblLengthmeters.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBOk.add(lblLengthmeters);
-		
+
 		textField_16 = new JTextField();
 		textField_16.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -600,17 +600,17 @@ public class interfaz implements ModelListener {
 		});
 		textField_16.setColumns(10);
 		CBOk.add(textField_16);
-		
+
 		JPanel CBWrong = new JPanel();
 		FlowLayout flowLayout_1 = (FlowLayout) CBWrong.getLayout();
 		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		tabbedPane_3.addTab("CB Wrong", null, CBWrong, null);
-		
+
 		JLabel label_5 = new JLabel("Length (meters)");
 		label_5.setHorizontalAlignment(SwingConstants.LEFT);
 		label_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBWrong.add(label_5);
-		
+
 		textField_19 = new JTextField();
 		textField_19.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -639,22 +639,21 @@ public class interfaz implements ModelListener {
 
 		JPanel panel_2 = new JPanel();
 		tabbedPane_2.addTab("Slave 3", null, panel_2, null);
-		
+
 		// MALDITO BOTON PARA ABRIR VENTANA DE INFORMES
 		JButton buttonReports = new JButton("Reports");
 		buttonReports.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Report ventanaReports = new Report();
+				Report ventanaReports = new Report(frame);
 				ventanaReports.setVisible(true);
 			}
 		});
 		buttonReports.setFont(new Font("Tahoma", Font.BOLD, 14));
 		buttonReports.setBounds(961, 497, 94, 34);
 		frame.getContentPane().add(buttonReports);
-		
-	}
 
+	}
 
 	@Override
 	public void updateOnModelChange() {
@@ -668,12 +667,12 @@ public class interfaz implements ModelListener {
 
 	private void updateStatusSlave1Sections(MasterModel model) {
 		Slave1Model slave1Model = (Slave1Model) model.getModel().get(CommunicationIds.SLAVE1);
-		if (slave1Model != null && model.isConnected(CommunicationIds.SLAVE1)) {
+		if ((slave1Model != null) && model.isConnected(CommunicationIds.SLAVE1)) {
 			gearStatusPanel.setModo(slave1Model.getGearBeltModel().getCurrentMode());
 			axisStatusPanel.setModo(slave1Model.getAxisBeltModel().getCurrentMode());
 			assemblyStatusPanel.setModo(slave1Model.getAssemblyStationModel().getCurrentMode());
 			robot1StatusPanel.setModo(slave1Model.getRobo1Model().getCurrentMode());
-		}else{
+		} else {
 			gearStatusPanel.setModo(null);
 			axisStatusPanel.setModo(null);
 			assemblyStatusPanel.setModo(null);
