@@ -1,5 +1,6 @@
 package core.sections.ConveyorBelt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import core.gui.satuspanel.ModeEnum;
@@ -13,6 +14,10 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 
 	private transient List<ModelListener> listeners;
 	private ConveyorBeltState currentState;
+
+	public ConveyorBeltModel() {
+		listeners = new ArrayList<ModelListener>();
+	}
 
 	@Override
 	public void addListener(ModelListener listener) {
@@ -31,7 +36,7 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 
 	@Override
 	public void notifyObservers() {
-		for (ModelListener listener: listeners){
+		for (ModelListener listener : listeners) {
 			listener.updateOnModelChange();
 		}
 	}

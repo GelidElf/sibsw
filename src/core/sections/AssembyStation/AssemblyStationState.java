@@ -11,8 +11,7 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 	private enum states implements AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> {
 		Started(ModeEnum.READY) {
 			@Override
-			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(
-					AssemblyStationState currentState, AssemblyStationInput input) {
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
 				case START:
 					currentState.getAutomata().startCommand();
@@ -25,16 +24,75 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 		},
 		Idle(ModeEnum.IDLE) {
 			@Override
-			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(
-					AssemblyStationState currentState, AssemblyStationInput input) {
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case axisDetectedTrue:
+					return WithAxis;
+				case gearDetectedTrue:
+					return WithGear;
 
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WithGear(ModeEnum.IDLE) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case axisDetectedTrue:
+					return Working;
+
+				default:
+					break;
+				}
+
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WithAxis(ModeEnum.IDLE) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case gearDetectedTrue:
+					return Working;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		Working(ModeEnum.RUNNING) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case jobDone:
+					return IdleLoaded;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		IdleLoaded(ModeEnum.IDLE) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case apDetectedFalse:
+					return Idle;
+
+				default:
+					break;
+				}
 				return super.executeInternal(currentState, input);
 			}
 		};
 
 		@Override
-		public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(
-				AssemblyStationState currentState, AssemblyStationInput input) {
+		public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 			return this;
 		}
 
@@ -49,10 +107,10 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			return mode;
 		}
 	}
-	
+
 	private states currentState;
 	private transient AssemblyStationAutomata automata;
-	
+
 	public AssemblyStationState(AssemblyStationAutomata automata) {
 		this.automata = automata;
 		currentState = states.Started;
@@ -65,10 +123,10 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 		return oldState != currentState;
 	}
 
-	public AssemblyStationAutomata getAutomata(){
+	public AssemblyStationAutomata getAutomata() {
 		return automata;
 	}
-	
+
 	@Override
 	public ModeEnum getMode() {
 		return currentState.getMode();
