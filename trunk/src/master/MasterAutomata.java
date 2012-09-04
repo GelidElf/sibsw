@@ -41,6 +41,10 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 			default:
 				break;
 			}
+		} else {
+			if (message.getType() == CommunicationMessageType.REPORT) {
+
+			}
 		}
 
 	}
