@@ -1,5 +1,14 @@
 package slave3;
 
 public enum Slave3Input {
-
+	START, 
+	NSTOP, 
+	ESTOP, 
+	RESTART, 
+	QCS_LOADED,
+	QCS_FINISHED_OK,
+	QCS_FINISHED_NOT_OK,
+	QCS_UNLOADED,
+	OK_LOADED,
+	NOT_OK_LOADED;
 }

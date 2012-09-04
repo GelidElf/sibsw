@@ -3,57 +3,43 @@ package slave2;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
-import core.sections.AssembyStation.AssemblyStationInput;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
-import core.sections.robot1.Robot1Input;
+import core.sections.weldingstation.WeldingInput;
 
 public class Slave2State implements State<Slave2Input> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -814489288998212057L;
+	private static final long serialVersionUID = 3510029429322490323L;
 
-	public static enum states implements AutomataStatesInternalImplementation<Slave2Input, Slave2State>{
+	public static enum states implements AutomataStatesInternalImplementation<Slave2Input, Slave2State> {
 		STARTED(ModeEnum.READY) {
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case START:
 					//FIXME: Make the feed input execute the start command
-					currentState.getAutomata().getRobot().feedInput(Robot1Input.START, true);
-					//Tested code above
-					
-					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.START, true);
-					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.START, true);
-					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.START, true);
-					//startCommand should start the sections on ready so that the start command is heard
-					currentState.getAutomata().getAssemblyStation().startCommand();
-					return IDDLE;
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.START, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.START, true);
+					return Idle;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		},
-		IDDLE(ModeEnum.IDLE) {
+		Idle(ModeEnum.IDLE) {
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
-				switch(input){
-				case MOVE_AXIS:
-					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
-					return AXIS_LOADING;
-				case MOVE_GEAR:
-					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
-					return GEAR_LOADING;
-				case GEAR_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.gearDetectedTrue, false);
-					return LOADING_AS;
-				case AXIS_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.axisDetectedTrue, false);
-					return LOADING_AS;
+				switch (input) {
+				//TODO
+				// !!!!!!!!!!!!!!!!!!!!!!!!!!! COMPLETAR Y MODIFICAR EL RESTO
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return IdleStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return IdleStop;
 
 					// Complete
 				default:
@@ -62,7 +48,19 @@ public class Slave2State implements State<Slave2Input> {
 				return super.executeInternal(currentState, input);
 			}
 		},
-		AS_UNLOAD(ModeEnum.RUNNING), LOADING_TRANSFER_CB(ModeEnum.RUNNING), UNLOADING_AS(ModeEnum.RUNNING), LOADING_AS(ModeEnum.RUNNING), GEAR_UNLOAD(ModeEnum.RUNNING), GEAR_LOADING(ModeEnum.RUNNING), AXIS_UNLOAD(ModeEnum.RUNNING), AXIS_LOADING(ModeEnum.RUNNING);
+		IdleStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					return Idle;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		};
 
 		@Override
 		public states executeInternal(Slave2State currentState, Slave2Input input) {
@@ -70,11 +68,11 @@ public class Slave2State implements State<Slave2Input> {
 		}
 
 		private ModeEnum mode;
-		
+
 		private states(ModeEnum mode) {
 			this.mode = mode;
 		}
-		
+
 		@Override
 		public ModeEnum getMode() {
 			return mode;
@@ -82,20 +80,22 @@ public class Slave2State implements State<Slave2Input> {
 	}
 
 	private states currentState;
-	private transient Slave2Automata slave1;
+	private transient Slave2Automata slave2;
 
-	public Slave2State(Slave2Automata slave1) {
-		this.slave1 = slave1;
+	public Slave2State(Slave2Automata slave2) {
+		this.slave2 = slave2;
 		currentState = states.STARTED;
 	}
 
 	@Override
-	public void execute(Slave2Input input) {
+	public boolean execute(Slave2Input input) {
+		states oldState = currentState;
 		currentState = currentState.executeInternal(this, input);
+		return oldState != currentState;
 	}
 
 	public Slave2Automata getAutomata() {
-		return slave1;
+		return slave2;
 	}
 
 	@Override

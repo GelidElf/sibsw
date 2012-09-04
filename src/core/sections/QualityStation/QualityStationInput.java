@@ -1,5 +1,5 @@
 package core.sections.QualityStation;
 
 public enum QualityStationInput {
-	START, NSTOP, ESTOP, RESTART, JobDone, Empty, Load, Checked
+	START, NSTOP, ESTOP, RESTART, JobDoneOK, JobDoneKO, Empty, Load, Checked
 }

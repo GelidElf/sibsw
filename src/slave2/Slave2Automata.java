@@ -28,6 +28,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 	public Slave2Automata(Configuration conf) {
 		super(null, new Slave2Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE2, conf));
+		
 		ConveyorBeltManager transferManager = new ConveyorBeltManager();
 		transferManager.configure(10, 2);
 		transferBelt = new ConveyorBeltAutomata(this, transferManager, Slave2Input.ASSEMBLED_READY);
@@ -58,7 +59,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 		this.transferBelt = transferBelt;
 	}
 
-	public WeldingAutomata getAssemblyStation() {
+	public WeldingAutomata getWeldingStation() {
 		return weldingStation;
 	}
 
@@ -71,28 +72,8 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
 			Slave2Input input = (Slave2Input) message.getInputType();
-			//If input is a shortcut, try it here
-			switch (input) {
-			case LOAD_ASSEMBLED_TCB:
-				transferBelt.disableAutoFeed();
-				message.consumeMessage();
-				break;
-			case UNLOAD_ASSEMBLED_TCB:
-				transferBelt.disableAutoFeed();
-				message.consumeMessage();
-				break;
-			case ASSEMBLED_READY:
-				//!!!!!!!!!!!!!!!!!!!!! COMPLETAR
-				break;
-			case WELDED_PIECE:
-				//!!!!!!!!!!!!!!!!!!!!! COMPLETAR
-				break;
-			default:
-				getModel().getState().execute(input);
-				break;
-			}
+			message.setConsumed(getModel().getState().execute(input));
 		}
-
 	}
 
 	private void reaccionaPorTipoDeMensaje(Message message) {

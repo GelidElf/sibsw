@@ -1,7 +1,7 @@
 package core.sections.QualityStation;
 
-import slave1.Slave1Automata;
-import slave1.Slave1Input;
+import slave3.Slave3Automata;
+import slave3.Slave3Input;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
@@ -34,6 +34,9 @@ public class QualityStationState implements State<QualityStationInput> {
 					return IdleStop;
 				case Load:
 					return WeldedLoaded;
+
+					// AQUI FALTAN MOVIDAS
+
 				default:
 					break;
 				}
@@ -55,12 +58,18 @@ public class QualityStationState implements State<QualityStationInput> {
 		WeldedLoaded(ModeEnum.READY) {
 			@Override
 			public AutomataStatesInternalImplementation<QualityStationInput, QualityStationState> executeInternal(QualityStationState currentState, QualityStationInput input) {
+				AutomataContainer<?, ?, ?> father = currentState.getAutomata().getFather();
 				switch (input) {
-				case Load:
-					AutomataContainer<?, ?, ?> father = currentState.getAutomata().getFather();
-					if (father instanceof Slave1Automata) {
-						Slave1Automata slave1 = (Slave1Automata) father;
-						slave1.feedInput(Slave1Input.AXIS_IN_AS, false);
+				case JobDoneOK:
+					if (father instanceof Slave3Automata) {
+						Slave3Automata slave3 = (Slave3Automata) father;
+						slave3.feedInput(Slave3Input.QCS_FINISHED_OK, false);
+					}
+					return Idle;
+				case JobDoneKO:
+					if (father instanceof Slave3Automata) {
+						Slave3Automata slave3 = (Slave3Automata) father;
+						slave3.feedInput(Slave3Input.QCS_FINISHED_NOT_OK, false);
 					}
 					return Idle;
 				default:

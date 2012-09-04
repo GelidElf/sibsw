@@ -28,11 +28,10 @@ public class QualityStationManager extends ParallelPortManager {
 		}
 	}
 	
-	public void configure(int activationTime, int failurePercentage) {
+	public void configure(int activationTime) {
 		try {
-			//setValueByName(Robot1Manager.SPEED, speed);
 			setValueByName(QualityStationManager.ACTIVATION_TIME, activationTime);
-			setValueByName(QualityStationManager.FAILURE_PERCENTAGE, failurePercentage);
+			//setValueByName(QualityStationManager.FAILURE_PERCENTAGE, failurePercentage); //No es necesario
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
