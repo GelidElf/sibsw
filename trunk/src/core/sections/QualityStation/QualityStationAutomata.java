@@ -17,7 +17,7 @@ public class QualityStationAutomata extends AutomataContainer<QualityStationInpu
 	public QualityStationAutomata(AutomataContainer<?, ?, ?> father, QualityStationModel model, CommunicationManager commManager) {
 		super(father, model, commManager);
 		manager = new QualityStationManager();
-		manager.configure(2, 10);
+		manager.configure(5);
 		manager.registerObserver(this);
 		simulator = new QualityStationSimulator(manager);
 		getModel().setAutomata(this);
@@ -27,8 +27,8 @@ public class QualityStationAutomata extends AutomataContainer<QualityStationInpu
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
 		try {
-			if (attribute.getName().equals("ROBOT1SPEED")) {
-				manager.setValueByName(QualityStationManager.TIME_TO_AXIS_GEAR, (Integer) attribute.getValue());
+			if (attribute.getName().equals(QualityStationManager.ACTIVATION_TIME)) {
+				manager.setValueByName(QualityStationManager.ACTIVATION_TIME, (Integer) attribute.getValue());
 			}
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
@@ -83,9 +83,22 @@ public class QualityStationAutomata extends AutomataContainer<QualityStationInpu
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
 		if (manager.getModifiedGroupName().equals(QualityStationManager.ENABLED) && !((QualityStationManager) manager).jobToBeDone()) {
-			feedInput(QualityStationInput.JobDone, false);
+			try {
+				boolean resultadoOk = manager.getValueByNameAsBoolean(QualityStationManager.RESULT);
+				if (resultadoOk) {
+					feedInput(QualityStationInput.JobDoneOK, false);
+				} else {
+					feedInput(QualityStationInput.JobDoneKO, false);
+				}
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
 		}
 
+	}
+
+	public ParallelPortManager getManager() {
+		return manager;
 	}
 
 }

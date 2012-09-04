@@ -8,8 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,6 +30,8 @@ import core.messages.enums.CommunicationMessageType;
 import core.messages.enums.ConfigurationParameters;
 import core.model.ModelListener;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 
 public class interfaz implements ModelListener {
@@ -57,7 +57,6 @@ public class interfaz implements ModelListener {
 	private JTextField textField_11;
 	private JTextField textField_12;
 	private JTextField textField_13;
-	private final Action action = new SwingAction();
 
 	private StatusPanel axisStatusPanel;
 	private StatusPanel gearStatusPanel;
@@ -121,7 +120,7 @@ public class interfaz implements ModelListener {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1104, 802);
+		frame.setBounds(100, 100, 1122, 802);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 
@@ -215,7 +214,7 @@ public class interfaz implements ModelListener {
 		lblComponents.setHorizontalAlignment(SwingConstants.CENTER);
 
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
-		btnEmergencyStop.setBounds(926, 236, 152, 51);
+		btnEmergencyStop.setBounds(944, 236, 152, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -251,7 +250,7 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(btnStart);
 
 		JTabbedPane configuration = new JTabbedPane(JTabbedPane.TOP);
-		configuration.setBounds(10, 557, 390, 196);
+		configuration.setBounds(10, 541, 390, 212);
 		frame.getContentPane().add(configuration);
 
 		JPanel Master = new JPanel();
@@ -622,14 +621,8 @@ public class interfaz implements ModelListener {
 		textField_19.setColumns(10);
 		CBWrong.add(textField_19);
 
-		JButton btnReports = new JButton("Reports");
-		btnReports.setAction(action);
-		btnReports.setFont(new Font("Tahoma", Font.BOLD, 12));
-		btnReports.setBounds(10, 523, 139, 23);
-		frame.getContentPane().add(btnReports);
-
 		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_2.setBounds(430, 557, 635, 196);
+		tabbedPane_2.setBounds(430, 541, 635, 212);
 		frame.getContentPane().add(tabbedPane_2);
 
 		JPanel panel_3 = new JPanel();
@@ -646,30 +639,22 @@ public class interfaz implements ModelListener {
 
 		JPanel panel_2 = new JPanel();
 		tabbedPane_2.addTab("Slave 3", null, panel_2, null);
-		btnReports.addActionListener(new ActionListener() {
-
+		
+		// MALDITO BOTON PARA ABRIR VENTANA DE INFORMES
+		JButton buttonReports = new JButton("Reports");
+		buttonReports.addMouseListener(new MouseAdapter() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFrame reports = new JFrame();
-				reports.setBounds(100, 100, 751, 646);
-				reports.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				reports.getContentPane().setLayout(null);
-
+			public void mouseClicked(MouseEvent arg0) {
+				Report ventanaReports = new Report();
+				ventanaReports.setVisible(true);
 			}
 		});
+		buttonReports.setFont(new Font("Tahoma", Font.BOLD, 14));
+		buttonReports.setBounds(961, 497, 94, 34);
+		frame.getContentPane().add(buttonReports);
+		
 	}
 
-	private class SwingAction extends AbstractAction {
-		private static final long serialVersionUID = 7656906617014037779L;
-
-		public SwingAction() {
-			putValue(NAME, "SwingAction");
-			putValue(SHORT_DESCRIPTION, "Some short description");
-		}
-
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
 
 	@Override
 	public void updateOnModelChange() {

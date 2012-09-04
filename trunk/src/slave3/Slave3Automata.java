@@ -3,100 +3,162 @@ package slave3;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
+import core.messages.OfflineCommunicationManager;
 import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
+import core.messages.enums.ConfigurationParameters;
 import core.model.AutomataContainer;
+import core.model.ModelListener;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
-import core.sections.QualityStation.ATQualityStation;
+import core.sections.ConveyorBelt.ConveyorBeltManager;
+import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.sections.QualityStation.QualityStationAutomata;
+import core.sections.QualityStation.QualityStationManager;
+import core.sections.QualityStation.QualityStationModel;
 
-public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, Slave3Model> {
 
-	private ConveyorBeltAutomata conveyorBelt;
-	private ATQualityStation qualityStation;
-	private Slave3State currentState;
-	private Message messageToSend;
+public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, Slave3Model> implements ModelListener {
+
+	private ConveyorBeltAutomata okBelt;
+	private ConveyorBeltAutomata notOkBelt;
+	private QualityStationAutomata qualityStation;
+
+	public Slave3State getCurrentState() {
+		return getModel().getState();
+	}
 
 	public Slave3Automata(Configuration conf) {
 		super(null, new Slave3Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3, conf));
-		//		currentState = (Slave3State) Slave3State.createState(IdleQCSEmpty.class, currentState);
+	
+		qualityStation = new QualityStationAutomata(this, new QualityStationModel(), new OfflineCommunicationManager());
+		qualityStation.getModel().addListener(this);
+		getModel().setQualityStationModel(qualityStation.getModel());
+		
+		ConveyorBeltManager okManager = new ConveyorBeltManager();
+		okManager.configure(10, 2);
+		okBelt = new ConveyorBeltAutomata(this, okManager, null);
+		getModel().setOkBeltModel(okBelt.getModel());
+		
+		ConveyorBeltManager notOkManager = new ConveyorBeltManager();
+		notOkManager.configure(10, 2);
+		notOkBelt = new ConveyorBeltAutomata(this, notOkManager, null);
+		getModel().setOkBeltModel(notOkBelt.getModel());
+		
 	}
 
-	public void setATConveyorbelt(ConveyorBeltAutomata cb) {
-		conveyorBelt = cb;
+	public void setInitialSettings(String settings) {
+
+		//TODO: po hacerlo >.<
+		//robot.setSpeed......
+		//gearBelt.setLength,speed, capacity....
+		//AS.setAssemblyDelay....
+
 	}
 
-	public void setATQualityStation(ATQualityStation qcs) {
-		qualityStation = qcs;
+	public ConveyorBeltAutomata getOkBelt() {
+		return okBelt;
+	}
+
+	public void setOkBelt(ConveyorBeltAutomata okBelt) {
+		this.okBelt = okBelt;
+	}
+
+	public ConveyorBeltAutomata getNotOkBelt() {
+		return notOkBelt;
+	}
+
+	public void setNotOkBelt(ConveyorBeltAutomata notOkBelt) {
+		this.notOkBelt = notOkBelt;
+	}
+
+	public QualityStationAutomata getQualityStation() {
+		return qualityStation;
+	}
+
+	public void setQualityStation(QualityStationAutomata qualityStation) {
+		this.qualityStation = qualityStation;
+	}
+
+	@Override
+	protected void consume(Message message) {
+		reaccionaPorTipoDeMensaje(message);
+		if (debeReaccionaPorTipoEntrada(message)) {
+			Slave3Input input = (Slave3Input) message.getInputType();
+			// Input is a normal state command, use the state.
+			message.setConsumed(getModel().getState().execute(input));
+		}
+	}
+
+	private void reaccionaPorTipoDeMensaje(Message message) {
+		message.consumeMessage();
+		switch (message.getType()) {
+		case START:
+			message.setConsumed(getModel().getState().execute(Slave3Input.START));
+			break;
+		case NSTOP:
+			message.setConsumed(getModel().getState().execute(Slave3Input.NSTOP));
+			break;
+		case ESTOP:
+			message.setConsumed(getModel().getState().execute(Slave3Input.ESTOP));
+			break;
+		case RESTART:
+			message.setConsumed(getModel().getState().execute(Slave3Input.RESTART));
+			break;
+		case CONFIGURATION:
+			for (Attribute attribute : message.getAttributes()) {
+				changeConfigurationParameter(attribute);
+			}
+			break;
+		default:
+			message.didNotConsumeMessage();
+			break;
+		}
+
+	}
+
+	private boolean debeReaccionaPorTipoEntrada(Message message) {
+		return message.getType() == CommunicationMessageType.COMMAND;
 	}
 
 	@Override
 	public void startCommand() {
-		// TODO Auto-generated method stub
-
+		getCommunicationManager().initialize();
+		getOkBelt().startCommand();
+		getNotOkBelt().startCommand();
+		getQualityStation().startCommand();
+		this.start();
 	}
 
 	@Override
-	protected void changeConfigurationParameter(Attribute attribute) {
-		// TODO Auto-generated method stub
-
+	protected void changeConfigurationParameter(Attribute attribute) {	
+		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
+		if (parameter != null) {
+			try {
+				//TODO
+				/*
+					CB_OK_LENGTH,
+					CB_WRONG_LENGTH, !!!!!!!!!!!!!!!!!!!!!! completar con la longitud
+				 */
+				switch (parameter) {
+				case CB_OK_SPEED:
+					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					break;
+				case ACTIVATION_TIME_QCS:
+					qualityStation.getManager().setBitGroupValue(QualityStationManager.ACTIVATION_TIME, (Integer) attribute.getValue());
+					break;
+				default:
+					break;
+				}
+			} catch (ParallelPortException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
-	protected void consume(Message currentMessage) {
-		// TODO Auto-generated method stub
-
+	public void updateOnModelChange() {
+		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
 	}
-
-	/**
-	 * @Override //TODO Hacer la parte del START public void run() { super.run();
-	 *           while(true){ Message message = commManager.readMessage();
-	 *           String id = message.getID(); String owner = message.getOwner();
-	 *           if(id.equals("Slave3.NormalStop")){ currentState =
-	 *           (Slave3State) currentState.NStop(); }
-	 *           if(id.equals("Slave3.EmergencyStop")){ currentState =
-	 *           (Slave3State) currentState.EStop(); }
-	 *           if(id.equals("Slave.Restart")){ currentState = (Slave3State)
-	 *           currentState.Restart(); }
-	 *           if(id.equals("Slave3.NewParameters")){
-	 *           conveyorBelt.setupParametersFromMessage(message);
-	 *           qualityStation.setupParametersFromMessage(message); }
-	 *           if(owner.equals("Master")){ Attribute action =
-	 *           message.getAttribute("action");
-	 *           if(action.getValue().equals("R2Idle")){ currentState =
-	 *           (Slave3State) currentState.R2Idle(); try {
-	 *           qualityStation.getManager
-	 *           ().setBitGroupValue(QualityStationManager.SENSOR, 0); } catch
-	 *           (ParallelPortException e) { // TODO Auto-generated catch block
-	 *           e.printStackTrace(); } }
-	 *           if(action.getValue().equals("LOAD_QCS")){ currentState =
-	 *           (Slave3State) currentState.LoadQCS(); try {
-	 *           qualityStation.getManager
-	 *           ().setBitGroupValue(QualityStationManager.SENSOR, 1); } catch
-	 *           (ParallelPortException e) { // TODO Auto-generated catch block
-	 *           e.printStackTrace(); } } if(action.getValue().equals("START")){
-	 *           currentState = (Slave3State) currentState.Start(); }
-	 * 
-	 *           } if(id.equals("QCS.AssemblyInvalid")){ currentState =
-	 *           (Slave3State) currentState.Invalid(); messageToSend = new
-	 *           Message("Slave3.Invalid","MASTER",false);
-	 *           commManager.sendMessage(messageToSend); }
-	 *           if(id.equals("QCS.AssemblyValid")){ currentState =
-	 *           (Slave3State) currentState.Valid(); messageToSend = new
-	 *           Message("Slave3.Valid","MASTER",false);
-	 *           commManager.sendMessage(messageToSend); try {
-	 *           if(conveyorBelt.isFirstPositionEmpty() == true){ messageToSend
-	 *           = new Message("Slave3.CBReadyToPlaceWP","MASTER",false);
-	 *           commManager.sendMessage(messageToSend); currentState =
-	 *           (Slave3State) currentState.NotFull();
-	 * 
-	 *           } } catch (ParallelPortException e) { // TODO Auto-generated
-	 *           catch block e.printStackTrace(); } }
-	 * 
-	 *           }
-	 * 
-	 * 
-	 * 
-	 *           }
-	 */
 
 }

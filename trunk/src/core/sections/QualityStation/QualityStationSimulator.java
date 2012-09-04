@@ -53,11 +53,6 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 			setTimeToComplete(manager.getBitGroupValue(QualityStationManager.ACTIVATION_TIME));
 			startJob(manager);
 			return;
-		}
-		if (modifiedGroup.equals(QualityStationManager.RESULT)) {
-			setTimeToComplete(manager.getBitGroupValue(QualityStationManager.FAILURE_PERCENTAGE));
-			startJob(manager);
-			return;
 		}		
 	}
 	
