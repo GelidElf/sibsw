@@ -57,7 +57,9 @@ public class Report extends JDialog {
 	 * Create the dialog.
 	 */
 	public Report(JFrame father) {
-		super(father);
+		super(father, true);
+		setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+		setLocationRelativeTo(father);
 		for (ReportValues parameter : ReportValues.values()) {
 			map.put(parameter, 0);
 			mapTotales.put(parameter, 0);

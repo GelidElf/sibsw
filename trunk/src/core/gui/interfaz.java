@@ -73,6 +73,8 @@ public class interfaz implements ModelListener {
 	private JTextField textField_16;
 	private JTextField textField_19;
 
+	private Report ventanaReports;
+
 	/**
 	 * Fill the map with the configuration parameter and its value from the
 	 * interface
@@ -640,12 +642,14 @@ public class interfaz implements ModelListener {
 		JPanel panel_2 = new JPanel();
 		tabbedPane_2.addTab("Slave 3", null, panel_2, null);
 
+		ventanaReports = new Report(frame);
+
 		// MALDITO BOTON PARA ABRIR VENTANA DE INFORMES
 		JButton buttonReports = new JButton("Reports");
 		buttonReports.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				Report ventanaReports = new Report(frame);
+				ventanaReports.validate();
 				ventanaReports.setVisible(true);
 			}
 		});
