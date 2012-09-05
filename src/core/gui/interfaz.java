@@ -73,7 +73,7 @@ public class interfaz implements ModelListener {
 	private JTextField textField_16;
 	private JTextField textField_19;
 
-	private Report ventanaReports;
+	private ReportWindow ventanaReports;
 
 	/**
 	 * Fill the map with the configuration parameter and its value from the
@@ -145,7 +145,7 @@ public class interfaz implements ModelListener {
 		axisStatusPanel.setBounds(731, 372, 14, 10);
 		mainView.add(axisStatusPanel);
 
-		gearStatusPanel.setBounds(731, 466, 14, 10);
+		gearStatusPanel.setBounds(715, 464, 14, 10);
 		mainView.add(gearStatusPanel);
 
 		assemblyStatusPanel.setBounds(814, 142, 14, 10);
@@ -154,7 +154,7 @@ public class interfaz implements ModelListener {
 		assembledStatusPanel.setBounds(468, 254, 14, 10);
 		mainView.add(assembledStatusPanel);
 
-		finisedStatusPanel.setBounds(207, 444, 14, 10);
+		finisedStatusPanel.setBounds(223, 444, 14, 10);
 		mainView.add(finisedStatusPanel);
 
 		robot2StatusPanel.setBounds(303, 390, 14, 10);
@@ -166,7 +166,7 @@ public class interfaz implements ModelListener {
 		weldingStatusPanel.setBounds(387, 171, 14, 10);
 		mainView.add(weldingStatusPanel);
 
-		robot1StatusPanel.setBounds(654, 390, 14, 10);
+		robot1StatusPanel.setBounds(655, 405, 14, 10);
 		mainView.add(robot1StatusPanel);
 
 		JPanel panel = new JPanel();
@@ -642,7 +642,7 @@ public class interfaz implements ModelListener {
 		JPanel panel_2 = new JPanel();
 		tabbedPane_2.addTab("Slave 3", null, panel_2, null);
 
-		ventanaReports = new Report(frame);
+		ventanaReports = new ReportWindow(frame);
 
 		// MALDITO BOTON PARA ABRIR VENTANA DE INFORMES
 		JButton buttonReports = new JButton("Reports");
