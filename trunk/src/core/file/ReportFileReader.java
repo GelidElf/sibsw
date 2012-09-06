@@ -5,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import core.aplication.Configuration;
 import core.messages.enums.ReportValues;
 import core.reports.Report;
 
