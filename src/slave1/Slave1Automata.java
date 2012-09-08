@@ -163,7 +163,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 	protected void changeConfigurationParameter(Attribute attribute) {
 		
 		/* Falta CB_AXIS_LENGTH,
-	CB_GEARS_LENGTH !!!!!!!!!!!!!!!!1*/
+	CB_GEARS_LENGTH !!!!!!!!!!!!!!!!*/
 		
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {

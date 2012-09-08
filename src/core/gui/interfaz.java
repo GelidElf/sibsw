@@ -85,6 +85,10 @@ public class interfaz implements ModelListener {
 		message.addAttribute(parameter.name(), newValue);
 		master.sendMessage(message);
 	}
+	
+	public Map<ConfigurationParameters, Integer> getMap(){
+		return map;
+	}
 
 	/**
 	 * Launch the application.
@@ -325,12 +329,6 @@ public class interfaz implements ModelListener {
 		JPanel Robot1 = new JPanel();
 		tabbedPane_1.addTab("Robot 1", null, Robot1, null);
 		Robot1.setLayout(null);
-
-		JLabel lblRobot_1 = new JLabel("Robot 1");
-		lblRobot_1.setBounds(149, 11, 51, 15);
-		lblRobot_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblRobot_1.setFont(new Font("Tahoma", Font.BOLD, 12));
-		Robot1.add(lblRobot_1);
 
 		JLabel lblTimeToPick = new JLabel("Time to pick axis/gear (sec.)");
 		lblTimeToPick.setBounds(5, 39, 161, 15);
@@ -623,24 +621,24 @@ public class interfaz implements ModelListener {
 		textField_19.setColumns(10);
 		CBWrong.add(textField_19);
 
-		JTabbedPane tabbedPane_2 = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane_2.setBounds(430, 541, 635, 212);
-		frame.getContentPane().add(tabbedPane_2);
+		JTabbedPane console = new JTabbedPane(JTabbedPane.TOP);
+		console.setBounds(432, 541, 625, 212);
+		frame.getContentPane().add(console);
 
 		JPanel panel_3 = new JPanel();
-		tabbedPane_2.addTab("Main", null, panel_3, null);
+		console.addTab("Main", null, panel_3, null);
 
 		JPanel masterConsoleView = new JPanel();
-		tabbedPane_2.addTab("Master", null, masterConsoleView, null);
+		console.addTab("Master", null, masterConsoleView, null);
 
 		JPanel slave1ConsoleView = new JPanel();
-		tabbedPane_2.addTab("Slave 1", null, slave1ConsoleView, null);
+		console.addTab("Slave 1", null, slave1ConsoleView, null);
 
 		JPanel panel_1 = new JPanel();
-		tabbedPane_2.addTab("Slave 2", null, panel_1, null);
+		console.addTab("Slave 2", null, panel_1, null);
 
 		JPanel panel_2 = new JPanel();
-		tabbedPane_2.addTab("Slave 3", null, panel_2, null);
+		console.addTab("Slave 3", null, panel_2, null);
 
 		ventanaReports = new ReportWindow(frame);
 
@@ -656,6 +654,21 @@ public class interfaz implements ModelListener {
 		buttonReports.setFont(new Font("Tahoma", Font.BOLD, 14));
 		buttonReports.setBounds(961, 497, 94, 34);
 		frame.getContentPane().add(buttonReports);
+		
+		JButton btnNewButton = new JButton("Send conf");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Message mensaje = new Message("Cambio de configuracion", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
+				for(ConfigurationParameters value: ConfigurationParameters.values()){
+					mensaje.addAttribute(value.name(), getMap().get(value));
+					master.sendMessage(mensaje);
+				}
+			}
+		});
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnNewButton.setBounds(296, 525, 104, 34);
+		frame.getContentPane().add(btnNewButton);
 
 	}
 
