@@ -142,7 +142,7 @@ public class Robot2State implements State<Robot2Input> {
 
 	}
 
-	private Robot2Automata automata;
+	private transient Robot2Automata automata;
 	private states currentState;
 
 	@Override

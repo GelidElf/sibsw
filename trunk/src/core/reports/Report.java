@@ -19,7 +19,7 @@ public class Report {
 	/**
 	 * Store report values
 	 */
-	private void receiveSignal(ReportValues signal) {
+	public void receiveSignal(ReportValues signal) {
 		map.put(signal, map.get(signal) + 1);
 		mapTotales.put(signal, mapTotales.get(signal) + 1);
 	}

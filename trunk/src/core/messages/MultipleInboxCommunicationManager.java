@@ -14,6 +14,7 @@ import java.util.concurrent.FutureTask;
 import master.MasterModel;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
 public class MultipleInboxCommunicationManager implements CommunicationManager {
@@ -143,7 +144,9 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 	public void clientDisconnected(CommunicationIds commId) {
 		connections.get(commId).disable();
 		MasterModel.getInstance().setModel(commId, null);
-		//TODO: Must inform that the client was disconnected
+		getInbox().add(
+				new Message("EmergencyFromDisconnection", CommunicationIds.BROADCAST, true,
+						CommunicationMessageType.ESTOP, null));
 		reconnectClient(commId);
 	}
 

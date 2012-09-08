@@ -92,7 +92,7 @@ public class AtAssemblyStationTest extends JFrame {
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			atas.putEngranaje();
+			atas.putGear();
 		}
 
 	}
