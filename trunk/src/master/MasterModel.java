@@ -10,13 +10,15 @@ import core.messages.enums.CommunicationIds;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
 import core.model.ModelListener;
+import core.sections.robot2.Robot2Model;
 
 public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	private static final long serialVersionUID = -5649471149764787709L;
 	private static MasterModel instance;
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
-
+	private Robot2Model robot2Model;
+	
 	public static synchronized MasterModel getInstance() {
 		if (instance == null) {
 			instance = new MasterModel();
@@ -40,6 +42,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		for (CommunicationIds id : CommunicationIds.values()) {
 			connected.put(id, false);
 		}
+		robot2Model = new Robot2Model();
 	}
 
 	private Map<CommunicationIds, Boolean> connected = new HashMap<CommunicationIds, Boolean>();
@@ -88,6 +91,14 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	public void setAutomata(AutomataContainer<MasterInput, MasterState, ? extends AutomataModel<MasterInput, MasterState>> automata) {
 		currentState = new MasterState((MasterAutomata) automata);
 
+	}
+	
+	public void setRobot2Model(Robot2Model model) {
+		robot2Model = model;
+	}
+
+	public Robot2Model getRobo1Model() {
+		return robot2Model;
 	}
 
 }

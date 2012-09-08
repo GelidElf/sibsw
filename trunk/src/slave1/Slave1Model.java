@@ -38,6 +38,7 @@ public class Slave1Model implements AutomataModel<Slave1Input, Slave1State> {
 		gearBeltModel = new ConveyorBeltModel();
 		axisBeltModel = new ConveyorBeltModel();
 		assemblyStationModel = new AssemblyStationModel();
+		robot1Model = new Robot1Model();
 	}
 
 	@Override

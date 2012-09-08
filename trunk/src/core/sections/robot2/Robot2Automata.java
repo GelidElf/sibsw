@@ -3,12 +3,10 @@ package core.sections.robot2;
 import core.messages.Attribute;
 import core.messages.CommunicationManager;
 import core.messages.Message;
-import core.messages.OfflineCommunicationManager;
 import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataContainer;
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
-import core.sections.ParallelPort.Utils.ParallelPortException;
 
 
 public class Robot2Automata extends AutomataContainer<Robot2Input, core.sections.robot2.Robot2State, Robot2Model> implements ParallelPortManagerObserver {
@@ -88,6 +86,10 @@ public class Robot2Automata extends AutomataContainer<Robot2Input, core.sections
 			feedInput(Robot2Input.JobDone, false);
 		}
 
+	}
+
+	public ParallelPortManager getManager() {
+		return manager;
 	}
 
 }
