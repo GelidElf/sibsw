@@ -39,33 +39,33 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 	protected void consume(Message message) {
 		if (message.getType() == CommunicationMessageType.COMMAND) {
 			switch ((MasterInput) message.getInputType()) {
-				case START:
-					sendBroadCastMessage(CommunicationMessageType.START);
-					message.setConsumed(getModel().getState().execute(MasterInput.START));
-					break;
-				case NSTOP:
-					getModel().receiveSignal(ReportValues.SYSTEM_STOPS);
-					sendBroadCastMessage(CommunicationMessageType.NSTOP);
-					message.setConsumed(getModel().getState().execute(MasterInput.NSTOP));
-					break;
-				case ESTOP:
-					getModel().receiveSignal(ReportValues.SYSTEM_EMERGENCIES);
-					sendBroadCastMessage(CommunicationMessageType.ESTOP);
-					message.setConsumed(getModel().getState().execute(MasterInput.ESTOP));
-					break;
-				case RESUME:
-					sendBroadCastMessage(CommunicationMessageType.RESTART);
-					message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
-					break;
-				default:
-					break;
+			case START:
+				sendBroadCastMessage(CommunicationMessageType.START);
+				message.setConsumed(getModel().getState().execute(MasterInput.START));
+				break;
+			case NSTOP:
+				getModel().receiveSignal(ReportValues.SYSTEM_STOPS);
+				sendBroadCastMessage(CommunicationMessageType.NSTOP);
+				message.setConsumed(getModel().getState().execute(MasterInput.NSTOP));
+				break;
+			case ESTOP:
+				getModel().receiveSignal(ReportValues.SYSTEM_EMERGENCIES);
+				sendBroadCastMessage(CommunicationMessageType.ESTOP);
+				message.setConsumed(getModel().getState().execute(MasterInput.ESTOP));
+				break;
+			case RESUME:
+				sendBroadCastMessage(CommunicationMessageType.RESTART);
+				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
+				break;
+			default:
+				break;
 			}
 		} else {
 			if (message.getType() == CommunicationMessageType.REPORT) {
 
 			}
 			if (message.getType() == CommunicationMessageType.LOG_MESSAGE) {
-				System.out.print(message.getAttributeValue("MESSAGE"));
+				MasterModel.getInstance().putTextInBuffer(message.getOwner(),(String) message.getAttributeValue("MESSAGE"));
 				message.setConsumed(true);
 			}
 		}
@@ -89,19 +89,19 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 		if (parameter != null) {
 			try {
 				switch (parameter) {
-					case PICK_TIME_ASSEMBLED:
-						robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P,
-								(Integer) attribute.getValue());
-						break;
-					case TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS:
-						robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_WELDED,
-								(Integer) attribute.getValue());
-						break;
-					case TRANSPORT_PLACE_TIME_WELDED:
-						robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_CB, (Integer) attribute.getValue());
-						break;
-					default:
-						break;
+				case PICK_TIME_ASSEMBLED:
+					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P,
+							(Integer) attribute.getValue());
+					break;
+				case TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS:
+					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_WELDED,
+							(Integer) attribute.getValue());
+					break;
+				case TRANSPORT_PLACE_TIME_WELDED:
+					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_CB, (Integer) attribute.getValue());
+					break;
+				default:
+					break;
 				}
 			} catch (ParallelPortException e) {
 				e.printStackTrace();
