@@ -687,7 +687,7 @@ public class interfaz implements ModelListener {
 				}
 			}
 		});
-		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 11));
+		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(296, 525, 104, 34);
 		frame.getContentPane().add(btnNewButton);
 
