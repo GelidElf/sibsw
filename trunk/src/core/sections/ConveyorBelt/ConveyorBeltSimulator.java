@@ -18,6 +18,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private int numberOfElements = 0;
 
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
+		this.setName("ConveyorBeltSimulatorThread");
 		this.manager = manager;
 		contents = new int[this.manager.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
 		cleanContentsOfBelt();

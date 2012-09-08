@@ -19,6 +19,7 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	public ConveyorBeltAutomata(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager, Enum<?> jobDone) {
 		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
+		this.setName("ConveyorBeltAutomataThread");
 		getModel().setAutomata(this);
 		this.manager = manager;
 		manager.registerObserver(this);

@@ -6,17 +6,18 @@ import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
+import core.utilities.log.LoggerListener;
 
 /**
  * Client communication manager, created for all the slaves
  * 
- * tries to connect to the server, and when connection is lost, tryes to
+ * tries to connect to the server, and when connection is lost, tries to
  * reconnect
  * 
  * @author GelidElf
  * 
  */
-public class SingleInboxCommunicationManager implements CommunicationManager {
+public class SingleInboxCommunicationManager implements CommunicationManager, LoggerListener{
 
 	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;
 	private CommunicationIds owner;
@@ -57,6 +58,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	private void connectAndStartThread() {
 		while (!connected) {
 			if (tryToConnectToServer()) {
+				Logger.registerListener(this);
 				connection.setPeer(CommunicationIds.MASTER);
 				connection.start();
 				Logger.println("Connection achieved");
@@ -130,7 +132,23 @@ public class SingleInboxCommunicationManager implements CommunicationManager {
 	@Override
 	public void clientDisconnected(CommunicationIds commId) {
 		connected = false;
+		Logger.unregisterListener(this);
 		connectAndStartThread();
+	}
+
+	@Override
+	public void print(String string) {
+		Message message = new Message("Logger", CommunicationIds.MASTER, false, CommunicationMessageType.LOG_MESSAGE, null);
+		message.addAttribute("MESSAGE",string);
+		sendMessage(message);
+
+	}
+
+	@Override
+	public void println(String text) {
+		Message message = new Message("Logger", CommunicationIds.MASTER, false, CommunicationMessageType.LOG_MESSAGE, null);
+		message.addAttribute("MESSAGE",text+"\n");
+		sendMessage(message);
 	}
 
 }

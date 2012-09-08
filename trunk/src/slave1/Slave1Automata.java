@@ -51,6 +51,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		getModel().setRobot1Model(robot.getModel());
 		getModel().setAutomata(this);
 		getModel().addListener(this);
+		this.setName("Slave1AutomataThread");
 	}
 
 	public void setInitialSettings(String settings) {

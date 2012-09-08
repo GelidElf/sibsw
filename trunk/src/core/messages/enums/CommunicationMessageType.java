@@ -9,7 +9,7 @@ public enum CommunicationMessageType {
 	CONFIGURATION,
 	COMMAND,
 	HANDSHAKE,
-	STATUS_UPDATE, 
-	REPORT;
-	
+	STATUS_UPDATE,
+	REPORT,
+	LOG_MESSAGE;
 }

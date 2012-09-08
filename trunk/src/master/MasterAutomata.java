@@ -64,6 +64,10 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 			if (message.getType() == CommunicationMessageType.REPORT) {
 
 			}
+			if (message.getType() == CommunicationMessageType.LOG_MESSAGE) {
+				System.out.print(message.getAttributeValue("MESSAGE"));
+				message.setConsumed(true);
+			}
 		}
 
 	}

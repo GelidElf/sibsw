@@ -155,6 +155,7 @@ public class ConnectionManager extends Thread {
 			oos.flush();
 			oos.reset();
 		} catch (IOException e) {
+			commManager.clientDisconnected(getPeer());
 			Logger.println("Error escribiendo el mensaje");
 		}
 	}
@@ -182,16 +183,16 @@ public class ConnectionManager extends Thread {
 			}
 		} catch (IOException e) {
 			if ((e instanceof EOFException) || (e instanceof SocketException)) {
-				Logger.println("Client has disconnected. Awaiting for reconnection");
 				commManager.clientDisconnected(getPeer());
+				Logger.println("Client has disconnected. Awaiting for reconnection");
 			} else {
 				e.printStackTrace();
 			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
-			Logger.println("Client has disconnected. Awaiting for reconnection");
 			commManager.clientDisconnected(getPeer());
+			Logger.println("Client has disconnected. Awaiting for reconnection");
 		}
 		return null;
 	}
