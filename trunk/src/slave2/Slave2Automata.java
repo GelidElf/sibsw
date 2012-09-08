@@ -117,11 +117,10 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {
-				
-				/*
-				 * Falta: CB_TRANSFER_LENGTH!!!!!!
-				 */
 				switch (parameter) {
+				case CB_TRANSFER_LENGTH:
+					transferBelt.setLength((Integer) attribute.getValue());
+					break;
 				case CB_TRANSFER_SPEED:
 					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
 					break;

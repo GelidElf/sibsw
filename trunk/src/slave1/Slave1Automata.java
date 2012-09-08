@@ -161,14 +161,16 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
-		
-		/* Falta CB_AXIS_LENGTH,
-	CB_GEARS_LENGTH !!!!!!!!!!!!!!!!*/
-		
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {
 				switch (parameter) {
+				case CB_AXIS_LENGTH:
+					axisBelt.setLength((Integer) attribute.getValue());
+					break;
+				case CB_GEARS_LENGTH:
+					gearBelt.setLength((Integer) attribute.getValue());
+					break;
 				case CB_AXIS_CAPACITY:
 					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
 					break;
