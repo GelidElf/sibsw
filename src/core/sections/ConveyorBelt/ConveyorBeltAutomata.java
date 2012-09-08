@@ -122,7 +122,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		}
 	}
 
-
 	@Override
 	public void startCommand() {
 		simulator.start();
@@ -155,7 +154,14 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	}
 
 	public void setLength(int length) {
-		// TODO, adapt the length to the capacity and quantity
+		// size of piece is 0.1 m, length comes in meters
+		try {
+			int value = (int) (length / 0.1);
+		    manager.setValueByName(ConveyorBeltManager.CAPACITY, value);
+		} catch (ParallelPortException e) {
+		   // TODO Auto-generated catch block
+		   e.printStackTrace();
+		}
 	}
 
 }
