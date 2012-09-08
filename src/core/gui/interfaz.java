@@ -95,6 +95,7 @@ public class interfaz implements ModelListener {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					ConfigurationFileReader confReader = new ConfigurationFileReader("master.ini");
@@ -270,6 +271,7 @@ public class interfaz implements ModelListener {
 
 		textField = new JTextField();
 		textField.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, Integer.parseInt(textField.getText()));
 			}
@@ -287,6 +289,7 @@ public class interfaz implements ModelListener {
 
 		textField_1 = new JTextField();
 		textField_1.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS, Integer.parseInt(textField_1.getText()));
 			}
@@ -303,6 +306,7 @@ public class interfaz implements ModelListener {
 
 		textField_2 = new JTextField();
 		textField_2.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED, Integer.parseInt(textField_2.getText()));
 			}
@@ -337,6 +341,7 @@ public class interfaz implements ModelListener {
 
 		textField_3 = new JTextField();
 		textField_3.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.PICK_TIME_AXIS_GEAR, Integer.parseInt(textField_3.getText()));
 			}
@@ -353,6 +358,7 @@ public class interfaz implements ModelListener {
 
 		textField_4 = new JTextField();
 		textField_4.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR, Integer.parseInt(textField_4.getText()));
 			}
@@ -369,6 +375,7 @@ public class interfaz implements ModelListener {
 
 		textField_5 = new JTextField();
 		textField_5.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED, Integer.parseInt(textField_5.getText()));
 			}
@@ -399,6 +406,7 @@ public class interfaz implements ModelListener {
 
 		textField_6 = new JTextField();
 		textField_6.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_LENGTH, Integer.parseInt(textField_6.getText()));
 			}
@@ -409,6 +417,7 @@ public class interfaz implements ModelListener {
 
 		textField_7 = new JTextField();
 		textField_7.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_SPEED, Integer.parseInt(textField_7.getText()));
 			}
@@ -419,6 +428,7 @@ public class interfaz implements ModelListener {
 
 		textField_8 = new JTextField();
 		textField_8.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_CAPACITY, Integer.parseInt(textField_8.getText()));
 			}
@@ -448,6 +458,7 @@ public class interfaz implements ModelListener {
 
 		textField_10 = new JTextField();
 		textField_10.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_CAPACITY, Integer.parseInt(textField_10.getText()));
 			}
@@ -458,6 +469,7 @@ public class interfaz implements ModelListener {
 
 		textField_9 = new JTextField();
 		textField_9.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_SPEED, Integer.parseInt(textField_9.getText()));
 			}
@@ -468,6 +480,7 @@ public class interfaz implements ModelListener {
 
 		textField_11 = new JTextField();
 		textField_11.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_LENGTH, Integer.parseInt(textField_11.getText()));
 			}
@@ -487,6 +500,7 @@ public class interfaz implements ModelListener {
 
 		textField_17 = new JTextField();
 		textField_17.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_AS, Integer.parseInt(textField_17.getText()));
 			}
@@ -511,6 +525,7 @@ public class interfaz implements ModelListener {
 
 		textField_12 = new JTextField();
 		textField_12.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_TRANSFER_LENGTH, Integer.parseInt(textField_12.getText()));
 			}
@@ -521,6 +536,7 @@ public class interfaz implements ModelListener {
 
 		textField_13 = new JTextField();
 		textField_13.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_TRANSFER_SPEED, Integer.parseInt(textField_12.getText()));
 			}
@@ -536,6 +552,7 @@ public class interfaz implements ModelListener {
 
 		textField_18 = new JTextField();
 		textField_18.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_WS, Integer.parseInt(textField_18.getText()));
 			}
@@ -562,6 +579,7 @@ public class interfaz implements ModelListener {
 
 		textField_14 = new JTextField();
 		textField_14.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_QCS, Integer.parseInt(textField_14.getText()));
 			}
@@ -581,6 +599,7 @@ public class interfaz implements ModelListener {
 
 		textField_15 = new JTextField();
 		textField_15.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_OK_SPEED, Integer.parseInt(textField_15.getText()));
 			}
@@ -594,6 +613,7 @@ public class interfaz implements ModelListener {
 
 		textField_16 = new JTextField();
 		textField_16.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_OK_LENGTH, Integer.parseInt(textField_16.getText()));
 			}
@@ -613,6 +633,7 @@ public class interfaz implements ModelListener {
 
 		textField_19 = new JTextField();
 		textField_19.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				fillMap(ConfigurationParameters.CB_WRONG_LENGTH, Integer.parseInt(textField_19.getText()));
 			}
@@ -679,6 +700,7 @@ public class interfaz implements ModelListener {
 		updateStatusSlave1Sections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE2, model);
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
+		ventanaReports.updateData(model.getCurrentReport());
 		frame.repaint();
 	}
 

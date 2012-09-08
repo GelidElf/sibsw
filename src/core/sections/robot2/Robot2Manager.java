@@ -37,12 +37,12 @@ public class Robot2Manager extends ParallelPortManager {
 
 	}
 	
-	public void configure(int timeToAssembledP, int timeToTransport, int TimeToWelded) {
+	public void configure(int timeToAssembledP, int timeToTransport, int timeToWelded) {
 		try {
 			//setValueByName(Robot2Manager.SPEED, speed);
 			setValueByName(Robot2Manager.TIME_TO_ASSEMBLED_P, timeToAssembledP);
 			setValueByName(Robot2Manager.TIME_TO_CB, timeToTransport);
-			setValueByName(Robot2Manager.DELIVER_WELDED_PIECE, TimeToWelded);
+			setValueByName(Robot2Manager.TIME_TO_WELDED, timeToWelded);
 			clearJobTypes();
 		} catch (ParallelPortException e) {
 			e.printStackTrace();

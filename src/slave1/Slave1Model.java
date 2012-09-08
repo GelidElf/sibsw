@@ -22,6 +22,7 @@ public class Slave1Model implements AutomataModel<Slave1Input, Slave1State> {
 		modelListeners.add(listener);
 	}
 
+	@Override
 	public void notifyObservers() {
 		for (ModelListener listener : modelListeners) {
 			listener.updateOnModelChange();

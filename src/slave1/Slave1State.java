@@ -83,7 +83,7 @@ public class Slave1State implements State<Slave1Input> {
 				switch (input) {
 				case GEAR_IN_AS:
 					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.gearDetectedTrue, false);
+								.feedInput(AssemblyStationInput.GearFeeded, false);
 					return Idle;
 				case NSTOP:
 					return GEAR_LOADING_STOP;
@@ -111,7 +111,7 @@ public class Slave1State implements State<Slave1Input> {
 				switch (input) {
 				case AXIS_IN_AS:
 					currentState.getAutomata().getAssemblyStation()
-							.feedInput(AssemblyStationInput.axisDetectedTrue, false);
+								.feedInput(AssemblyStationInput.AxisFeeded, false);
 					return Idle;
 				case NSTOP:
 					return AXIS_LOADING_STOP;

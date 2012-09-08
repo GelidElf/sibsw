@@ -5,10 +5,10 @@ import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
-public class AssemblyStationSimulator extends Thread implements ParallelPortManagerObserver{
-	
+public class AssemblyStationSimulator extends Thread implements ParallelPortManagerObserver {
+
 	private AssemblyStationManager manager;
-	
+
 	public AssemblyStationSimulator(AssemblyStationManager manager) {
 		this.manager = manager;
 	}
@@ -20,19 +20,21 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 	@Override
 	public void run() {
 		super.run();
-		while(true){
-			if (stationLoadedCorrectly() && stationClearToProceed()){
-			try {
-				Logger.println("Assembling");
-				sleepExecution(getAssemblingTime());
-				Logger.println("Finished assembling");
-				manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, true);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (ParallelPortException e) {
-				e.printStackTrace();
-			}
-			}else{
+		while (true) {
+			if (stationLoadedCorrectly() && stationClearToProceed()) {
+				try {
+					Logger.println("Assembling");
+					sleepExecution(getAssemblingTime());
+					Logger.println("Finished assembling");
+					manager.setValueByNameAsBoolean(AssemblyStationManager.AP_DETECTED, true);
+					manager.setValueByNameAsBoolean(AssemblyStationManager.AXIS_DETECTED, false);
+					manager.setValueByNameAsBoolean(AssemblyStationManager.GEAR_DETECTED, false);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				} catch (ParallelPortException e) {
+					e.printStackTrace();
+				}
+			} else {
 				try {
 					sleep(2000);
 				} catch (InterruptedException e) {
@@ -52,7 +54,7 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 	}
 
 	private boolean stationLoadedCorrectly() {
-		boolean loaded = true; 
+		boolean loaded = true;
 		try {
 			loaded = loaded && manager.getValueByNameAsBoolean(AssemblyStationManager.AXIS_DETECTED);
 			loaded = loaded && manager.getValueByNameAsBoolean(AssemblyStationManager.GEAR_DETECTED);
@@ -66,21 +68,17 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 		if (velocity == 0) {
 			Logger.println("Speed set to 0");
 		} else {
-			
+
 			sleep(1000 / velocity);
 		}
 	}
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (manager.getModifiedGroupName().equals(AssemblyStationManager.ENGAGE)){
+		if (manager.getModifiedGroupName().equals(AssemblyStationManager.ENGAGE)) {
 			start();
 		}
-		
+
 	}
 
-	
-	
-	
-	
 }

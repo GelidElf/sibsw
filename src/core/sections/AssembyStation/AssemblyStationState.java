@@ -1,5 +1,7 @@
 package core.sections.AssembyStation;
 
+import slave1.Slave1Automata;
+import slave1.Slave1Input;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
@@ -26,9 +28,11 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			@Override
 			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
-				case axisDetectedTrue:
+					case AxisFeeded:
+						currentState.getAutomata().putAxis();
 					return WithAxis;
-				case gearDetectedTrue:
+					case GearFeeded:
+						currentState.getAutomata().putGear();
 					return WithGear;
 
 				default:
@@ -41,7 +45,8 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			@Override
 			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
-				case axisDetectedTrue:
+					case AxisFeeded:
+						currentState.getAutomata().putAxis();
 					return Working;
 
 				default:
@@ -55,7 +60,8 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			@Override
 			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
-				case gearDetectedTrue:
+					case GearFeeded:
+						currentState.getAutomata().putGear();
 					return Working;
 
 				default:
@@ -68,7 +74,9 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			@Override
 			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
-				case jobDone:
+					case JobDone:
+						Slave1Automata father = (Slave1Automata) currentState.getAutomata().getFather();
+						father.feedInput(Slave1Input.AS_READY, false);
 					return IdleLoaded;
 
 				default:
@@ -81,7 +89,9 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 			@Override
 			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
 				switch (input) {
-				case apDetectedFalse:
+					case ASRemoved:
+						Slave1Automata father = (Slave1Automata) currentState.getAutomata().getFather();
+						father.feedInput(Slave1Input.AS_EMPTY, false);
 					return Idle;
 
 				default:

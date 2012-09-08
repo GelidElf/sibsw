@@ -1,6 +1,7 @@
 package slave1;
 
 public enum Slave1Input {
+
 	START, 
 	NSTOP, 
 	ESTOP, 
@@ -13,7 +14,8 @@ public enum Slave1Input {
 	AUTO_FEED_GEAR_ON, 
 	AUTO_FEED_GEAR_OFF, 
 	MOVE_AXIS, 
-	MOVE_GEAR;
+	MOVE_GEAR,
+	AS_READY,
+	AS_EMPTY;
 
-	//	EMPTY_TRANSFER_CB,AS_EMPTY, 
 }

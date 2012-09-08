@@ -62,20 +62,9 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (!this.manager.isAPDetected()) {
-			consume(createDummyMessageForInput(AssemblyStationInput.apDetectedFalse, false));
+		if (this.manager.isAPDetected()) {
+			feedInput(AssemblyStationInput.JobDone, false);
 		}
-		if (this.manager.isAxisDetected()) {
-			consume(createDummyMessageForInput(AssemblyStationInput.axisDetectedTrue, false));
-		} else {
-			consume(createDummyMessageForInput(AssemblyStationInput.axisDetectedFalse, false));
-		}
-		if (this.manager.isGearDetected()) {
-			consume(createDummyMessageForInput(AssemblyStationInput.gearDetectedTrue, false));
-		} else {
-			consume(createDummyMessageForInput(AssemblyStationInput.gearDetectedFalse, false));
-		}
-
 	}
 
 	public void putAxis() {
@@ -87,7 +76,7 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 		}
 	}
 
-	public void putEngranaje() {
+	public void putGear() {
 		try {
 			manager.setValueByNameAsBoolean(AssemblyStationManager.GEAR_DETECTED, true);
 		} catch (ParallelPortException e) {
