@@ -16,8 +16,9 @@ import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
+import core.utilities.log.LoggerListener;
 
-public class MultipleInboxCommunicationManager implements CommunicationManager {
+public class MultipleInboxCommunicationManager implements CommunicationManager, LoggerListener{
 
 	private HashMap<CommunicationIds, ConnectionManager> connections = new HashMap<CommunicationIds, ConnectionManager>();
 	private int numberOfIncoming;
@@ -32,6 +33,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 		this.owner = owner;
 		this.conf = conf;
 		this.numberOfIncoming = numberOfIncoming;
+		Logger.registerListener(this);
 		inbox = new Inbox();
 		serverPort = this.conf.getServerPortAsInt();
 		createServerSocket();
@@ -218,6 +220,16 @@ public class MultipleInboxCommunicationManager implements CommunicationManager {
 	@Override
 	public void feed(Message message) {
 		inbox.add(message);
+	}
+
+	@Override
+	public void print(String string) {
+		MasterModel.getInstance().putTextInBuffer(CommunicationIds.MASTER, string);
+	}
+
+	@Override
+	public void println(String text) {
+		MasterModel.getInstance().putTextInBuffer(CommunicationIds.MASTER, text+"\n");
 	}
 
 }

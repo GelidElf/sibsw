@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
@@ -73,6 +74,13 @@ public class interfaz implements ModelListener {
 	private JTextField textField_16;
 	private JTextField textField_19;
 
+	JTextArea mainConsoleView;
+	JTextArea masterConsoleView;
+	JTextArea slave1ConsoleView;
+	JTextArea slave2ConsoleView;
+	JTextArea slave3ConsoleView;
+
+
 	private ReportWindow ventanaReports;
 
 	/**
@@ -85,7 +93,7 @@ public class interfaz implements ModelListener {
 		message.addAttribute(parameter.name(), newValue);
 		master.sendMessage(message);
 	}
-	
+
 	public Map<ConfigurationParameters, Integer> getMap(){
 		return map;
 	}
@@ -642,24 +650,7 @@ public class interfaz implements ModelListener {
 		textField_19.setColumns(10);
 		CBWrong.add(textField_19);
 
-		JTabbedPane console = new JTabbedPane(JTabbedPane.TOP);
-		console.setBounds(432, 541, 625, 212);
-		frame.getContentPane().add(console);
-
-		JPanel panel_3 = new JPanel();
-		console.addTab("Main", null, panel_3, null);
-
-		JPanel masterConsoleView = new JPanel();
-		console.addTab("Master", null, masterConsoleView, null);
-
-		JPanel slave1ConsoleView = new JPanel();
-		console.addTab("Slave 1", null, slave1ConsoleView, null);
-
-		JPanel panel_1 = new JPanel();
-		console.addTab("Slave 2", null, panel_1, null);
-
-		JPanel panel_2 = new JPanel();
-		console.addTab("Slave 3", null, panel_2, null);
+		frame.getContentPane().add(createConsolePanel());
 
 		ventanaReports = new ReportWindow(frame);
 
@@ -675,7 +666,7 @@ public class interfaz implements ModelListener {
 		buttonReports.setFont(new Font("Tahoma", Font.BOLD, 14));
 		buttonReports.setBounds(961, 497, 94, 34);
 		frame.getContentPane().add(buttonReports);
-		
+
 		JButton btnNewButton = new JButton("Send conf");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
@@ -693,6 +684,32 @@ public class interfaz implements ModelListener {
 
 	}
 
+	private JTabbedPane createConsolePanel() {
+		JTabbedPane console = new JTabbedPane(JTabbedPane.TOP);
+		console.setBounds(432, 541, 625, 212);
+
+		mainConsoleView = new JTextArea("");
+		mainConsoleView.setEditable(false);
+		console.addTab("Main", null, mainConsoleView, null);
+
+		masterConsoleView = new JTextArea("");
+		masterConsoleView.setEditable(false);
+		console.addTab("Master", null, masterConsoleView, null);
+
+		slave1ConsoleView = new JTextArea("");
+		slave1ConsoleView.setEditable(false);
+		console.addTab("Slave 1", null, slave1ConsoleView, null);
+
+		slave2ConsoleView = new JTextArea("");
+		slave2ConsoleView.setEditable(false);
+		console.addTab("Slave 2", null, slave2ConsoleView, null);
+
+		slave3ConsoleView = new JTextArea("");
+		slave3ConsoleView.setEditable(false);
+		console.addTab("Slave 3", null, slave3ConsoleView, null);
+		return console;
+	}
+
 	@Override
 	public void updateOnModelChange() {
 		MasterModel model = MasterModel.getInstance();
@@ -701,7 +718,34 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE2, model);
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
 		ventanaReports.updateData(model.getCurrentReport());
+		updateConsoles();
 		frame.repaint();
+	}
+
+	private void updateConsoles() {
+		MasterModel model = MasterModel.getInstance();
+		String masterConsoleText = model.getConsoleBuffer(CommunicationIds.MASTER);
+		String slave1ConsoleText = model.getConsoleBuffer(CommunicationIds.SLAVE1);
+		String slave2ConsoleText = model.getConsoleBuffer(CommunicationIds.SLAVE2);
+		String slave3ConsoleText = model.getConsoleBuffer(CommunicationIds.SLAVE3);
+
+		if ((masterConsoleText != null) && !masterConsoleText.equals("")){
+			mainConsoleView.append(CommunicationIds.MASTER.name()+"-->"+masterConsoleText);
+			masterConsoleView.append(masterConsoleText);
+		}
+		if ((slave1ConsoleText != null) && !slave1ConsoleText.equals("")){
+			mainConsoleView.append(CommunicationIds.SLAVE1.name()+"-->"+slave1ConsoleText);
+			slave1ConsoleView.append(slave1ConsoleText);
+		}
+		if ((slave2ConsoleText != null) && !slave2ConsoleText.equals("")){
+			mainConsoleView.append(CommunicationIds.SLAVE2.name()+"-->"+slave2ConsoleText);
+			slave2ConsoleView.append(slave2ConsoleText);
+		}
+		if ((slave3ConsoleText != null) && !slave3ConsoleText.equals("")){
+			mainConsoleView.append(CommunicationIds.SLAVE3.name()+"-->"+slave3ConsoleText);
+			slave3ConsoleView.append(slave3ConsoleText);
+		}
+
 	}
 
 	private void updateStatusSlave1Sections(MasterModel model) {

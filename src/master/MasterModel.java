@@ -20,7 +20,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	private static MasterModel instance;
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
 	private Robot2Model robot2Model;
-	
+
 	public static synchronized MasterModel getInstance() {
 		if (instance == null) {
 			instance = new MasterModel();
@@ -60,6 +60,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	}
 
 	private Map<CommunicationIds, AutomataModel<?, ?>> models = new HashMap<CommunicationIds, AutomataModel<?, ?>>();
+	private Map<CommunicationIds, String> consoles = new HashMap<CommunicationIds, String>();
 	private MasterState currentState;
 	private transient Report currentReport;
 
@@ -97,7 +98,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		currentState = new MasterState((MasterAutomata) automata);
 
 	}
-	
+
 	public void setRobot2Model(Robot2Model model) {
 		robot2Model = model;
 	}
@@ -110,7 +111,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		currentReport.receiveSignal(signal);
 		notifyObservers();
 	}
-	
+
 	/**
 	 * @return the currentReport
 	 */
@@ -124,6 +125,26 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	 */
 	public void setCurrentReport(Report currentReport) {
 		this.currentReport = currentReport;
+	}
+
+	public void setConsoles(Map<CommunicationIds, String> consoles) {
+		this.consoles = consoles;
+	}
+
+	public Map<CommunicationIds, String> getConsoles() {
+		return consoles;
+	}
+
+	public void putTextInBuffer(CommunicationIds id, String text){
+		String newText = consoles.get(id)+text;
+		consoles.put(id,newText);
+		notifyObservers();
+	}
+
+	public String getConsoleBuffer(CommunicationIds id){
+		String text = consoles.get(id);
+		consoles.put(id,"");
+		return text;
 	}
 
 }
