@@ -20,6 +20,11 @@ public class Logger {
 		listeners.add(listener);
 	}
 
+
+	public static void unregisterListener(LoggerListener listener) {
+		listeners.remove(listener);
+	}
+
 	public static void println(String text) {
 		for (LoggerListener listener : listeners) {
 			listener.println(Thread.currentThread().getName() + ":>" + text);

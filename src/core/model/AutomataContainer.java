@@ -9,7 +9,7 @@ import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
 public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends State<INPUT>, MODEL extends AutomataModel<INPUT, STATE>>
-		extends Thread {
+extends Thread {
 
 	protected Configuration conf;
 	private CommunicationManager commManager;
@@ -20,6 +20,7 @@ public abstract class AutomataContainer<INPUT extends Enum<INPUT>, STATE extends
 		this.father = father;
 		this.commManager = commManager;
 		this.model = model;
+		this.setName("AutomataContainerThread");
 	}
 
 	public CommunicationManager getCommunicationManager() {
