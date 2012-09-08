@@ -15,6 +15,8 @@ import core.messages.enums.ReportValues;
 import core.reports.Report;
 
 import javax.swing.SwingConstants;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class ReportWindow extends JDialog {
 
@@ -50,7 +52,7 @@ public class ReportWindow extends JDialog {
 	public static void main(String[] args) {
 		try {
 			ReportWindow dialog = new ReportWindow(new JFrame());
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			//dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -191,6 +193,11 @@ public class ReportWindow extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						setVisible(false);
+					}
+				});
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);
