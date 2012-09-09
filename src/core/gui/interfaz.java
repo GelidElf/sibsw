@@ -77,17 +77,17 @@ public class interfaz implements ModelListener {
 	private JTextField textField_16;
 	private JTextField textField_19;
 
-	JTextArea mainConsoleView;
-	JTextArea masterConsoleView;
-	JTextArea slave1ConsoleView;
-	JTextArea slave2ConsoleView;
-	JTextArea slave3ConsoleView;
+	private JTextArea mainConsoleView;
+	private JTextArea masterConsoleView;
+	private JTextArea slave1ConsoleView;
+	private JTextArea slave2ConsoleView;
+	private JTextArea slave3ConsoleView;
 
-	JScrollPane mainConsoleScroll;
-	JScrollPane masterConsoleScroll;
-	JScrollPane slave1ConsoleScroll;
-	JScrollPane slave2ConsoleScroll;
-	JScrollPane slave3ConsoleScroll;
+	private JScrollPane mainConsoleScroll;
+	private JScrollPane masterConsoleScroll;
+	private JScrollPane slave1ConsoleScroll;
+	private JScrollPane slave2ConsoleScroll;
+	private JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
 
