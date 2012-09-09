@@ -82,13 +82,13 @@ public class Slave1Test extends JFrame {
 
 	private JButton creaBotonDeMeterEje() {
 		JButton jButton = new JButton("Mete Eje");
-		jButton.addActionListener(new AlimentaActionListener(slave1, Slave1Input.MOVE_AXIS));
+		jButton.addActionListener(new AlimentaActionListener(slave1, Slave1Input.AXIS_READY));
 		return jButton;
 	}
 
 	private JButton creaBotonDeMeterEngranaje() {
 		JButton jButton = new JButton("Mete Engranaje");
-		jButton.addActionListener(new AlimentaActionListener(slave1, Slave1Input.MOVE_GEAR));
+		jButton.addActionListener(new AlimentaActionListener(slave1, Slave1Input.GEAR_READY));
 		return jButton;
 	}
 
