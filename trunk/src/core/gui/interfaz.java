@@ -40,6 +40,7 @@ public class interfaz implements ModelListener {
 	private MasterAutomata master;
 
 	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
+	public ConfigurationFileReader confIniRead = new ConfigurationFileReader("ConfigurationParameters.ini");
 
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
@@ -284,6 +285,7 @@ public class interfaz implements ModelListener {
 		Master.add(lblNewLabel);
 
 		textField = new JTextField();
+		textField.setText(confIniRead.readConfiguration());
 		textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -792,3 +794,4 @@ public class interfaz implements ModelListener {
 		statusPanels.get(commID).setModo(model.isConnected(commID) ? model.getModel().get(commID).getCurrentMode() : null);
 	}
 }
+
