@@ -3,6 +3,7 @@ package master;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.utilities.log.Logger;
 
 public class MasterState implements State<MasterInput> {
 
@@ -67,7 +68,11 @@ public class MasterState implements State<MasterInput> {
 	public boolean execute(MasterInput input) {
 		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	@Override

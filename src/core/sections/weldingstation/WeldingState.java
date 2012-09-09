@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.utilities.log.Logger;
 
 public class WeldingState implements State<WeldingInput> {
 
@@ -94,7 +95,11 @@ public class WeldingState implements State<WeldingInput> {
 	public boolean execute(WeldingInput input) {
 		states oldState = currentState;
 		currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public WeldingState(WeldingAutomata automata) {

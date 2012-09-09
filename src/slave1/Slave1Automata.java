@@ -32,21 +32,28 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	public Slave1Automata(Configuration conf) {
 		super(null, new Slave1Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE1, conf));
-		this.setName("Slave1AutomataThread");
+		this.setName("Slave1Automata");
+
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10, 2);
 		gearBelt = new ConveyorBeltAutomata(this, gearManager, Slave1Input.GEAR_READY);
 		getModel().setGearBeltModel(gearBelt.getModel());
 		gearBelt.enableAutoFeed();
+		gearBelt.getModel().addListener(this);
+
 		ConveyorBeltManager axisManager = new ConveyorBeltManager();
 		axisManager.configure(10, 2);
 		axisBelt = new ConveyorBeltAutomata(this, axisManager, Slave1Input.AXIS_READY);
 		getModel().setAxisBeltModel(axisBelt.getModel());
 		axisBelt.enableAutoFeed();
+		axisBelt.getModel().addListener(this);
+
 		AssemblyStationManager assemblyManager = new AssemblyStationManager();
 		assemblyManager.configure(10);
 		assemblyStation = new AssemblyStationAutomata(this, assemblyManager);
 		getModel().setAssemblyStationModel(assemblyStation.getModel());
+		assemblyStation.getModel().addListener(this);
+
 		robot = new Robot1Automata(this, new Robot1Model(), new OfflineCommunicationManager());
 		robot.getModel().addListener(this);
 		getModel().setRobot1Model(robot.getModel());
@@ -138,6 +145,9 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			for (Attribute attribute : message.getAttributes()) {
 				changeConfigurationParameter(attribute);
 			}
+			break;
+		case HANDSHAKE:
+			message.consumeMessage();
 			break;
 		default:
 			message.didNotConsumeMessage();

@@ -20,18 +20,10 @@ extends Thread {
 		this.father = father;
 		this.commManager = commManager;
 		this.model = model;
-		this.setName("AutomataContainerThread");
 	}
 
 	public CommunicationManager getCommunicationManager() {
 		return commManager;
-	}
-
-	public void injectMessage(Message message) {
-		if (message == null) {
-			return;
-		}
-		commManager.getInbox().add(message);
 	}
 
 	@Override
@@ -98,6 +90,14 @@ extends Thread {
 		commManager.sendMessage(message);
 	}
 
+
+	public void injectMessage(Message message) {
+		if (message == null) {
+			return;
+		}
+		commManager.feed(message);
+	}
+
 	/**
 	 * alimenta un input al automata, se usa para comunicar automatas del mismo
 	 * slave, entrada de usuario y el resto de comunicacion que no sea a través
@@ -109,13 +109,13 @@ extends Thread {
 	 *            si es urgente
 	 */
 	public synchronized void feedInput(INPUT input, boolean isUrgent) {
-		commManager.feed(createDummyMessageForInput(input, isUrgent));
+		injectMessage(createDummyMessageForInput(input, isUrgent));
 	}
 
 	public void feedInputObject(Enum<?> input, boolean isUrgent) {
 		Message message = new Message("FeededInputObjectDummyMessage", getCommunicationManager().getOwner(), isUrgent,
 				CommunicationMessageType.COMMAND, input);
-		commManager.feed(message);
+		injectMessage(message);
 	}
 
 	protected Message createDummyMessageForInput(INPUT input, boolean isUrgent) {

@@ -16,27 +16,53 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 
 	public AssemblyStationAutomata(AutomataContainer<?, ?, ?> father, AssemblyStationManager manager) {
 		super(father, new AssemblyStationModel(), new OfflineCommunicationManager());
+		setName("AssemblyStationAutomata");
 		this.manager = manager;
 		manager.registerObserver(this);
 		simulator = new AssemblyStationSimulator(this.manager);
 		getModel().setAutomata(this);
 	}
 
-	public static void main(String[] args) {
-		AssemblyStationManager m = new AssemblyStationManager();
-		m.configure(10);
-		AssemblyStationAutomata atcb = new AssemblyStationAutomata(null, m);
-		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
-		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME, "32"));
-		atcb.injectMessage(mess);
-		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
-		atcb.injectMessage(mess2);
-	}
-
 	@Override
 	protected void consume(Message message) {
-		//TODO
+		reaccionaPorTipoDeMensaje(message);
+		if (debeReaccionaPorTipoEntrada(message)) {
+			reactToInput((AssemblyStationInput) message.getInputType());
+		}
+	}
 
+	private void reactToInput(AssemblyStationInput input) {
+		getModel().getState().execute(input);
+	}
+
+	private boolean debeReaccionaPorTipoEntrada(Message message) {
+		return message.getType() == CommunicationMessageType.COMMAND;
+	}
+
+	private void reaccionaPorTipoDeMensaje(Message message) {
+		message.consumeMessage();
+		switch (message.getType()) {
+		case START:
+			reactToInput(AssemblyStationInput.START);
+			break;
+		case NSTOP:
+			reactToInput(AssemblyStationInput.NSTOP);
+			break;
+		case ESTOP:
+			reactToInput(AssemblyStationInput.ESTOP);
+			break;
+		case RESTART:
+			reactToInput(AssemblyStationInput.RESTART);
+			break;
+		case CONFIGURATION:
+			for (Attribute attribute : message.getAttributes()) {
+				changeConfigurationParameter(attribute);
+			}
+			break;
+		default:
+			message.didNotConsumeMessage();
+			break;
+		}
 	}
 
 	@Override
@@ -98,6 +124,17 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 
 	public AssemblyStationManager getManager() {
 		return manager;
+	}
+
+	public static void main(String[] args) {
+		AssemblyStationManager m = new AssemblyStationManager();
+		m.configure(10);
+		AssemblyStationAutomata atcb = new AssemblyStationAutomata(null, m);
+		Message mess = new Message("algo", null, false, CommunicationMessageType.CONFIGURATION, null);
+		mess.addAttribute(new Attribute(AssemblyStationManager.ASSEMBLING_TIME, "32"));
+		atcb.injectMessage(mess);
+		Message mess2 = new Message("algo", null, false, CommunicationMessageType.START, null);
+		atcb.injectMessage(mess2);
 	}
 
 }

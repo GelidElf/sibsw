@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.utilities.log.Logger;
 
 public class QualityStationState implements State<QualityStationInput> {
 
@@ -116,7 +117,11 @@ public class QualityStationState implements State<QualityStationInput> {
 	public boolean execute(QualityStationInput input) {
 		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public QualityStationState(QualityStationAutomata automata) {

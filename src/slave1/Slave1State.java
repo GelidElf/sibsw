@@ -10,6 +10,7 @@ import core.model.State;
 import core.sections.AssembyStation.AssemblyStationInput;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
 import core.sections.robot1.Robot1Input;
+import core.utilities.log.Logger;
 
 public class Slave1State implements State<Slave1Input> {
 
@@ -34,18 +35,18 @@ public class Slave1State implements State<Slave1Input> {
 			}
 		},
 		Idle(ModeEnum.IDLE) {
-			
+
 			//!!!!!!!!!!!!! FALTA MOVE_ASSEMBLED
-			
+
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch(input){
-					case AS_READY:
-						currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAssembledPiece, false);
-						return LOADING_TB;
-					case AS_EMPTY:
-						return LOADING_AS;
-						// OLDCODE
+				case AS_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAssembledPiece, false);
+					return LOADING_TB;
+				case AS_EMPTY:
+					return LOADING_AS;
+					// OLDCODE
 				case NSTOP:
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.NSTOP, true);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.NSTOP, true);
@@ -83,16 +84,16 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case AS_IN_TRANSPORT:
-						Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
-								CommunicationMessageType.COMMAND, MasterInput.AS_IN_TCB);
-						currentState.getAutomata().sendMessage(message);
-						currentState.getAutomata().getAssemblyStation()
-								.feedInput(AssemblyStationInput.ASRemoved, false);
-						return Idle;
+				case AS_IN_TRANSPORT:
+					Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
+							CommunicationMessageType.COMMAND, MasterInput.AS_IN_TCB);
+					currentState.getAutomata().sendMessage(message);
+					currentState.getAutomata().getAssemblyStation()
+					.feedInput(AssemblyStationInput.ASRemoved, false);
+					return Idle;
 
-					default:
-						break;
+				default:
+					break;
 				}
 
 				return super.executeInternal(currentState, input);
@@ -102,14 +103,14 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case GEAR_READY:
-						currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
-						return LOADING_GEAR_IN_AS;
-					case AXIS_READY:
-						currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
-						return LOADING_AXIS_IN_AS;
-					default:
-						break;
+				case GEAR_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
+					return LOADING_GEAR_IN_AS;
+				case AXIS_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
+					return LOADING_AXIS_IN_AS;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -118,14 +119,14 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case GEAR_IN_AS:
-						currentState.getAutomata().getAssemblyStation()
-								.feedInput(AssemblyStationInput.GearFeeded, false);
-						currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
-						return WAITING_FOR_AXIS;
+				case GEAR_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+					.feedInput(AssemblyStationInput.GearFeeded, false);
+					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+					return WAITING_FOR_AXIS;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -134,12 +135,12 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case AXIS_READY:
-						currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
-						return LOADING_AXIS_WHEN_GEAR_READY;
+				case AXIS_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAxis, false);
+					return LOADING_AXIS_WHEN_GEAR_READY;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -148,14 +149,14 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case AXIS_IN_AS:
-						currentState.getAutomata().getAssemblyStation()
-								.feedInput(AssemblyStationInput.AxisFeeded, false);
-						currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
-						return Idle;
+				case AXIS_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+					.feedInput(AssemblyStationInput.AxisFeeded, false);
+					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+					return Idle;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -164,14 +165,14 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case GEAR_IN_AS:
-						currentState.getAutomata().getAssemblyStation()
-								.feedInput(AssemblyStationInput.GearFeeded, false);
-						currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
-						return WAITING_FOR_GEAR;
+				case AXIS_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+					.feedInput(AssemblyStationInput.AxisFeeded, false);
+					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+					return WAITING_FOR_GEAR;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -180,28 +181,28 @@ public class Slave1State implements State<Slave1Input> {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case GEAR_READY:
-						currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
-						return LOADING_GEAR_WHEN_GEAR_READY;
+				case GEAR_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverGear, false);
+					return LOADING_GEAR_WHEN_AXIS_READY;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		},
-		LOADING_GEAR_WHEN_GEAR_READY(ModeEnum.RUNNING) {
+		LOADING_GEAR_WHEN_AXIS_READY(ModeEnum.RUNNING) {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
-					case GEAR_IN_AS:
-						currentState.getAutomata().getAssemblyStation()
-								.feedInput(AssemblyStationInput.GearFeeded, false);
-						currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
-						return Idle;
+				case GEAR_IN_AS:
+					currentState.getAutomata().getAssemblyStation()
+					.feedInput(AssemblyStationInput.GearFeeded, false);
+					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+					return Idle;
 
-					default:
-						break;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -213,11 +214,11 @@ public class Slave1State implements State<Slave1Input> {
 		}
 
 		private ModeEnum mode;
-		
+
 		private states(ModeEnum mode) {
 			this.mode = mode;
 		}
-		
+
 		@Override
 		public ModeEnum getMode() {
 			return mode;
@@ -236,7 +237,11 @@ public class Slave1State implements State<Slave1Input> {
 	public boolean execute(Slave1Input input) {
 		states oldState = currentState;
 		currentState = currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public Slave1Automata getAutomata() {

@@ -16,6 +16,7 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 
 	public Robot1Automata(AutomataContainer<?, ?, ?> father, Robot1Model model, CommunicationManager commManager) {
 		super(father, model, commManager);
+		setName("Robot1Automata");
 		manager = new Robot1Manager();
 		manager.configure(7, 7, 7);
 		manager.registerObserver(this);
@@ -40,12 +41,12 @@ public class Robot1Automata extends AutomataContainer<Robot1Input, Robot1State, 
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			reactToInput((Robot1Input) message.getInputType());
+			message.setConsumed(reactToInput((Robot1Input) message.getInputType()));
 		}
 	}
 
-	private void reactToInput(Robot1Input input) {
-		getModel().getState().execute(input);
+	private boolean reactToInput(Robot1Input input) {
+		return getModel().getState().execute(input);
 	}
 
 	private boolean debeReaccionaPorTipoEntrada(Message message) {
