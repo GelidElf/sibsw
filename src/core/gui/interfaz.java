@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -80,6 +81,11 @@ public class interfaz implements ModelListener {
 	JTextArea slave2ConsoleView;
 	JTextArea slave3ConsoleView;
 
+	JScrollPane mainConsoleScroll;
+	JScrollPane masterConsoleScroll;
+	JScrollPane slave1ConsoleScroll;
+	JScrollPane slave2ConsoleScroll;
+	JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
 
@@ -690,23 +696,28 @@ public class interfaz implements ModelListener {
 
 		mainConsoleView = new JTextArea("");
 		mainConsoleView.setEditable(false);
-		console.addTab("Main", null, mainConsoleView, null);
+		mainConsoleScroll = new JScrollPane(mainConsoleView);
+		console.addTab("Main", null, mainConsoleScroll, null);
 
 		masterConsoleView = new JTextArea("");
 		masterConsoleView.setEditable(false);
-		console.addTab("Master", null, masterConsoleView, null);
+		masterConsoleScroll = new JScrollPane(masterConsoleView);
+		console.addTab("Master", null, masterConsoleScroll, null);
 
 		slave1ConsoleView = new JTextArea("");
 		slave1ConsoleView.setEditable(false);
-		console.addTab("Slave 1", null, slave1ConsoleView, null);
+		slave1ConsoleScroll = new JScrollPane(slave1ConsoleView);
+		console.addTab("Slave 1", null, slave1ConsoleScroll, null);
 
 		slave2ConsoleView = new JTextArea("");
 		slave2ConsoleView.setEditable(false);
-		console.addTab("Slave 2", null, slave2ConsoleView, null);
+		slave2ConsoleScroll = new JScrollPane(slave2ConsoleView);
+		console.addTab("Slave 2", null, slave2ConsoleScroll, null);
 
 		slave3ConsoleView = new JTextArea("");
 		slave3ConsoleView.setEditable(false);
-		console.addTab("Slave 3", null, slave3ConsoleView, null);
+		slave3ConsoleScroll = new JScrollPane(slave3ConsoleView);
+		console.addTab("Slave 3", null, slave3ConsoleScroll, null);
 		return console;
 	}
 
@@ -732,20 +743,34 @@ public class interfaz implements ModelListener {
 		if ((masterConsoleText != null) && !masterConsoleText.equals("")){
 			mainConsoleView.append(CommunicationIds.MASTER.name()+"-->"+masterConsoleText);
 			masterConsoleView.append(masterConsoleText);
+			autoScrollIfNeccesary(masterConsoleScroll, masterConsoleView);
 		}
 		if ((slave1ConsoleText != null) && !slave1ConsoleText.equals("")){
 			mainConsoleView.append(CommunicationIds.SLAVE1.name()+"-->"+slave1ConsoleText);
 			slave1ConsoleView.append(slave1ConsoleText);
+			autoScrollIfNeccesary(slave1ConsoleScroll, slave1ConsoleView);
 		}
 		if ((slave2ConsoleText != null) && !slave2ConsoleText.equals("")){
 			mainConsoleView.append(CommunicationIds.SLAVE2.name()+"-->"+slave2ConsoleText);
 			slave2ConsoleView.append(slave2ConsoleText);
+			autoScrollIfNeccesary(slave2ConsoleScroll, slave2ConsoleView);
 		}
 		if ((slave3ConsoleText != null) && !slave3ConsoleText.equals("")){
 			mainConsoleView.append(CommunicationIds.SLAVE3.name()+"-->"+slave3ConsoleText);
 			slave3ConsoleView.append(slave3ConsoleText);
+			autoScrollIfNeccesary(slave3ConsoleScroll, slave3ConsoleView);
 		}
 
+		autoScrollIfNeccesary(mainConsoleScroll, mainConsoleView);
+	}
+
+	private void autoScrollIfNeccesary(JScrollPane scroll, JTextArea area) {
+		// JScrollBar vbar = scroll.getVerticalScrollBar();
+		// boolean autoScroll = ((vbar.getValue() + vbar.getVisibleAmount()) ==
+		// vbar.getMaximum());
+		// if (autoScroll) {
+			area.setCaretPosition(area.getDocument().getLength());
+		// }
 	}
 
 	private void updateStatusSlave1Sections(MasterModel model) {
