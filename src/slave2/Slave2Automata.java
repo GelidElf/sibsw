@@ -28,16 +28,18 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 	public Slave2Automata(Configuration conf) {
 		super(null, new Slave2Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE2, conf));
-		
+
 		ConveyorBeltManager transferManager = new ConveyorBeltManager();
 		transferManager.configure(10, 2);
 		transferBelt = new ConveyorBeltAutomata(this, transferManager, Slave2Input.ASSEMBLED_READY);
 		getModel().setTransferBeltModel(transferBelt.getModel());
-		
+		transferBelt.getModel().addListener(this);
+
 		weldingStation = new WeldingAutomata(this, new WeldingModel(), new OfflineCommunicationManager());
 		weldingStation.getModel().addListener(this);
 		getModel().setWeldingModel(weldingStation.getModel());
-		
+		weldingStation.getModel().addListener(this);
+
 		getModel().setAutomata(this);
 		getModel().addListener(this);
 	}
@@ -77,6 +79,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 	}
 
 	private void reaccionaPorTipoDeMensaje(Message message) {
+		message.consumeMessage();
 		switch (message.getType()) {
 		case START:
 			feedInput(Slave2Input.START, message.isUrgent());
@@ -95,7 +98,11 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 				changeConfigurationParameter(attribute);
 			}
 			break;
+		case HANDSHAKE:
+			message.consumeMessage();
+			break;
 		default:
+			message.didNotConsumeMessage();
 			break;
 		}
 
@@ -108,12 +115,14 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 	@Override
 	public void startCommand() {
 		getCommunicationManager().initialize();
-		start();
+		getTransferBelt().startCommand();
+		getWeldingStation().startCommand();
+		this.start();
 	}
 
 	@Override
 	protected void changeConfigurationParameter(Attribute attribute) {
-			
+
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {

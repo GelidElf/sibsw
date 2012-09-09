@@ -9,7 +9,7 @@ import core.utilities.log.Logger;
 
 public class Slave2State implements State<Slave2Input> {
 
-	private static final long serialVersionUID = 3510029429322490323L;
+	private static final long serialVersionUID = 7025769611332442118L;
 
 	public static enum states implements AutomataStatesInternalImplementation<Slave2Input, Slave2State> {
 		STARTED(ModeEnum.READY) {
@@ -17,7 +17,6 @@ public class Slave2State implements State<Slave2Input> {
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case START:
-					//FIXME: Make the feed input execute the start command
 					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.START, true);
 					return Idle;

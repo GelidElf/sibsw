@@ -10,6 +10,8 @@ import core.utilities.log.Logger;
 
 public class WeldingState implements State<WeldingInput> {
 
+	private static final long serialVersionUID = -7702717114957704622L;
+
 	private enum states implements AutomataStatesInternalImplementation<WeldingInput, WeldingState> {
 		Started(ModeEnum.READY) {
 			@Override
@@ -88,7 +90,7 @@ public class WeldingState implements State<WeldingInput> {
 		}
 	}
 
-	private WeldingAutomata automata;
+	private transient WeldingAutomata automata;
 	private states currentState;
 
 	@Override
@@ -103,6 +105,7 @@ public class WeldingState implements State<WeldingInput> {
 	}
 
 	public WeldingState(WeldingAutomata automata) {
+		currentState = states.Started;
 		this.automata = automata;
 	}
 

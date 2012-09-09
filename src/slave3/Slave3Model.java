@@ -12,8 +12,8 @@ import core.sections.QualityStation.QualityStationModel;
 
 public class Slave3Model implements AutomataModel<Slave3Input, Slave3State> {
 
-	private static final long serialVersionUID = -7386586777088206957L;
-	
+	private static final long serialVersionUID = 9014547851278404382L;
+
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
 
 	@Override

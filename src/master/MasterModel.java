@@ -16,7 +16,8 @@ import core.sections.robot2.Robot2Model;
 
 public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
-	private static final long serialVersionUID = -5649471149764787709L;
+	private static final long serialVersionUID = -4132746104951198451L;
+
 	private static MasterModel instance;
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
 	private Robot2Model robot2Model;
