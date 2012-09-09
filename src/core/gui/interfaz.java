@@ -27,6 +27,7 @@ import master.MasterInput;
 import master.MasterModel;
 import slave1.Slave1Model;
 import core.file.ConfigurationFileReader;
+import core.file.ConfigurationParametersFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.Message;
@@ -40,7 +41,7 @@ public class interfaz implements ModelListener {
 	private MasterAutomata master;
 
 	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
-	public ConfigurationFileReader confIniRead = new ConfigurationFileReader("ConfigurationParameters.ini");
+	public ConfigurationParametersFileReader confIniRead = new ConfigurationParametersFileReader("ConfigurationParameters.ini");
 
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
@@ -285,7 +286,7 @@ public class interfaz implements ModelListener {
 		Master.add(lblNewLabel);
 
 		textField = new JTextField();
-		textField.setText(confIniRead.readConfiguration());
+		textField.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_ASSEMBLED).toString());
 		textField.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -304,6 +305,7 @@ public class interfaz implements ModelListener {
 		Master.add(lblTimeToTransport);
 
 		textField_1 = new JTextField();
+		textField_1.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS).toString());
 		textField_1.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -321,6 +323,7 @@ public class interfaz implements ModelListener {
 		Master.add(lblTimeToTransport_1);
 
 		textField_2 = new JTextField();
+		textField_2.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED).toString());
 		textField_2.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -356,6 +359,7 @@ public class interfaz implements ModelListener {
 		Robot1.add(lblTimeToPick);
 
 		textField_3 = new JTextField();
+		textField_3.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_AXIS_GEAR).toString());
 		textField_3.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -373,6 +377,7 @@ public class interfaz implements ModelListener {
 		Robot1.add(lblTimeToTransport_2);
 
 		textField_4 = new JTextField();
+		textField_4.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR).toString());
 		textField_4.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -390,6 +395,7 @@ public class interfaz implements ModelListener {
 		Robot1.add(lblTimeToTransport_3);
 
 		textField_5 = new JTextField();
+		textField_5.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED).toString());
 		textField_5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -421,6 +427,7 @@ public class interfaz implements ModelListener {
 		CBAxis.add(lblCapacity);
 
 		textField_6 = new JTextField();
+		textField_6.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_LENGTH).toString());
 		textField_6.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -432,6 +439,7 @@ public class interfaz implements ModelListener {
 		textField_6.setColumns(10);
 
 		textField_7 = new JTextField();
+		textField_7.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_SPEED).toString());
 		textField_7.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -443,6 +451,7 @@ public class interfaz implements ModelListener {
 		CBAxis.add(textField_7);
 
 		textField_8 = new JTextField();
+		textField_8.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_CAPACITY).toString());
 		textField_8.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -473,6 +482,7 @@ public class interfaz implements ModelListener {
 		CBGears.add(label_2);
 
 		textField_10 = new JTextField();
+		textField_10.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_CAPACITY).toString());
 		textField_10.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -484,6 +494,7 @@ public class interfaz implements ModelListener {
 		CBGears.add(textField_10);
 
 		textField_9 = new JTextField();
+		textField_9.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_SPEED).toString());
 		textField_9.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -495,6 +506,7 @@ public class interfaz implements ModelListener {
 		CBGears.add(textField_9);
 
 		textField_11 = new JTextField();
+		textField_11.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_LENGTH).toString());
 		textField_11.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -515,6 +527,7 @@ public class interfaz implements ModelListener {
 		AssemblingStation.add(lblActivationTimeMounting);
 
 		textField_17 = new JTextField();
+		textField_17.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_AS).toString());
 		textField_17.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -540,6 +553,7 @@ public class interfaz implements ModelListener {
 		Slave2.add(lblCbSpeed);
 
 		textField_12 = new JTextField();
+		textField_12.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_LENGTH).toString());
 		textField_12.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -551,6 +565,7 @@ public class interfaz implements ModelListener {
 		textField_12.setColumns(10);
 
 		textField_13 = new JTextField();
+		textField_13.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_SPEED).toString());
 		textField_13.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -567,6 +582,7 @@ public class interfaz implements ModelListener {
 		Slave2.add(lblActivationTimeAnd);
 
 		textField_18 = new JTextField();
+		textField_18.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_WS).toString());
 		textField_18.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -594,6 +610,7 @@ public class interfaz implements ModelListener {
 		QCS.add(lblActivationTimeQuality);
 
 		textField_14 = new JTextField();
+		textField_14.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_QCS).toString());
 		textField_14.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -614,6 +631,7 @@ public class interfaz implements ModelListener {
 		CBOk.add(lblSpeedmetersminute);
 
 		textField_15 = new JTextField();
+		textField_15.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_SPEED).toString());
 		textField_15.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -628,6 +646,7 @@ public class interfaz implements ModelListener {
 		CBOk.add(lblLengthmeters);
 
 		textField_16 = new JTextField();
+		textField_16.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_LENGTH).toString());
 		textField_16.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -648,6 +667,7 @@ public class interfaz implements ModelListener {
 		CBWrong.add(label_5);
 
 		textField_19 = new JTextField();
+		textField_19.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_WRONG_LENGTH).toString());
 		textField_19.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
