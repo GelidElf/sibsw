@@ -10,9 +10,9 @@ import core.model.ModelListener;
 
 public class WeldingModel implements AutomataModel<WeldingInput, WeldingState> {
 
-	private static final long serialVersionUID = -9139889456417544981L;
+	private static final long serialVersionUID = -2355793003691298996L;
 
-	private List<ModelListener> listeners;
+	private transient List<ModelListener> listeners;
 	private WeldingState state;
 
 	public WeldingModel() {

@@ -7,7 +7,7 @@ import core.utilities.log.Logger;
 
 public class MasterState implements State<MasterInput> {
 
-	private static final long serialVersionUID = 2119539530685446750L;
+	private static final long serialVersionUID = 4405083677911400643L;
 
 	private enum states implements AutomataStatesInternalImplementation<MasterInput, MasterState> {
 		Started(ModeEnum.READY) {

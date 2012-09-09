@@ -26,6 +26,7 @@ import master.MasterAutomata;
 import master.MasterInput;
 import master.MasterModel;
 import slave1.Slave1Model;
+import slave2.Slave2Model;
 import core.file.ConfigurationFileReader;
 import core.file.ConfigurationParametersFileReader;
 import core.gui.mainview.MainView;
@@ -64,7 +65,7 @@ public class interfaz implements ModelListener {
 	private StatusPanel axisStatusPanel;
 	private StatusPanel gearStatusPanel;
 	private StatusPanel assemblyStatusPanel;
-	private StatusPanel assembledStatusPanel;
+	private StatusPanel transferStatusPanel;
 	private StatusPanel finisedStatusPanel;
 	private StatusPanel robot2StatusPanel;
 	private StatusPanel qualityStatusPanel;
@@ -156,7 +157,7 @@ public class interfaz implements ModelListener {
 		axisStatusPanel = new StatusPanel();
 		gearStatusPanel = new StatusPanel();
 		assemblyStatusPanel = new StatusPanel();
-		assembledStatusPanel = new StatusPanel();
+		transferStatusPanel = new StatusPanel();
 		finisedStatusPanel = new StatusPanel();
 		robot2StatusPanel = new StatusPanel();
 		qualityStatusPanel = new StatusPanel();
@@ -172,8 +173,8 @@ public class interfaz implements ModelListener {
 		assemblyStatusPanel.setBounds(814, 142, 14, 10);
 		mainView.add(assemblyStatusPanel);
 
-		assembledStatusPanel.setBounds(468, 254, 14, 10);
-		mainView.add(assembledStatusPanel);
+		transferStatusPanel.setBounds(468, 254, 14, 10);
+		mainView.add(transferStatusPanel);
 
 		finisedStatusPanel.setBounds(223, 444, 14, 10);
 		mainView.add(finisedStatusPanel);
@@ -749,6 +750,7 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE1, model);
 		updateStatusSlave1Sections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE2, model);
+		updateStatusSlave2Sections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
 		ventanaReports.updateData(model.getCurrentReport());
 		updateConsoles();
@@ -791,7 +793,7 @@ public class interfaz implements ModelListener {
 		// boolean autoScroll = ((vbar.getValue() + vbar.getVisibleAmount()) ==
 		// vbar.getMaximum());
 		// if (autoScroll) {
-			area.setCaretPosition(area.getDocument().getLength());
+		area.setCaretPosition(area.getDocument().getLength());
 		// }
 	}
 
@@ -807,6 +809,17 @@ public class interfaz implements ModelListener {
 			axisStatusPanel.setModo(null);
 			assemblyStatusPanel.setModo(null);
 			robot1StatusPanel.setModo(null);
+		}
+	}
+
+	private void updateStatusSlave2Sections(MasterModel model) {
+		Slave2Model slave2Model = (Slave2Model) model.getModel().get(CommunicationIds.SLAVE2);
+		if ((slave2Model != null) && model.isConnected(CommunicationIds.SLAVE2)) {
+			weldingStatusPanel.setModo(slave2Model.getWeldingModel().getCurrentMode());
+			transferStatusPanel.setModo(slave2Model.getTransferBeltModel().getCurrentMode());
+		} else {
+			weldingStatusPanel.setModo(null);
+			transferStatusPanel.setModo(null);
 		}
 	}
 

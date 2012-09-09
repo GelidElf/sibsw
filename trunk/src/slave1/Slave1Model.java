@@ -13,7 +13,7 @@ import core.sections.robot1.Robot1Model;
 
 public class Slave1Model implements AutomataModel<Slave1Input, Slave1State> {
 
-	private static final long serialVersionUID = -7533088185929981996L;
+	private static final long serialVersionUID = -4758647288567804899L;
 
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
 

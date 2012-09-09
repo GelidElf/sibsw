@@ -18,7 +18,7 @@ import core.sections.robot2.Robot2Model;
 
 public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, MasterModel> {
 
-	private static final int NUMBEROFINBOXES = 1;
+	private static final int NUMBEROFINBOXES = 2;
 	private Robot2Automata robot;
 
 	public MasterState getCurrentState() {
@@ -80,8 +80,8 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 
 	@Override
 	public void startCommand() {
-		getCommunicationManager().initialize();
 		this.start();
+		getCommunicationManager().initialize();
 	}
 
 	@Override

@@ -12,11 +12,8 @@ import core.sections.weldingstation.WeldingModel;
 
 public class Slave2Model implements AutomataModel<Slave2Input, Slave2State> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7649511831198200443L;
-	
+	private static final long serialVersionUID = 7295893442823312716L;
+
 	private transient List<ModelListener> modelListeners = new ArrayList<ModelListener>();
 
 	@Override
@@ -24,6 +21,7 @@ public class Slave2Model implements AutomataModel<Slave2Input, Slave2State> {
 		modelListeners.add(listener);
 	}
 
+	@Override
 	public void notifyObservers() {
 		for (ModelListener listener : modelListeners) {
 			listener.updateOnModelChange();
@@ -73,6 +71,7 @@ public class Slave2Model implements AutomataModel<Slave2Input, Slave2State> {
 	@Override
 	public void setAutomata(AutomataContainer<Slave2Input, Slave2State, ? extends AutomataModel<Slave2Input, Slave2State>> automata) {
 		currentState = new Slave2State((Slave2Automata) automata);
+		notifyObservers();
 	}
 
 }

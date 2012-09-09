@@ -14,7 +14,7 @@ import core.utilities.log.Logger;
 
 public class Slave1State implements State<Slave1Input> {
 
-	private static final long serialVersionUID = 3510029429322490323L;
+	private static final long serialVersionUID = -283016116349309454L;
 
 	public static enum states implements AutomataStatesInternalImplementation<Slave1Input, Slave1State>{
 		STARTED(ModeEnum.READY) {
