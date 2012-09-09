@@ -3,6 +3,7 @@ package core.sections.ConveyorBelt;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.utilities.log.Logger;
 
 public class ConveyorBeltState implements State<ConveyorBeltInput> {
 
@@ -64,7 +65,7 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 				case unloadSensorFalse:
 					currentState.getAutomata().getManager().setSensorFinish(false);
 					currentState.getAutomata().getManager().setRunning(true);
-					break;
+					return Running;
 				case NSTOP:
 					return WaitingForPickupStop;
 				case ESTOP:
@@ -122,9 +123,13 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 
 	@Override
 	public boolean execute(ConveyorBeltInput input) {
-		states oldstate = currentState;
+		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
-		return oldstate != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	@Override

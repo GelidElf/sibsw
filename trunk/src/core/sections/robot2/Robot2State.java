@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.utilities.log.Logger;
 
 
 public class Robot2State implements State<Robot2Input> {
@@ -149,7 +150,11 @@ public class Robot2State implements State<Robot2Input> {
 	public boolean execute(Robot2Input input) {
 		states oldState = currentState;
 		currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public Robot2State(Robot2Automata automata) {

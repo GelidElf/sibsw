@@ -7,6 +7,7 @@ import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ParallelPort.Utils.ParallelPortException;
+import core.utilities.log.Logger;
 
 public class Robot1State implements State<Robot1Input> {
 
@@ -32,8 +33,7 @@ public class Robot1State implements State<Robot1Input> {
 				case DeliverAxis:
 					try {
 						currentState.getAutomata().getManager()
-								.setValueByNameAsBoolean(Robot1Manager.DELIVER_AXIS, true);
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+						.setValueByNameAsBoolean(Robot1Manager.DELIVER_AXIS, true);
 					} catch (ParallelPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -42,8 +42,7 @@ public class Robot1State implements State<Robot1Input> {
 				case DeliverGear:
 					try {
 						currentState.getAutomata().getManager()
-								.setValueByNameAsBoolean(Robot1Manager.DELIVER_GEAR, true);
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+						.setValueByNameAsBoolean(Robot1Manager.DELIVER_GEAR, true);
 					} catch (ParallelPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -52,8 +51,7 @@ public class Robot1State implements State<Robot1Input> {
 				case DeliverAssembledPiece:
 					try {
 						currentState.getAutomata().getManager()
-								.setValueByNameAsBoolean(Robot1Manager.DELIVER_ASSEMBLED, true);
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot1Manager.ENABLE, true);
+						.setValueByNameAsBoolean(Robot1Manager.DELIVER_ASSEMBLED, true);
 					} catch (ParallelPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -194,7 +192,11 @@ public class Robot1State implements State<Robot1Input> {
 	public boolean execute(Robot1Input input) {
 		states oldState = currentState;
 		currentState = (states) currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public Robot1State(Robot1Automata automata) {

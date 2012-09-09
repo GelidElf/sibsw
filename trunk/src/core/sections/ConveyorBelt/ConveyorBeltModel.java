@@ -49,6 +49,7 @@ public class ConveyorBeltModel implements AutomataModel<ConveyorBeltInput, Conve
 	@Override
 	public void setAutomata(AutomataContainer<ConveyorBeltInput, ConveyorBeltState, ? extends AutomataModel<ConveyorBeltInput, ConveyorBeltState>> automata) {
 		currentState = new ConveyorBeltState((ConveyorBeltAutomata) automata);
+		notifyObservers();
 	}
 
 }

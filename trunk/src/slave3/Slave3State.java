@@ -9,6 +9,7 @@ import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
 import core.sections.QualityStation.QualityStationInput;
+import core.utilities.log.Logger;
 
 public class Slave3State implements State<Slave3Input> {
 
@@ -98,7 +99,11 @@ public class Slave3State implements State<Slave3Input> {
 	public boolean execute(Slave3Input input) {
 		states oldState = currentState;
 		currentState = currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public Slave3Automata getAutomata() {

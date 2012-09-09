@@ -19,7 +19,7 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	public ConveyorBeltAutomata(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager, Enum<?> jobDone) {
 		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
-		this.setName("ConveyorBeltAutomataThread");
+		this.setName("ConveyorBeltAutomata");
 		getModel().setAutomata(this);
 		this.manager = manager;
 		manager.registerObserver(this);
@@ -62,20 +62,10 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (this.manager.isSensorInitial()) {
-			feedInput(ConveyorBeltInput.loadSensorTrue, false);
-		}
-		if (this.manager.isSensorFinish()) {
-			father.feedInputObject(jobDone, false);
-		}
-		if (!this.manager.isSensorFinish()) {
-			feedInput(ConveyorBeltInput.unloadSensorFalse, false);
-		}
-		if (this.manager.isSensorUnloadMax()) {
-			feedInput(ConveyorBeltInput.unloadSensorTrueMax, false);
-		}
-		if (this.manager.isEmpty()) {
-			feedInput(ConveyorBeltInput.empty, false);
+		if (this.manager.getModifiedGroupName().equals(ConveyorBeltManager.SENSOR_UNLOAD)){
+			if (this.manager.isSensorFinish()) {
+				feedInput(ConveyorBeltInput.unloadSensorTrue, false);
+			}
 		}
 	}
 
@@ -158,10 +148,10 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		// size of piece is 0.1 m, length comes in meters
 		try {
 			int value = (int) (length / 0.1);
-		    manager.setValueByName(ConveyorBeltManager.CAPACITY, value);
+			manager.setValueByName(ConveyorBeltManager.CAPACITY, value);
 		} catch (ParallelPortException e) {
-		   // TODO Auto-generated catch block
-		   e.printStackTrace();
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

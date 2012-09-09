@@ -5,6 +5,7 @@ import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
 import core.sections.weldingstation.WeldingInput;
+import core.utilities.log.Logger;
 
 public class Slave2State implements State<Slave2Input> {
 
@@ -91,7 +92,11 @@ public class Slave2State implements State<Slave2Input> {
 	public boolean execute(Slave2Input input) {
 		states oldState = currentState;
 		currentState = currentState.executeInternal(this, input);
-		return oldState != currentState;
+		boolean changedState = oldState != currentState;
+		if (changedState){
+			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
+		}
+		return changedState;
 	}
 
 	public Slave2Automata getAutomata() {

@@ -49,6 +49,7 @@ public class AssemblyStationModel implements AutomataModel<AssemblyStationInput,
 	@Override
 	public void setAutomata(AutomataContainer<AssemblyStationInput, AssemblyStationState, ? extends AutomataModel<AssemblyStationInput, AssemblyStationState>> automata) {
 		currentState = new AssemblyStationState((AssemblyStationAutomata) automata);
+		notifyObservers();
 	}
 
 }
