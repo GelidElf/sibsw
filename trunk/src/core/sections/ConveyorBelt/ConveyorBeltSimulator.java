@@ -22,19 +22,20 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private int realCapacity = 0;
 	private int realLength = 0;
 	private int quantity = 0;
-	
+
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.setName("ConveyorBeltSimulatorThread");
 		this.manager = manager;
 		contents = new int[this.manager.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
 		cleanContentsOfBelt();
+		this.manager.registerObserver(this);
 	}
 
 	/**
 	 * 
 	 */
 	private void move() {
-		//printContents("before:");
+		printContents("before:");
 		for (int i = 1; i < contents.length; i++) {
 			contents[i - 1] = contents[i];
 		}
@@ -46,7 +47,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//printContents("after:");
+		printContents("after:");
 	}
 
 	private void printContents(String text) {
@@ -64,7 +65,6 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		while (true) {
 			try {
 				//int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
-				updateCapacity();
 				if (running()) {
 					if (initialSensorActive()) {
 						setElementInInitialPositionInContents();
@@ -111,8 +111,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		return contents.length > 0;
 	}
 
-	private void updateCapacity() throws ParallelPortException {
-		int newCapacity = manager.getValueByName(ConveyorBeltManager.CAPACITY);
+	private void updateCapacity(int newCapacity) throws ParallelPortException {
 		if (newCapacity != capacity) {
 			capacity = newCapacity;
 			int residualCuantity = changeCapacity(newCapacity);
@@ -182,18 +181,24 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if( (manager.getModifiedGroupName().equals(ConveyorBeltManager.SPEED)) || 
-				(manager.getModifiedGroupName().equals(ConveyorBeltManager.CAPACITY)) || 
-				(manager.getModifiedGroupName().equals(ConveyorBeltManager.LENGTH)) ){
+		if( (this.manager.getModifiedGroupName().equals(ConveyorBeltManager.SPEED)) ||
+				(this.manager.getModifiedGroupName().equals(ConveyorBeltManager.CAPACITY)) ||
+				(this.manager.getModifiedGroupName().equals(ConveyorBeltManager.LENGTH)) ){
 			int valorPinVelocidad = manager.getBitGroupValue(ConveyorBeltManager.SPEED);
 			realSpeed = (valorPinVelocidad * 5) + 20;
 			int valorPinCapacidad = manager.getBitGroupValue(ConveyorBeltManager.CAPACITY);
 			realCapacity = valorPinCapacidad + 50;
+			try {
+				updateCapacity(realCapacity);
+			} catch (ParallelPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			int valorPinLongitud = manager.getBitGroupValue(ConveyorBeltManager.LENGTH);
 			realLength = valorPinLongitud + 10;
 			espacioDePieza = realLength / realCapacity;
-			tiempoEsperaEntrePiezas = espacioDePieza / realSpeed;
-		}	
+			tiempoEsperaEntrePiezas = espacioDePieza / realSpeed / 60;
+		}
 	}
 
 

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import core.configurationParameters.ConfigurationParametersClass;
+import core.file.ConfigurationParametersFileReader;
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.ReportValues;
@@ -48,6 +50,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		robot2Model = new Robot2Model();
 		// TODO: must read the file of reports to restore old values
 		currentReport = new Report();
+		currentScadaConfiguration = new ConfigurationParametersFileReader("ConfigurationParameters.ini").readConfiguration();
 	}
 
 	private Map<CommunicationIds, Boolean> connected = new HashMap<CommunicationIds, Boolean>();
@@ -64,6 +67,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	private Map<CommunicationIds, String> consoles = new HashMap<CommunicationIds, String>();
 	private MasterState currentState;
 	private transient Report currentReport;
+	private ConfigurationParametersClass currentScadaConfiguration;
 
 	public void setModel(CommunicationIds id, AutomataModel<?, ?> model) {
 		if (model != null) {
@@ -146,6 +150,20 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		String text = consoles.get(id);
 		consoles.put(id,"");
 		return text;
+	}
+
+	/**
+	 * @param currentScadaConfiguration the currentScadaConfiguration to set
+	 */
+	public void setCurrentScadaConfiguration(ConfigurationParametersClass currentScadaConfiguration) {
+		this.currentScadaConfiguration = currentScadaConfiguration;
+	}
+
+	/**
+	 * @return the currentScadaConfiguration
+	 */
+	public ConfigurationParametersClass getCurrentScadaConfiguration() {
+		return currentScadaConfiguration;
 	}
 
 }

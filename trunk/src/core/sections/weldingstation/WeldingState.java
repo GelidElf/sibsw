@@ -1,9 +1,8 @@
 package core.sections.weldingstation;
 
-import slave1.Slave1Automata;
-import slave1.Slave1Input;
+import slave2.Slave2Automata;
+import slave2.Slave2Input;
 import core.gui.satuspanel.ModeEnum;
-import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.utilities.log.Logger;
@@ -18,6 +17,8 @@ public class WeldingState implements State<WeldingInput> {
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
 				case START:
+					Slave2Automata father = (Slave2Automata) currentState.getAutomata().getFather();
+					father.feedInput(Slave2Input.WS_EMPTY, false);
 					return Idle;
 				}
 				return super.executeInternal(currentState, input);
@@ -52,12 +53,13 @@ public class WeldingState implements State<WeldingInput> {
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
 				case JobDone:
-					AutomataContainer<?, ?, ?> father = currentState.getAutomata().getFather();
-					if (father instanceof Slave1Automata) {
-						Slave1Automata slave1 = (Slave1Automata) father;
-						slave1.feedInput(Slave1Input.AXIS_IN_AS, false);
-					}
+					Slave2Automata father = (Slave2Automata) currentState.getAutomata().getFather();
+					father.feedInput(Slave2Input.WELDMENT_READY, false);
 					return Idle;
+				case NSTOP:
+					return DeliveringWeldmentStop;
+				case ESTOP:
+					return DeliveringWeldmentStop;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -68,6 +70,31 @@ public class WeldingState implements State<WeldingInput> {
 				switch (input) {
 				case RESTART:
 					return DeliveringWeldment;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForWeldmentToBeRemoved(ModeEnum.IDLE){
+			@Override
+			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
+				switch (input) {
+				case WeldmentRemoved:
+					Slave2Automata father = (Slave2Automata) currentState.getAutomata().getFather();
+					father.feedInput(Slave2Input.WS_EMPTY, false);
+					return Idle;
+				case NSTOP:
+					return WaitingForWeldmentToBeRemovedStop;
+				case ESTOP:
+					return WaitingForWeldmentToBeRemovedStop;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},WaitingForWeldmentToBeRemovedStop(ModeEnum.NSTOP){
+			@Override
+			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
+				switch (input) {
+				case RESTART:
+					return WaitingForWeldmentToBeRemoved;
 				}
 				return super.executeInternal(currentState, input);
 			}

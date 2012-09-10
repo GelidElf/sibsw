@@ -144,18 +144,22 @@ public class ParallelPortManager {
 
 	public synchronized void setBit(int position) {
 		state.setValue(position, true);
+		update();
 	}
 
 	public synchronized void resetBit(int position) {
 		state.setValue(position, false);
+		update();
 	}
 
 	public synchronized void setBitTo(int position, boolean value) {
 		state.setValue(position, value);
+		update();
 	}
 
 	public synchronized void setBitTo(int position, int value) {
 		state.setValue(position, (value == 1));
+		update();
 	}
 
 	/**
@@ -175,6 +179,7 @@ public class ParallelPortManager {
 
 	public synchronized void setBitGroupValue(String name, int value) throws ParallelPortException {
 		_connectorNames.get(name).setValue(value);
+		update();
 	}
 
 	public synchronized int getBitGroupValue(String name) {
@@ -279,7 +284,7 @@ public class ParallelPortManager {
 	 * Returns the boolean value of the group, if this group has only one element
 	 * @param groupName the pin group name
 	 * @return TRUE if the pin group name value is 1, false if is 0
-	 * @throws ParallelPortException 
+	 * @throws ParallelPortException
 	 */
 	public Boolean getValueByNameAsBoolean(String groupName) throws ParallelPortException {
 		if (_connectorNames.get(groupName).length() != 1) {

@@ -104,6 +104,15 @@ public class MultipleInboxCommunicationManager implements CommunicationManager, 
 		connections.put(s, c);
 		Logger.println(String.format("%s connected", s));
 		startConnection(c);
+		sendConfigurationParameters(s);
+	}
+
+	private void sendConfigurationParameters(CommunicationIds id) {
+		Message configurationMessage = new Message("InitialConfiguration", id, true, CommunicationMessageType.CONFIGURATION, null);
+		for (Attribute atribute : MasterModel.getInstance().getCurrentScadaConfiguration().getAsAttributeList()){
+			configurationMessage.addAttribute(atribute);
+		}
+		sendMessage(configurationMessage);
 	}
 
 	/**
