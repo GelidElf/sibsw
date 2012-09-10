@@ -41,7 +41,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	 * 
 	 */
 	private void move() {
-		printContents("before:");
+		//		printContents("before:");
 		for (int i = 1; i < contents.length; i++) {
 			contents[i - 1] = contents[i];
 		}
@@ -53,7 +53,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		printContents("after:");
+		//		printContents("after:");
 	}
 
 	private void printContents(String text) {
