@@ -16,11 +16,12 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private ConveyorBeltManager manager = null;
 	private int capacity = 0;
 	private int numberOfElements = 0;
-	public double velocidadReal = 0;
-	public double espacioDePieza = 0;
-	int realSpeed = 0;
-	int realCapacity = 0;
-	int realLength = 0;
+	private double tiempoEsperaEntrePiezas = 0;
+	private double espacioDePieza = 0;
+	private int realSpeed = 0;
+	private int realCapacity = 0;
+	private int realLength = 0;
+	private int quantity = 0;
 	
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.setName("ConveyorBeltSimulatorThread");
@@ -57,18 +58,12 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		Logger.println(builder.toString());
 	}
 
-	
-	/*
-	 *  el run tiene que hacer
-	 * como minumo
-	 * calcular el tiempo que tiene que dormir el hilo en cada ejkecuccion
-	 * usando para ello la longitud, la cantidad y la velocidad
-	 */
+
 	@Override
 	public void run() {
 		while (true) {
 			try {
-				int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
+				//int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
 				updateCapacity();
 				if (running()) {
 					if (initialSensorActive()) {
@@ -86,7 +81,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 						}
 					}
 				}
-				sleepExecution(velocity);
+				sleepExecution();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ParallelPortException e) {
@@ -95,17 +90,15 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		}
 	}
 
-	private void sleepExecution(int velocity) throws InterruptedException {
-		if (velocity == 0) {
-			Logger.println("Speed set to 0");
-		} else {
-			sleep(1000 / velocity);
-		}
+	private void sleepExecution() throws InterruptedException {
+		sleep(new Double(tiempoEsperaEntrePiezas * 1000).longValue());
+
 	}
 
 	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta() throws ParallelPortException {
 		if (positionOccupied(0)) {
-			manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
+			quantity = quantity - 1;
+			//manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) - 1);
 			numberOfElements--;
 		}
 	}
@@ -123,7 +116,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		if (newCapacity != capacity) {
 			capacity = newCapacity;
 			int residualCuantity = changeCapacity(newCapacity);
-			manager.setValueByName(ConveyorBeltManager.QUANTITY, residualCuantity);
+			//manager.setValueByName(ConveyorBeltManager.QUANTITY, residualCuantity);
+			quantity = residualCuantity;
 		}
 	}
 
@@ -140,7 +134,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	}
 
 	private void increaseElementCountByOne() throws ParallelPortException {
-		manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) + 1);
+		//manager.setValueByName(ConveyorBeltManager.QUANTITY, manager.getValueByName(ConveyorBeltManager.QUANTITY) + 1);
+		quantity = quantity + 1;
 		numberOfElements++;
 	}
 
@@ -197,8 +192,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			int valorPinLongitud = manager.getBitGroupValue(ConveyorBeltManager.LENGTH);
 			realLength = valorPinLongitud + 10;
 			espacioDePieza = realLength / realCapacity;
+			tiempoEsperaEntrePiezas = espacioDePieza / realSpeed;
 		}	
-
 	}
 
 
