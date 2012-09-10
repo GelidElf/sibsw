@@ -144,7 +144,7 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		return jobDone;
 	}
 
-	public void setLength(int length) {
+	/*public void setLength(int length) {
 		// size of piece is 0.1 m, length comes in meters
 		try {
 			int value = (int) (length / 0.1);
@@ -153,6 +153,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }

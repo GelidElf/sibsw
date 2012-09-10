@@ -18,7 +18,7 @@ public class WeldingManager extends ParallelPortManager {
 		try {
 			this.setBitGroup(WeldingManager.DELIVER_WELDMENT, 0, 0);
 			this.setBitGroup(WeldingManager.ENABLE, 1, 1);
-			this.setBitGroup(WeldingManager.TIME_TO_WELD, 2, 4);
+			this.setBitGroup(WeldingManager.TIME_TO_WELD, 2, 7);
 			// continue
 		} catch (ParallelPortException e) {
 			Logger.println(e.getMessage());
