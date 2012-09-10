@@ -30,7 +30,6 @@ public class ConnectionManager extends Thread {
 	private CommunicationManager commManager = null;
 	private CommunicationIds owner = null;
 	private CommunicationIds peer = null;
-	private int messagesToRead = 0;
 	private boolean keepRunning = true;
 
 	public ConnectionManager(Socket socket, CommunicationManager cm, Inbox inbox) {
@@ -218,21 +217,6 @@ public class ConnectionManager extends Thread {
 			Logger.println("Error leyendo mensaje: " + e.getMessage());
 			return null;
 		}
-	}
-
-	/**
-	 * @return the messagesToRead
-	 */
-	public int getMessagesToRead() {
-		return messagesToRead;
-	}
-
-	/**
-	 * @param messagesToRead
-	 *            the messagesToRead to set
-	 */
-	public void setMessagesToRead(int messagesToRead) {
-		this.messagesToRead = messagesToRead;
 	}
 
 	/**

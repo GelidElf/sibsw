@@ -28,7 +28,7 @@ extends Thread {
 
 	@Override
 	public void run() {
-		sendPeerInformation(); // TODO: Comprobar este cambio!
+		sendPeerInformation();
 		super.run();
 		while (true) {
 			try {

@@ -15,18 +15,22 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import master.MasterAutomata;
 import master.MasterInput;
 import master.MasterModel;
 import slave1.Slave1Model;
 import slave2.Slave2Model;
+import core.configurationParameters.ConfigurationParametersClass;
 import core.file.ConfigurationFileReader;
-import core.file.ConfigurationParametersFileReader;
 import core.gui.mainview.MainView;
 import core.gui.satuspanel.StatusPanel;
 import core.messages.Message;
@@ -34,17 +38,13 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.messages.enums.ConfigurationParameters;
 import core.model.ModelListener;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ChangeEvent;
 
 public class interfaz implements ModelListener {
 
 	private MasterAutomata master;
 
 	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
-	public ConfigurationParametersFileReader confIniRead = new ConfigurationParametersFileReader("ConfigurationParameters.ini");
+	private ConfigurationParametersClass currentScadaConfiguration;
 
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
@@ -73,7 +73,7 @@ public class interfaz implements ModelListener {
 	private JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
-	
+
 	/**
 	 * Fill the map with the configuration parameter and its value from the
 	 * interface
@@ -112,6 +112,7 @@ public class interfaz implements ModelListener {
 	 */
 	public interfaz(MasterAutomata master) {
 		this.master = master;
+		currentScadaConfiguration = MasterModel.getInstance().getCurrentScadaConfiguration();
 		initialize();
 		MasterModel.getInstance().addListener(this);
 		updateOnModelChange();
@@ -283,36 +284,36 @@ public class interfaz implements ModelListener {
 		lblRobot.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblRobot.setBounds(110, 11, 115, 29);
 		Master.add(lblRobot);
-		
+
 		final JSpinner time_to_pick_ass = new JSpinner();
 		time_to_pick_ass.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, (Integer)time_to_pick_ass.getModel().getValue());
 			}
 		});
-		time_to_pick_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_ASSEMBLED).intValue()), 5, 15, 1));
+		time_to_pick_ass.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.PICK_TIME_ASSEMBLED).intValue()), 5, 15, 1));
 		time_to_pick_ass.setBounds(307, 56, 42, 20);
 		Master.add(time_to_pick_ass);
 		fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, (Integer)time_to_pick_ass.getModel().getValue());
-		
-						
+
+
 		final JSpinner t_trans_place_ass = new JSpinner();
 		t_trans_place_ass.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS, (Integer)t_trans_place_ass.getModel().getValue());
 			}
 		});
-		t_trans_place_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS).intValue()), 5, 15, 1));
+		t_trans_place_ass.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS).intValue()), 5, 15, 1));
 		t_trans_place_ass.setBounds(307, 95, 42, 20);
 		Master.add(t_trans_place_ass);
-		
+
 		final JSpinner t_trans_place_wel = new JSpinner();
 		t_trans_place_wel.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED, (Integer)t_trans_place_wel.getModel().getValue());
 			}
 		});
-		t_trans_place_wel.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED).intValue()), 5, 15, 1));
+		t_trans_place_wel.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED).intValue()), 5, 15, 1));
 		t_trans_place_wel.setBounds(307, 134, 42, 20);
 		Master.add(t_trans_place_wel);
 
@@ -342,34 +343,34 @@ public class interfaz implements ModelListener {
 		lblTimeToTransport_3.setBounds(5, 109, 290, 15);
 		lblTimeToTransport_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_3);
-		
+
 		final JSpinner t_pick_axis_gear = new JSpinner();
 		t_pick_axis_gear.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.PICK_TIME_AXIS_GEAR, (Integer)t_pick_axis_gear.getModel().getValue());
 			}
 		});
-		t_pick_axis_gear.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
+		t_pick_axis_gear.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.PICK_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
 		t_pick_axis_gear.setBounds(315, 37, 41, 20);
 		Robot1.add(t_pick_axis_gear);
-		
+
 		final JSpinner t_trans_place_axis_gear = new JSpinner();
 		t_trans_place_axis_gear.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR, (Integer)t_trans_place_axis_gear.getModel().getValue());
 			}
 		});
-		t_trans_place_axis_gear.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
+		t_trans_place_axis_gear.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
 		t_trans_place_axis_gear.setBounds(315, 69, 41, 20);
 		Robot1.add(t_trans_place_axis_gear);
-		
+
 		final JSpinner t_trans_place_ass_p = new JSpinner();
 		t_trans_place_ass_p.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED, (Integer)t_trans_place_ass_p.getModel().getValue());
 			}
 		});
-		t_trans_place_ass_p.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED).intValue()), 5, 15, 1));
+		t_trans_place_ass_p.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED).intValue()), 5, 15, 1));
 		t_trans_place_ass_p.setBounds(315, 107, 41, 20);
 		Robot1.add(t_trans_place_ass_p);
 
@@ -391,34 +392,34 @@ public class interfaz implements ModelListener {
 		lblCapacity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCapacity.setBounds(10, 94, 73, 22);
 		CBAxis.add(lblCapacity);
-				
+
 		final JSpinner cb_axis_length = new JSpinner();
 		cb_axis_length.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_LENGTH, (Integer)cb_axis_length.getModel().getValue());
 			}
 		});
-		cb_axis_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_LENGTH).intValue()), 10, 65, 1));
+		cb_axis_length.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_AXIS_LENGTH).intValue()), 10, 65, 1));
 		cb_axis_length.setBounds(199, 30, 43, 20);
 		CBAxis.add(cb_axis_length);
-		
+
 		final JSpinner cb_axis_speed = new JSpinner();
 		cb_axis_speed.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_SPEED, (Integer)cb_axis_speed.getModel().getValue());
 			}
 		});
-		cb_axis_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_SPEED).intValue()), 20, 55, 5));
+		cb_axis_speed.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_AXIS_SPEED).intValue()), 20, 55, 5));
 		cb_axis_speed.setBounds(199, 63, 43, 20);
 		CBAxis.add(cb_axis_speed);
-		
+
 		final JSpinner cb_axis_capa = new JSpinner();
 		cb_axis_capa.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_AXIS_CAPACITY, (Integer)cb_axis_capa.getModel().getValue());
 			}
 		});
-		cb_axis_capa.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_CAPACITY).intValue()), 50, 64, 1));
+		cb_axis_capa.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_AXIS_CAPACITY).intValue()), 50, 64, 1));
 		cb_axis_capa.setBounds(199, 96, 43, 20);
 		CBAxis.add(cb_axis_capa);
 
@@ -440,34 +441,34 @@ public class interfaz implements ModelListener {
 		label_2.setBounds(10, 100, 45, 15);
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBGears.add(label_2);
-		
+
 		final JSpinner cb_gears_length = new JSpinner();
 		cb_gears_length.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_LENGTH, (Integer)cb_gears_length.getModel().getValue());
 			}
 		});
-		cb_gears_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_LENGTH).intValue()), 10, 65, 1));
+		cb_gears_length.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_GEARS_LENGTH).intValue()), 10, 65, 1));
 		cb_gears_length.setBounds(196, 36, 45, 20);
 		CBGears.add(cb_gears_length);
-		
+
 		final JSpinner cb_gears_speed = new JSpinner();
 		cb_gears_speed.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_SPEED, (Integer)cb_gears_speed.getModel().getValue());
 			}
 		});
-		cb_gears_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_SPEED).intValue()), 20, 55, 5));
+		cb_gears_speed.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_GEARS_SPEED).intValue()), 20, 55, 5));
 		cb_gears_speed.setBounds(196, 70, 45, 20);
 		CBGears.add(cb_gears_speed);
-		
+
 		final JSpinner cb_gears_capa = new JSpinner();
 		cb_gears_capa.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_GEARS_CAPACITY, (Integer)cb_gears_capa.getModel().getValue());
 			}
 		});
-		cb_gears_capa.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_CAPACITY).intValue()), 50, 64, 1));
+		cb_gears_capa.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_GEARS_CAPACITY).intValue()), 50, 64, 1));
 		cb_gears_capa.setBounds(196, 98, 45, 20);
 		CBGears.add(cb_gears_capa);
 
@@ -479,14 +480,14 @@ public class interfaz implements ModelListener {
 		lblActivationTimeMounting.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeMounting.setBounds(10, 22, 319, 15);
 		AssemblingStation.add(lblActivationTimeMounting);
-		
+
 		final JSpinner act_t_ass = new JSpinner();
 		act_t_ass.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_AS, (Integer)act_t_ass.getModel().getValue());
 			}
 		});
-		act_t_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_AS).intValue()), 3, 15, 1));
+		act_t_ass.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.ACTIVATION_TIME_AS).intValue()), 3, 15, 1));
 		act_t_ass.setBounds(326, 20, 42, 20);
 		AssemblingStation.add(act_t_ass);
 
@@ -508,34 +509,34 @@ public class interfaz implements ModelListener {
 		lblActivationTimeAnd.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeAnd.setBounds(10, 115, 324, 15);
 		Slave2.add(lblActivationTimeAnd);
-		
+
 		final JSpinner cb_trans_length = new JSpinner();
 		cb_trans_length.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_TRANSFER_LENGTH, (Integer)cb_trans_length.getModel().getValue());
 			}
 		});
-		cb_trans_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_LENGTH).intValue()), 10, 65, 1));
+		cb_trans_length.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_TRANSFER_LENGTH).intValue()), 10, 65, 1));
 		cb_trans_length.setBounds(254, 38, 44, 20);
 		Slave2.add(cb_trans_length);
-		
+
 		final JSpinner cb_trans_speed = new JSpinner();
 		cb_trans_speed.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_TRANSFER_SPEED, (Integer)cb_trans_speed.getModel().getValue());
 			}
 		});
-		cb_trans_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_SPEED).intValue()), 20, 55, 5));
+		cb_trans_speed.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_TRANSFER_SPEED).intValue()), 20, 55, 5));
 		cb_trans_speed.setBounds(254, 76, 44, 20);
 		Slave2.add(cb_trans_speed);
-		
+
 		final JSpinner act_t_welding = new JSpinner();
 		act_t_welding.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_WS, (Integer)act_t_welding.getModel().getValue());
 			}
 		});
-		act_t_welding.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_WS).intValue()), 30, 60, 1));
+		act_t_welding.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.ACTIVATION_TIME_WS).intValue()), 30, 60, 1));
 		act_t_welding.setBounds(254, 113, 44, 20);
 		Slave2.add(act_t_welding);
 
@@ -556,14 +557,14 @@ public class interfaz implements ModelListener {
 		lblActivationTimeQuality.setHorizontalAlignment(SwingConstants.LEFT);
 		lblActivationTimeQuality.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		QCS.add(lblActivationTimeQuality);
-		
+
 		final JSpinner act_t_qcs = new JSpinner();
 		act_t_qcs.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.ACTIVATION_TIME_QCS, (Integer)act_t_qcs.getModel().getValue());
 			}
 		});
-		act_t_qcs.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_QCS).intValue()), 5, 30, 1));
+		act_t_qcs.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.ACTIVATION_TIME_QCS).intValue()), 5, 30, 1));
 		act_t_qcs.setBounds(298, 24, 49, 20);
 		QCS.add(act_t_qcs);
 
@@ -581,24 +582,24 @@ public class interfaz implements ModelListener {
 		lblLengthmeters.setBounds(-20, 52, 163, 15);
 		lblLengthmeters.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBOk.add(lblLengthmeters);
-		
+
 		final JSpinner cb_ok_speed = new JSpinner();
 		cb_ok_speed.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_OK_SPEED, (Integer)cb_ok_speed.getModel().getValue());
 			}
 		});
-		cb_ok_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_SPEED).intValue()), 20, 55, 5));
+		cb_ok_speed.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_OK_SPEED).intValue()), 20, 55, 5));
 		cb_ok_speed.setBounds(200, 22, 42, 20);
 		CBOk.add(cb_ok_speed);
-		
+
 		final JSpinner cb_ok_length = new JSpinner();
 		cb_ok_length.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_OK_LENGTH, (Integer)cb_ok_length.getModel().getValue());
 			}
 		});
-		cb_ok_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_LENGTH).intValue()), 10, 65, 1));
+		cb_ok_length.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_OK_LENGTH).intValue()), 10, 65, 1));
 		cb_ok_length.setBounds(200, 50, 42, 20);
 		CBOk.add(cb_ok_length);
 
@@ -611,14 +612,14 @@ public class interfaz implements ModelListener {
 		label_5.setHorizontalAlignment(SwingConstants.LEFT);
 		label_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBWrong.add(label_5);
-		
+
 		final JSpinner cb_wrong_length = new JSpinner();
 		cb_wrong_length.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent arg0) {
 				fillMap(ConfigurationParameters.CB_WRONG_LENGTH, (Integer)cb_wrong_length.getModel().getValue());
 			}
 		});
-		cb_wrong_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_WRONG_LENGTH).intValue()), 10, 65, 1));
+		cb_wrong_length.setModel(new SpinnerNumberModel((currentScadaConfiguration.getMap().get(ConfigurationParameters.CB_WRONG_LENGTH).intValue()), 10, 65, 1));
 		cb_wrong_length.setBounds(151, 22, 49, 20);
 		CBWrong.add(cb_wrong_length);
 
