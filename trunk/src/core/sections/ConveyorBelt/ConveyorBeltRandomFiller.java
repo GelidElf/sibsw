@@ -2,6 +2,7 @@ package core.sections.ConveyorBelt;
 
 import java.util.Random;
 
+@Deprecated
 public class ConveyorBeltRandomFiller extends Thread {
 
 	private ConveyorBeltManager manager;
