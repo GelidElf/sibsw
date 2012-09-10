@@ -177,22 +177,24 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			try {
 				switch (parameter) {
 				case CB_AXIS_LENGTH:
-					axisBelt.setLength((Integer) attribute.getValue());
-					break;
-				case CB_GEARS_LENGTH:
-					gearBelt.setLength((Integer) attribute.getValue());
+					//axisBelt.setLength((Integer) attribute.getValue());
+					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_AXIS_CAPACITY:
-					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
+					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
 					break;
 				case CB_AXIS_SPEED:
-					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
+					break;
+				case CB_GEARS_LENGTH:
+					//gearBelt.setLength((Integer) attribute.getValue());
+					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_GEARS_CAPACITY:
-					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, (Integer) attribute.getValue());
+					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
 					break;
 				case CB_GEARS_SPEED:
-					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_AS:
 					assemblyStation.getManager().setBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME, (Integer) attribute.getValue());
@@ -226,5 +228,21 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 	public Robot1Automata getRobot() {
 		return robot;
+	}
+	
+	private int getPinSpeed(int valorVelocidad){
+		int valorPinesSpeed = (valorVelocidad - 20) / 5;
+		return valorPinesSpeed;
+	}
+	
+
+	private int getPinCapacity(int valorCapacidad){
+		int valorPinesCap = (valorCapacidad - 50);
+		return valorPinesCap;
+	}
+	
+	private int getPinLength(int valorLength){
+		int valorPinesLen = (valorLength- 10);
+		return valorPinesLen;
 	}
 }

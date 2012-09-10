@@ -16,7 +16,12 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private ConveyorBeltManager manager = null;
 	private int capacity = 0;
 	private int numberOfElements = 0;
-
+	public double velocidadReal = 0;
+	public double espacioDePieza = 0;
+	int realSpeed = 0;
+	int realCapacity = 0;
+	int realLength = 0;
+	
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.setName("ConveyorBeltSimulatorThread");
 		this.manager = manager;
@@ -52,6 +57,13 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		Logger.println(builder.toString());
 	}
 
+	
+	/*
+	 *  el run tiene que hacer
+	 * como minumo
+	 * calcular el tiempo que tiene que dormir el hilo en cada ejkecuccion
+	 * usando para ello la longitud, la cantidad y la velocidad
+	 */
 	@Override
 	public void run() {
 		while (true) {
@@ -175,7 +187,19 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
+		if( (manager.getModifiedGroupName().equals(ConveyorBeltManager.SPEED)) || 
+				(manager.getModifiedGroupName().equals(ConveyorBeltManager.CAPACITY)) || 
+				(manager.getModifiedGroupName().equals(ConveyorBeltManager.LENGTH)) ){
+			int valorPinVelocidad = manager.getBitGroupValue(ConveyorBeltManager.SPEED);
+			realSpeed = (valorPinVelocidad * 5) + 20;
+			int valorPinCapacidad = manager.getBitGroupValue(ConveyorBeltManager.CAPACITY);
+			realCapacity = valorPinCapacidad + 50;
+			int valorPinLongitud = manager.getBitGroupValue(ConveyorBeltManager.LENGTH);
+			realLength = valorPinLongitud + 10;
+			espacioDePieza = realLength / realCapacity;
+		}	
 
 	}
+
 
 }

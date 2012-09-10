@@ -128,7 +128,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 			try {
 				switch (parameter) {
 				case CB_TRANSFER_LENGTH:
-					transferBelt.setLength((Integer) attribute.getValue());
+					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, (Integer) attribute.getValue());
 					break;
 				case CB_TRANSFER_SPEED:
 					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());

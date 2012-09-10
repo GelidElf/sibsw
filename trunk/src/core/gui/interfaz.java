@@ -2,7 +2,6 @@ package core.gui;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EtchedBorder;
 
@@ -36,6 +34,10 @@ import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.messages.enums.ConfigurationParameters;
 import core.model.ModelListener;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class interfaz implements ModelListener {
 
@@ -47,20 +49,6 @@ public class interfaz implements ModelListener {
 	private JFrame frame;
 	private Map<CommunicationIds, StatusPanel> statusPanels;
 	private MainView mainView;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_7;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField textField_10;
-	private JTextField textField_11;
-	private JTextField textField_12;
-	private JTextField textField_13;
 
 	private StatusPanel axisStatusPanel;
 	private StatusPanel gearStatusPanel;
@@ -71,12 +59,6 @@ public class interfaz implements ModelListener {
 	private StatusPanel qualityStatusPanel;
 	private StatusPanel weldingStatusPanel;
 	private StatusPanel robot1StatusPanel;
-	private JTextField textField_17;
-	private JTextField textField_18;
-	private JTextField textField_14;
-	private JTextField textField_15;
-	private JTextField textField_16;
-	private JTextField textField_19;
 
 	private JTextArea mainConsoleView;
 	private JTextArea masterConsoleView;
@@ -91,7 +73,7 @@ public class interfaz implements ModelListener {
 	private JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
-
+	
 	/**
 	 * Fill the map with the configuration parameter and its value from the
 	 * interface
@@ -286,61 +268,53 @@ public class interfaz implements ModelListener {
 		lblNewLabel.setBounds(10, 51, 215, 28);
 		Master.add(lblNewLabel);
 
-		textField = new JTextField();
-		textField.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_ASSEMBLED).toString());
-		textField.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, Integer.parseInt(textField.getText()));
-			}
-		});
-
-		textField.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField.setBounds(307, 55, 42, 20);
-		Master.add(textField);
-		textField.setColumns(10);
-
 		JLabel lblTimeToTransport = new JLabel("Time to transport and place assembled piece (sec.)");
 		lblTimeToTransport.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTimeToTransport.setBounds(10, 90, 287, 28);
 		Master.add(lblTimeToTransport);
-
-		textField_1 = new JTextField();
-		textField_1.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS).toString());
-		textField_1.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS, Integer.parseInt(textField_1.getText()));
-			}
-		});
-		textField_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_1.setColumns(10);
-		textField_1.setBounds(307, 94, 42, 20);
-		Master.add(textField_1);
 
 		JLabel lblTimeToTransport_1 = new JLabel("Time to transport and place welded piece (sec.)");
 		lblTimeToTransport_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblTimeToTransport_1.setBounds(10, 129, 287, 28);
 		Master.add(lblTimeToTransport_1);
 
-		textField_2 = new JTextField();
-		textField_2.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED).toString());
-		textField_2.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED, Integer.parseInt(textField_2.getText()));
-			}
-		});
-		textField_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_2.setColumns(10);
-		textField_2.setBounds(307, 133, 42, 20);
-		Master.add(textField_2);
-
 		JLabel lblRobot = new JLabel("Robot 2");
 		lblRobot.setHorizontalAlignment(SwingConstants.CENTER);
 		lblRobot.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblRobot.setBounds(110, 11, 115, 29);
 		Master.add(lblRobot);
+		
+		final JSpinner time_to_pick_ass = new JSpinner();
+		time_to_pick_ass.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, (Integer)time_to_pick_ass.getModel().getValue());
+			}
+		});
+		time_to_pick_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_ASSEMBLED).intValue()), 5, 15, 1));
+		time_to_pick_ass.setBounds(307, 56, 42, 20);
+		Master.add(time_to_pick_ass);
+		fillMap(ConfigurationParameters.PICK_TIME_ASSEMBLED, (Integer)time_to_pick_ass.getModel().getValue());
+		
+						
+		final JSpinner t_trans_place_ass = new JSpinner();
+		t_trans_place_ass.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS, (Integer)t_trans_place_ass.getModel().getValue());
+			}
+		});
+		t_trans_place_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS).intValue()), 5, 15, 1));
+		t_trans_place_ass.setBounds(307, 95, 42, 20);
+		Master.add(t_trans_place_ass);
+		
+		final JSpinner t_trans_place_wel = new JSpinner();
+		t_trans_place_wel.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED, (Integer)t_trans_place_wel.getModel().getValue());
+			}
+		});
+		t_trans_place_wel.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_WELDED).intValue()), 5, 15, 1));
+		t_trans_place_wel.setBounds(307, 134, 42, 20);
+		Master.add(t_trans_place_wel);
 
 		JPanel Slave1 = new JPanel();
 		configuration.addTab("Slave 1", null, Slave1, null);
@@ -359,54 +333,45 @@ public class interfaz implements ModelListener {
 		lblTimeToPick.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToPick);
 
-		textField_3 = new JTextField();
-		textField_3.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_AXIS_GEAR).toString());
-		textField_3.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.PICK_TIME_AXIS_GEAR, Integer.parseInt(textField_3.getText()));
-			}
-		});
-		textField_3.setBounds(319, 36, 51, 21);
-		textField_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_3.setColumns(10);
-		Robot1.add(textField_3);
-
 		JLabel lblTimeToTransport_2 = new JLabel("Time to transport and place axis/gear (sec.)");
 		lblTimeToTransport_2.setBounds(5, 71, 246, 15);
 		lblTimeToTransport_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_2);
 
-		textField_4 = new JTextField();
-		textField_4.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR).toString());
-		textField_4.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR, Integer.parseInt(textField_4.getText()));
-			}
-		});
-		textField_4.setBounds(319, 68, 51, 21);
-		textField_4.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_4.setColumns(10);
-		Robot1.add(textField_4);
-
 		JLabel lblTimeToTransport_3 = new JLabel("Time to transport and place assembled piece (sec.)");
 		lblTimeToTransport_3.setBounds(5, 109, 290, 15);
 		lblTimeToTransport_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Robot1.add(lblTimeToTransport_3);
-
-		textField_5 = new JTextField();
-		textField_5.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED).toString());
-		textField_5.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED, Integer.parseInt(textField_5.getText()));
+		
+		final JSpinner t_pick_axis_gear = new JSpinner();
+		t_pick_axis_gear.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.PICK_TIME_AXIS_GEAR, (Integer)t_pick_axis_gear.getModel().getValue());
 			}
 		});
-		textField_5.setBounds(319, 106, 51, 21);
-		textField_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		textField_5.setColumns(10);
-		Robot1.add(textField_5);
+		t_pick_axis_gear.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.PICK_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
+		t_pick_axis_gear.setBounds(315, 37, 41, 20);
+		Robot1.add(t_pick_axis_gear);
+		
+		final JSpinner t_trans_place_axis_gear = new JSpinner();
+		t_trans_place_axis_gear.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR, (Integer)t_trans_place_axis_gear.getModel().getValue());
+			}
+		});
+		t_trans_place_axis_gear.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_AXIS_GEAR).intValue()), 5, 15, 1));
+		t_trans_place_axis_gear.setBounds(315, 69, 41, 20);
+		Robot1.add(t_trans_place_axis_gear);
+		
+		final JSpinner t_trans_place_ass_p = new JSpinner();
+		t_trans_place_ass_p.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED, (Integer)t_trans_place_ass_p.getModel().getValue());
+			}
+		});
+		t_trans_place_ass_p.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.TRANSPORT_PLACE_TIME_ASSEMBLED).intValue()), 5, 15, 1));
+		t_trans_place_ass_p.setBounds(315, 107, 41, 20);
+		Robot1.add(t_trans_place_ass_p);
 
 		JPanel CBAxis = new JPanel();
 		tabbedPane_1.addTab("CB Axis", null, CBAxis, null);
@@ -426,42 +391,36 @@ public class interfaz implements ModelListener {
 		lblCapacity.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblCapacity.setBounds(10, 94, 73, 22);
 		CBAxis.add(lblCapacity);
-
-		textField_6 = new JTextField();
-		textField_6.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_LENGTH).toString());
-		textField_6.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_AXIS_LENGTH, Integer.parseInt(textField_6.getText()));
+				
+		final JSpinner cb_axis_length = new JSpinner();
+		cb_axis_length.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_LENGTH, (Integer)cb_axis_length.getModel().getValue());
 			}
 		});
-		textField_6.setBounds(185, 26, 47, 20);
-		CBAxis.add(textField_6);
-		textField_6.setColumns(10);
-
-		textField_7 = new JTextField();
-		textField_7.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_SPEED).toString());
-		textField_7.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_AXIS_SPEED, Integer.parseInt(textField_7.getText()));
+		cb_axis_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_LENGTH).intValue()), 10, 65, 1));
+		cb_axis_length.setBounds(199, 30, 43, 20);
+		CBAxis.add(cb_axis_length);
+		
+		final JSpinner cb_axis_speed = new JSpinner();
+		cb_axis_speed.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_SPEED, (Integer)cb_axis_speed.getModel().getValue());
 			}
 		});
-		textField_7.setColumns(10);
-		textField_7.setBounds(185, 63, 47, 20);
-		CBAxis.add(textField_7);
-
-		textField_8 = new JTextField();
-		textField_8.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_CAPACITY).toString());
-		textField_8.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_AXIS_CAPACITY, Integer.parseInt(textField_8.getText()));
+		cb_axis_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_SPEED).intValue()), 20, 55, 5));
+		cb_axis_speed.setBounds(199, 63, 43, 20);
+		CBAxis.add(cb_axis_speed);
+		
+		final JSpinner cb_axis_capa = new JSpinner();
+		cb_axis_capa.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_AXIS_CAPACITY, (Integer)cb_axis_capa.getModel().getValue());
 			}
 		});
-		textField_8.setColumns(10);
-		textField_8.setBounds(185, 96, 47, 20);
-		CBAxis.add(textField_8);
+		cb_axis_capa.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_AXIS_CAPACITY).intValue()), 50, 64, 1));
+		cb_axis_capa.setBounds(199, 96, 43, 20);
+		CBAxis.add(cb_axis_capa);
 
 		JPanel CBGears = new JPanel();
 		tabbedPane_1.addTab("CB Gears", null, CBGears, null);
@@ -481,42 +440,36 @@ public class interfaz implements ModelListener {
 		label_2.setBounds(10, 100, 45, 15);
 		label_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBGears.add(label_2);
-
-		textField_10 = new JTextField();
-		textField_10.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_CAPACITY).toString());
-		textField_10.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_GEARS_CAPACITY, Integer.parseInt(textField_10.getText()));
+		
+		final JSpinner cb_gears_length = new JSpinner();
+		cb_gears_length.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_LENGTH, (Integer)cb_gears_length.getModel().getValue());
 			}
 		});
-		textField_10.setBounds(198, 98, 45, 20);
-		textField_10.setColumns(10);
-		CBGears.add(textField_10);
-
-		textField_9 = new JTextField();
-		textField_9.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_SPEED).toString());
-		textField_9.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_GEARS_SPEED, Integer.parseInt(textField_9.getText()));
+		cb_gears_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_LENGTH).intValue()), 10, 65, 1));
+		cb_gears_length.setBounds(196, 36, 45, 20);
+		CBGears.add(cb_gears_length);
+		
+		final JSpinner cb_gears_speed = new JSpinner();
+		cb_gears_speed.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_SPEED, (Integer)cb_gears_speed.getModel().getValue());
 			}
 		});
-		textField_9.setBounds(198, 67, 45, 20);
-		textField_9.setColumns(10);
-		CBGears.add(textField_9);
-
-		textField_11 = new JTextField();
-		textField_11.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_LENGTH).toString());
-		textField_11.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_GEARS_LENGTH, Integer.parseInt(textField_11.getText()));
+		cb_gears_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_SPEED).intValue()), 20, 55, 5));
+		cb_gears_speed.setBounds(196, 70, 45, 20);
+		CBGears.add(cb_gears_speed);
+		
+		final JSpinner cb_gears_capa = new JSpinner();
+		cb_gears_capa.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_GEARS_CAPACITY, (Integer)cb_gears_capa.getModel().getValue());
 			}
 		});
-		textField_11.setBounds(198, 36, 45, 20);
-		textField_11.setColumns(10);
-		CBGears.add(textField_11);
+		cb_gears_capa.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_GEARS_CAPACITY).intValue()), 50, 64, 1));
+		cb_gears_capa.setBounds(196, 98, 45, 20);
+		CBGears.add(cb_gears_capa);
 
 		JPanel AssemblingStation = new JPanel();
 		AssemblingStation.setLayout(null);
@@ -526,18 +479,16 @@ public class interfaz implements ModelListener {
 		lblActivationTimeMounting.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeMounting.setBounds(10, 22, 319, 15);
 		AssemblingStation.add(lblActivationTimeMounting);
-
-		textField_17 = new JTextField();
-		textField_17.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_AS).toString());
-		textField_17.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.ACTIVATION_TIME_AS, Integer.parseInt(textField_17.getText()));
+		
+		final JSpinner act_t_ass = new JSpinner();
+		act_t_ass.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_AS, (Integer)act_t_ass.getModel().getValue());
 			}
 		});
-		textField_17.setColumns(10);
-		textField_17.setBounds(30, 48, 45, 20);
-		AssemblingStation.add(textField_17);
+		act_t_ass.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_AS).intValue()), 3, 15, 1));
+		act_t_ass.setBounds(326, 20, 42, 20);
+		AssemblingStation.add(act_t_ass);
 
 		JPanel Slave2 = new JPanel();
 		configuration.addTab("Slave 2", null, Slave2, null);
@@ -553,46 +504,40 @@ public class interfaz implements ModelListener {
 		lblCbSpeed.setBounds(10, 78, 123, 15);
 		Slave2.add(lblCbSpeed);
 
-		textField_12 = new JTextField();
-		textField_12.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_LENGTH).toString());
-		textField_12.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_TRANSFER_LENGTH, Integer.parseInt(textField_12.getText()));
-			}
-		});
-		textField_12.setBounds(157, 38, 46, 20);
-		Slave2.add(textField_12);
-		textField_12.setColumns(10);
-
-		textField_13 = new JTextField();
-		textField_13.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_SPEED).toString());
-		textField_13.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_TRANSFER_SPEED, Integer.parseInt(textField_12.getText()));
-			}
-		});
-		textField_13.setColumns(10);
-		textField_13.setBounds(157, 76, 46, 20);
-		Slave2.add(textField_13);
-
 		JLabel lblActivationTimeAnd = new JLabel("Activation time welding station(sec.)");
 		lblActivationTimeAnd.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblActivationTimeAnd.setBounds(10, 115, 324, 15);
 		Slave2.add(lblActivationTimeAnd);
-
-		textField_18 = new JTextField();
-		textField_18.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_WS).toString());
-		textField_18.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.ACTIVATION_TIME_WS, Integer.parseInt(textField_18.getText()));
+		
+		final JSpinner cb_trans_length = new JSpinner();
+		cb_trans_length.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_TRANSFER_LENGTH, (Integer)cb_trans_length.getModel().getValue());
 			}
 		});
-		textField_18.setColumns(10);
-		textField_18.setBounds(233, 113, 46, 20);
-		Slave2.add(textField_18);
+		cb_trans_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_LENGTH).intValue()), 10, 65, 1));
+		cb_trans_length.setBounds(254, 38, 44, 20);
+		Slave2.add(cb_trans_length);
+		
+		final JSpinner cb_trans_speed = new JSpinner();
+		cb_trans_speed.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_TRANSFER_SPEED, (Integer)cb_trans_speed.getModel().getValue());
+			}
+		});
+		cb_trans_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_TRANSFER_SPEED).intValue()), 20, 55, 5));
+		cb_trans_speed.setBounds(254, 76, 44, 20);
+		Slave2.add(cb_trans_speed);
+		
+		final JSpinner act_t_welding = new JSpinner();
+		act_t_welding.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_WS, (Integer)act_t_welding.getModel().getValue());
+			}
+		});
+		act_t_welding.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_WS).intValue()), 30, 60, 1));
+		act_t_welding.setBounds(254, 113, 44, 20);
+		Slave2.add(act_t_welding);
 
 		JPanel Slave3 = new JPanel();
 		configuration.addTab("Slave 3", null, Slave3, null);
@@ -604,80 +549,78 @@ public class interfaz implements ModelListener {
 
 		JPanel QCS = new JPanel();
 		tabbedPane_3.addTab("Quality Control Station", null, QCS, null);
+		QCS.setLayout(null);
 
 		JLabel lblActivationTimeQuality = new JLabel("Activation Time Quality Control Station (sec.)");
+		lblActivationTimeQuality.setBounds(12, 26, 248, 15);
 		lblActivationTimeQuality.setHorizontalAlignment(SwingConstants.LEFT);
 		lblActivationTimeQuality.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		QCS.add(lblActivationTimeQuality);
-
-		textField_14 = new JTextField();
-		textField_14.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_QCS).toString());
-		textField_14.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.ACTIVATION_TIME_QCS, Integer.parseInt(textField_14.getText()));
+		
+		final JSpinner act_t_qcs = new JSpinner();
+		act_t_qcs.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.ACTIVATION_TIME_QCS, (Integer)act_t_qcs.getModel().getValue());
 			}
 		});
-		QCS.add(textField_14);
-		textField_14.setColumns(10);
+		act_t_qcs.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.ACTIVATION_TIME_QCS).intValue()), 5, 30, 1));
+		act_t_qcs.setBounds(298, 24, 49, 20);
+		QCS.add(act_t_qcs);
 
 		JPanel CBOk = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) CBOk.getLayout();
-		flowLayout.setAlignment(FlowLayout.LEFT);
 		tabbedPane_3.addTab("CB Ok", null, CBOk, null);
 		tabbedPane_3.setEnabledAt(1, true);
+		CBOk.setLayout(null);
 
 		JLabel lblSpeedmetersminute = new JLabel("      Speed (meters/minute)  ");
+		lblSpeedmetersminute.setBounds(0, 24, 162, 15);
 		lblSpeedmetersminute.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBOk.add(lblSpeedmetersminute);
 
-		textField_15 = new JTextField();
-		textField_15.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_SPEED).toString());
-		textField_15.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_OK_SPEED, Integer.parseInt(textField_15.getText()));
-			}
-		});
-		textField_15.setColumns(10);
-		CBOk.add(textField_15);
-
 		JLabel lblLengthmeters = new JLabel("            Length (meters)      ");
+		lblLengthmeters.setBounds(-20, 52, 163, 15);
 		lblLengthmeters.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBOk.add(lblLengthmeters);
-
-		textField_16 = new JTextField();
-		textField_16.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_LENGTH).toString());
-		textField_16.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_OK_LENGTH, Integer.parseInt(textField_16.getText()));
+		
+		final JSpinner cb_ok_speed = new JSpinner();
+		cb_ok_speed.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_OK_SPEED, (Integer)cb_ok_speed.getModel().getValue());
 			}
 		});
-		textField_16.setColumns(10);
-		CBOk.add(textField_16);
+		cb_ok_speed.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_SPEED).intValue()), 20, 55, 5));
+		cb_ok_speed.setBounds(200, 22, 42, 20);
+		CBOk.add(cb_ok_speed);
+		
+		final JSpinner cb_ok_length = new JSpinner();
+		cb_ok_length.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_OK_LENGTH, (Integer)cb_ok_length.getModel().getValue());
+			}
+		});
+		cb_ok_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_OK_LENGTH).intValue()), 10, 65, 1));
+		cb_ok_length.setBounds(200, 50, 42, 20);
+		CBOk.add(cb_ok_length);
 
 		JPanel CBWrong = new JPanel();
-		FlowLayout flowLayout_1 = (FlowLayout) CBWrong.getLayout();
-		flowLayout_1.setAlignment(FlowLayout.LEFT);
 		tabbedPane_3.addTab("CB Wrong", null, CBWrong, null);
+		CBWrong.setLayout(null);
 
 		JLabel label_5 = new JLabel("Length (meters)");
+		label_5.setBounds(12, 24, 91, 15);
 		label_5.setHorizontalAlignment(SwingConstants.LEFT);
 		label_5.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		CBWrong.add(label_5);
-
-		textField_19 = new JTextField();
-		textField_19.setText(confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_WRONG_LENGTH).toString());
-		textField_19.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				fillMap(ConfigurationParameters.CB_WRONG_LENGTH, Integer.parseInt(textField_19.getText()));
+		
+		final JSpinner cb_wrong_length = new JSpinner();
+		cb_wrong_length.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent arg0) {
+				fillMap(ConfigurationParameters.CB_WRONG_LENGTH, (Integer)cb_wrong_length.getModel().getValue());
 			}
 		});
-		textField_19.setHorizontalAlignment(SwingConstants.CENTER);
-		textField_19.setColumns(10);
-		CBWrong.add(textField_19);
+		cb_wrong_length.setModel(new SpinnerNumberModel((confIniRead.readConfiguration().getMap().get(ConfigurationParameters.CB_WRONG_LENGTH).intValue()), 10, 65, 1));
+		cb_wrong_length.setBounds(151, 22, 49, 20);
+		CBWrong.add(cb_wrong_length);
 
 		frame.getContentPane().add(createConsolePanel());
 
@@ -765,22 +708,22 @@ public class interfaz implements ModelListener {
 		String slave3ConsoleText = model.getConsoleBuffer(CommunicationIds.SLAVE3);
 
 		if ((masterConsoleText != null) && !masterConsoleText.equals("")){
-			mainConsoleView.append(CommunicationIds.MASTER.name()+"-->"+masterConsoleText);
+			mainConsoleView.append(CommunicationIds.MASTER.name()+" --> "+masterConsoleText);
 			masterConsoleView.append(masterConsoleText);
 			autoScrollIfNeccesary(masterConsoleScroll, masterConsoleView);
 		}
 		if ((slave1ConsoleText != null) && !slave1ConsoleText.equals("")){
-			mainConsoleView.append(CommunicationIds.SLAVE1.name()+"-->"+slave1ConsoleText);
+			mainConsoleView.append(CommunicationIds.SLAVE1.name()+" --> "+slave1ConsoleText);
 			slave1ConsoleView.append(slave1ConsoleText);
 			autoScrollIfNeccesary(slave1ConsoleScroll, slave1ConsoleView);
 		}
 		if ((slave2ConsoleText != null) && !slave2ConsoleText.equals("")){
-			mainConsoleView.append(CommunicationIds.SLAVE2.name()+"-->"+slave2ConsoleText);
+			mainConsoleView.append(CommunicationIds.SLAVE2.name()+" --> "+slave2ConsoleText);
 			slave2ConsoleView.append(slave2ConsoleText);
 			autoScrollIfNeccesary(slave2ConsoleScroll, slave2ConsoleView);
 		}
 		if ((slave3ConsoleText != null) && !slave3ConsoleText.equals("")){
-			mainConsoleView.append(CommunicationIds.SLAVE3.name()+"-->"+slave3ConsoleText);
+			mainConsoleView.append(CommunicationIds.SLAVE3.name()+" --> "+slave3ConsoleText);
 			slave3ConsoleView.append(slave3ConsoleText);
 			autoScrollIfNeccesary(slave3ConsoleScroll, slave3ConsoleView);
 		}
