@@ -1,5 +1,7 @@
 package core.sections.ConveyorBelt;
 
+import java.util.Random;
+
 import core.sections.ParallelPort.ParallelPortManager;
 import core.sections.ParallelPort.ParallelPortManagerObserver;
 import core.sections.ParallelPort.Utils.ParallelPortException;
@@ -23,12 +25,16 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private int realLength = 0;
 	private int quantity = 0;
 
+	private Random rand;
+	private boolean autoFeed = true;
+
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.setName("ConveyorBeltSimulatorThread");
 		this.manager = manager;
 		contents = new int[this.manager.getBitGroupValue(ConveyorBeltManager.CAPACITY)];
 		cleanContentsOfBelt();
 		this.manager.registerObserver(this);
+		rand = new Random(System.currentTimeMillis());
 	}
 
 	/**
@@ -66,6 +72,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			try {
 				//int velocity = manager.getValueByName(ConveyorBeltManager.SPEED);
 				if (running()) {
+					setInitialSensorIfRandomFillerActive();
 					if (initialSensorActive()) {
 						setElementInInitialPositionInContents();
 						increaseElementCountByOne();
@@ -87,6 +94,12 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			} catch (ParallelPortException e) {
 				e.printStackTrace();
 			}
+		}
+	}
+
+	private void setInitialSensorIfRandomFillerActive() throws ParallelPortException {
+		if (autoFeed){
+			manager.setValueByNameAsBoolean(ConveyorBeltManager.SENSOR_LOAD,rand.nextBoolean());
 		}
 	}
 
@@ -199,6 +212,10 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 			espacioDePieza = realLength / realCapacity;
 			tiempoEsperaEntrePiezas = espacioDePieza / realSpeed / 60;
 		}
+	}
+
+	public void setAutoFeeed(boolean enable){
+		autoFeed = enable;
 	}
 
 

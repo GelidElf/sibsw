@@ -15,7 +15,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	private ConveyorBeltManager manager = null;
 	private ConveyorBeltSimulator simulator;
 	private Enum<?> jobDone;
-	private ConveyorBeltRandomFiller fillerThread = null;
 
 	public ConveyorBeltAutomata(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager, Enum<?> jobDone) {
 		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
@@ -25,7 +24,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		manager.registerObserver(this);
 		simulator = new ConveyorBeltSimulator(this.manager);
 		Logger.println("AT CB Created");
-		fillerThread = new ConveyorBeltRandomFiller(manager);
 		this.jobDone = jobDone;
 	}
 
@@ -116,7 +114,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	@Override
 	public void startCommand() {
 		simulator.start();
-		fillerThread.start();
 		this.start();
 	}
 
@@ -133,11 +130,11 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	}
 
 	public void enableAutoFeed(){
-		fillerThread.setEnabled(true);
+		simulator.setAutoFeeed(true);
 	}
 
 	public void disableAutoFeed() {
-		fillerThread.setEnabled(false);
+		simulator.setAutoFeeed(false);
 	}
 
 	public Enum<?> getJobDoneInput() {
