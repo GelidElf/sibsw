@@ -135,14 +135,15 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {
-				//TODO
-				/*
-					CB_OK_LENGTH,
-					CB_WRONG_LENGTH, !!!!!!!!!!!!!!!!!!!!!! completar con la longitud
-				 */
 				switch (parameter) {
+				case CB_OK_LENGTH:
+					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					break;
+				case CB_WRONG_LENGTH:
+					notOkBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					break;
 				case CB_OK_SPEED:
-					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_QCS:
 					qualityStation.getManager().setBitGroupValue(QualityStationManager.ACTIVATION_TIME, (Integer) attribute.getValue());
@@ -159,6 +160,17 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 	@Override
 	public void updateOnModelChange() {
 		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
+	}
+	
+	
+	private int getPinSpeed(int valorVelocidad){
+		int valorPinesSpeed = (valorVelocidad - 20) / 5;
+		return valorPinesSpeed;
+	}
+
+	private int getPinLength(int valorLength){
+		int valorPinesLen = (valorLength- 10);
+		return valorPinesLen;
 	}
 
 }
