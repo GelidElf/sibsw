@@ -64,11 +64,11 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		}
 	}
 
-	private Map<CommunicationIds, AutomataModel<?, ?>> models = new HashMap<CommunicationIds, AutomataModel<?, ?>>();
-	private Map<CommunicationIds, String> consoles = new HashMap<CommunicationIds, String>();
+	private transient Map<CommunicationIds, AutomataModel<?, ?>> models = new HashMap<CommunicationIds, AutomataModel<?, ?>>();
+	private transient Map<CommunicationIds, String> consoles = new HashMap<CommunicationIds, String>();
 	private MasterState currentState;
 	private transient Report currentReport;
-	private ConfigurationParametersClass currentScadaConfiguration;
+	private transient ConfigurationParametersClass currentScadaConfiguration;
 
 	public void setModel(CommunicationIds id, AutomataModel<?, ?> model) {
 		if (model != null) {
