@@ -59,6 +59,7 @@ public class interfaz implements ModelListener {
 	private StatusPanel qualityStatusPanel;
 	private StatusPanel weldingStatusPanel;
 	private StatusPanel robot1StatusPanel;
+	private StatusPanel masterStatusPanel;
 
 	private JTextArea mainConsoleView;
 	private JTextArea masterConsoleView;
@@ -73,6 +74,8 @@ public class interfaz implements ModelListener {
 	private JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
+	
+	JButton btnStart = new JButton("Start");
 
 	/**
 	 * Fill the map with the configuration parameter and its value from the
@@ -146,6 +149,7 @@ public class interfaz implements ModelListener {
 		qualityStatusPanel = new StatusPanel();
 		weldingStatusPanel = new StatusPanel();
 		robot1StatusPanel = new StatusPanel();
+		masterStatusPanel = new StatusPanel();
 
 		axisStatusPanel.setBounds(731, 372, 14, 10);
 		mainView.add(axisStatusPanel);
@@ -175,53 +179,65 @@ public class interfaz implements ModelListener {
 		mainView.add(robot1StatusPanel);
 
 		JPanel panel = new JPanel();
-		panel.setBounds(961, 11, 104, 124);
+		panel.setBounds(961, 11, 104, 166);
 		panel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
 
 		statusPanels = new HashMap<CommunicationIds, StatusPanel>();
+		
+		StatusPanel masterStatusPanel = new StatusPanel();
+		masterStatusPanel.setBounds(66, 32, 22, 20);
+		masterStatusPanel.setVisible(true);
+		statusPanels.put(CommunicationIds.MASTER, masterStatusPanel);
+		panel.add(masterStatusPanel);
+		
 		StatusPanel slave1StatusPanel = new StatusPanel();
-		slave1StatusPanel.setBounds(66, 31, 22, 20);
+		slave1StatusPanel.setBounds(66, 63, 22, 20);
 		slave1StatusPanel.setVisible(true);
 		statusPanels.put(CommunicationIds.SLAVE1, slave1StatusPanel);
 		panel.add(slave1StatusPanel);
 
 		StatusPanel slave2StatusPanel = new StatusPanel();
-		slave2StatusPanel.setBounds(66, 62, 22, 20);
+		slave2StatusPanel.setBounds(66, 94, 22, 20);
 		slave2StatusPanel.setVisible(true);
 		statusPanels.put(CommunicationIds.SLAVE2, slave2StatusPanel);
 		panel.add(slave2StatusPanel);
 
 		StatusPanel slave3StatusPanel = new StatusPanel();
-		slave3StatusPanel.setBounds(66, 93, 22, 20);
+		slave3StatusPanel.setBounds(66, 125, 22, 20);
 		slave3StatusPanel.setVisible(true);
 		statusPanels.put(CommunicationIds.SLAVE3, slave3StatusPanel);
 		panel.add(slave3StatusPanel);
 
 		JLabel lblSlave = new JLabel("Slave 1");
 		lblSlave.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSlave.setBounds(10, 37, 46, 14);
+		lblSlave.setBounds(10, 69, 46, 14);
 		panel.add(lblSlave);
 
 		JLabel lblSlave_1 = new JLabel("Slave 2");
 		lblSlave_1.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSlave_1.setBounds(10, 68, 46, 14);
+		lblSlave_1.setBounds(10, 100, 46, 14);
 		panel.add(lblSlave_1);
 
 		JLabel lblSlave_2 = new JLabel("Slave 3");
 		lblSlave_2.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblSlave_2.setBounds(10, 99, 46, 14);
+		lblSlave_2.setBounds(10, 131, 46, 14);
 		panel.add(lblSlave_2);
 
 		JLabel lblComponents = new JLabel("Components");
-		lblComponents.setBounds(10, 5, 78, 15);
+		lblComponents.setBounds(10, 11, 78, 15);
 		panel.add(lblComponents);
 		lblComponents.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblComponents.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		JLabel lblMaster = new JLabel("Master");
+		lblMaster.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblMaster.setBounds(10, 37, 46, 14);
+		panel.add(lblMaster);
 
 		JButton btnEmergencyStop = new JButton("Emergency Stop");
-		btnEmergencyStop.setBounds(944, 236, 152, 51);
+		btnEmergencyStop.setBounds(944, 279, 152, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -233,7 +249,7 @@ public class interfaz implements ModelListener {
 		});
 
 		JButton btnStop = new JButton("Stop");
-		btnStop.setBounds(971, 191, 86, 34);
+		btnStop.setBounds(971, 233, 86, 34);
 		btnStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -244,16 +260,27 @@ public class interfaz implements ModelListener {
 		btnStop.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnStop);
 
-		JButton btnStart = new JButton("Start");
-		btnStart.setBounds(971, 146, 86, 34);
+		//TODO CUANDO ESTÉ LISTO EL ESCLAVO 3, DESCOMENTAR
+		btnStart.setBounds(971, 188, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
-		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
-		btnStart.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				master.feedInput(MasterInput.START, true);
-			}
-		});
+		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));		
+		if( (master.getModel().isConnected(CommunicationIds.SLAVE1)) && 
+				(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
+			btnStart.setEnabled(true);
+			btnStart.addActionListener(new ActionListener() {		
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					master.feedInput(MasterInput.START, true);
+				}
+			});
+		}
+		if( !(master.getModel().isConnected(CommunicationIds.SLAVE1)) || 
+				!(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
+			btnStart.setEnabled(false);
+		}
+				
 		frame.getContentPane().add(btnStart);
 
 		JTabbedPane configuration = new JTabbedPane(JTabbedPane.TOP);
@@ -691,6 +718,8 @@ public class interfaz implements ModelListener {
 	@Override
 	public void updateOnModelChange() {
 		MasterModel model = MasterModel.getInstance();
+		setStatusPanelFor(CommunicationIds.MASTER, model);
+		updateStatusMasterSections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE1, model);
 		updateStatusSlave1Sections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE2, model);
@@ -698,7 +727,20 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
 		ventanaReports.updateData(model.getCurrentReport());
 		updateConsoles();
+		updateBotonStart();		
 		frame.repaint();
+	}
+
+	private void updateStatusMasterSections(MasterModel model) {
+		MasterModel masterModel = (MasterModel) model.getModel().get(CommunicationIds.MASTER);
+		if ((masterModel != null) && model.isConnected(CommunicationIds.MASTER)) {
+			masterStatusPanel.setModo(MasterModel.getInstance().getCurrentMode());
+			robot2StatusPanel.setModo(masterModel.getRobo1Model().getCurrentMode());
+		} else {
+			masterStatusPanel.setModo(null);
+			robot2StatusPanel.setModo(null);
+		}
+		
 	}
 
 	private void updateConsoles() {
@@ -765,6 +807,26 @@ public class interfaz implements ModelListener {
 			weldingStatusPanel.setModo(null);
 			transferStatusPanel.setModo(null);
 		}
+	}
+	
+	//TODO CUANDO ESTÉ LISTO EL ESCLAVO 3, DESCOMENTAR
+	private void updateBotonStart(){
+		if( (master.getModel().isConnected(CommunicationIds.SLAVE1)) && 
+				(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
+			btnStart.setEnabled(true);
+			btnStart.addActionListener(new ActionListener() {		
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					master.feedInput(MasterInput.START, true);
+				}
+			});
+		}
+		if( !(master.getModel().isConnected(CommunicationIds.SLAVE1)) || 
+				!(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
+			btnStart.setEnabled(false);
+		}	
 	}
 
 	private void setStatusPanelFor(CommunicationIds commID, MasterModel model) {

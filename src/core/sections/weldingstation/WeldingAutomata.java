@@ -88,4 +88,8 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 
 	}
 
+	public WeldingManager getManager() {
+		return manager;
+	}
+
 }

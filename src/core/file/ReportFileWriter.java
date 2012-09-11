@@ -7,7 +7,7 @@ import core.reports.Report;
 
 public class ReportFileWriter {
 	
-	public void readConfiguration(String fileName, Report informe) {
+	public void writeConfiguration(String fileName, Report informe) {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			for (ReportValues value: ReportValues.values()){
@@ -20,9 +20,5 @@ public class ReportFileWriter {
 		}
 	}
 
-	public static void main(String[] args) {
-		ReportFileWriter writer = new ReportFileWriter();
-		writer.readConfiguration("ax.txt", new Report());
-	}
 
 }

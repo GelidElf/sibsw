@@ -7,7 +7,7 @@ import core.messages.enums.ConfigurationParameters;
 
 public class ConfigurationParametersFileWriter {
 	
-	public void readConfiguration(String fileName, ConfigurationParametersClass parameters) {
+	public void writeConfiguration(String fileName, ConfigurationParametersClass parameters) {
 		try {
 			FileWriter writer = new FileWriter(fileName);
 			for (ConfigurationParameters value: ConfigurationParameters.values()){
@@ -22,7 +22,7 @@ public class ConfigurationParametersFileWriter {
 
 	public static void main(String[] args) {
 		ConfigurationParametersFileWriter writer = new ConfigurationParametersFileWriter();
-		writer.readConfiguration("ax.txt", new ConfigurationParametersClass());
+		writer.writeConfiguration("ax.txt", new ConfigurationParametersClass());
 	}
 
 }

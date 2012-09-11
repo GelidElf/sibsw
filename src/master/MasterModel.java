@@ -7,6 +7,7 @@ import java.util.Map;
 
 import core.configurationParameters.ConfigurationParametersClass;
 import core.file.ConfigurationParametersFileReader;
+import core.file.ReportFileWriter;
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.ReportValues;
@@ -114,6 +115,8 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	public void receiveSignal(ReportValues signal){
 		currentReport.receiveSignal(signal);
+		ReportFileWriter writer = new ReportFileWriter();
+		writer.writeConfiguration("reports.txt", currentReport);
 		notifyObservers();
 	}
 

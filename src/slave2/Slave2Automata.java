@@ -128,13 +128,13 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 			try {
 				switch (parameter) {
 				case CB_TRANSFER_LENGTH:
-					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, (Integer) attribute.getValue());
+					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_TRANSFER_SPEED:
-					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, (Integer) attribute.getValue());
+					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_WS:
-					transferBelt.getManager().setBitGroupValue(WeldingManager.TIME_TO_WELD, (Integer) attribute.getValue());
+					weldingStation.getManager().setBitGroupValue(WeldingManager.TIME_TO_WELD, (Integer) attribute.getValue());
 					break;
 				default:
 					break;
@@ -148,6 +148,16 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 	@Override
 	public void updateOnModelChange() {
 		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
+	}
+	
+	private int getPinSpeed(int valorVelocidad){
+		int valorPinesSpeed = (valorVelocidad - 20) / 5;
+		return valorPinesSpeed;
+	}
+
+	private int getPinLength(int valorLength){
+		int valorPinesLen = (valorLength- 10);
+		return valorPinesLen;
 	}
 
 }
