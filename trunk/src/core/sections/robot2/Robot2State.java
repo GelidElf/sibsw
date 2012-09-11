@@ -29,7 +29,9 @@ public class Robot2State implements State<Robot2Input> {
 					return DeliveringAssembled;
 				case DeliverWeldedPiece:
 					return DeliveringWelded;
-				case DeliverCheckedPiece:
+				case DeliverCheckedOkPiece:
+					return DeliveringChecked;
+				case DeliverCheckedNokPiece:
 					return DeliveringChecked;
 				case NSTOP:
 					return IdleStop;
@@ -107,7 +109,7 @@ public class Robot2State implements State<Robot2Input> {
 					AutomataContainer<?, ?, ?> father = currentState.getAutomata().getFather();
 					if (father instanceof MasterAutomata) {
 						MasterAutomata master = (MasterAutomata) father;
-						master.feedInput(MasterInput.CP_IN_CB, false);
+						master.feedInput(MasterInput.DeliveredChecked, false);
 					}
 					return Idle;
 				}

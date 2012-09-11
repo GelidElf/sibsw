@@ -28,7 +28,7 @@ public class WeldingState implements State<WeldingInput> {
 			@Override
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
-				case DeliverWeldment:
+				case AssemblyLoaded:
 					return DeliveringWeldment;
 				case NSTOP:
 					return IdleStop;
@@ -123,7 +123,7 @@ public class WeldingState implements State<WeldingInput> {
 	@Override
 	public boolean execute(WeldingInput input) {
 		states oldState = currentState;
-		currentState.executeInternal(this, input);
+		currentState = (states) currentState.executeInternal(this, input);
 		boolean changedState = oldState != currentState;
 		if (changedState){
 			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());

@@ -74,7 +74,7 @@ public class interfaz implements ModelListener {
 	private JScrollPane slave3ConsoleScroll;
 
 	private ReportWindow ventanaReports;
-	
+
 	JButton btnStart = new JButton("Start");
 
 	/**
@@ -185,13 +185,13 @@ public class interfaz implements ModelListener {
 		panel.setLayout(null);
 
 		statusPanels = new HashMap<CommunicationIds, StatusPanel>();
-		
+
 		StatusPanel masterStatusPanel = new StatusPanel();
 		masterStatusPanel.setBounds(66, 32, 22, 20);
 		masterStatusPanel.setVisible(true);
 		statusPanels.put(CommunicationIds.MASTER, masterStatusPanel);
 		panel.add(masterStatusPanel);
-		
+
 		StatusPanel slave1StatusPanel = new StatusPanel();
 		slave1StatusPanel.setBounds(66, 63, 22, 20);
 		slave1StatusPanel.setVisible(true);
@@ -230,7 +230,7 @@ public class interfaz implements ModelListener {
 		panel.add(lblComponents);
 		lblComponents.setFont(new Font("Tahoma", Font.BOLD, 12));
 		lblComponents.setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		JLabel lblMaster = new JLabel("Master");
 		lblMaster.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblMaster.setBounds(10, 37, 46, 14);
@@ -260,27 +260,17 @@ public class interfaz implements ModelListener {
 		btnStop.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnStop);
 
-		//TODO CUANDO ESTÉ LISTO EL ESCLAVO 3, DESCOMENTAR
 		btnStart.setBounds(971, 188, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
-		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));		
-		if( (master.getModel().isConnected(CommunicationIds.SLAVE1)) && 
-				(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
-			btnStart.setEnabled(true);
-			btnStart.addActionListener(new ActionListener() {		
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					master.feedInput(MasterInput.START, true);
-				}
-			});
-		}
-		if( !(master.getModel().isConnected(CommunicationIds.SLAVE1)) || 
-				!(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
-			btnStart.setEnabled(false);
-		}
-				
+		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnStart.setEnabled(false); //Al principio no se ha conectado ninguno, nos esperamos que el update normal cambie el estado cuando toque
+		btnStart.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				master.feedInput(MasterInput.START, true);
+			}
+		});
+
 		frame.getContentPane().add(btnStart);
 
 		JTabbedPane configuration = new JTabbedPane(JTabbedPane.TOP);
@@ -718,7 +708,7 @@ public class interfaz implements ModelListener {
 	@Override
 	public void updateOnModelChange() {
 		MasterModel model = MasterModel.getInstance();
-		setStatusPanelFor(CommunicationIds.MASTER, model);
+		statusPanels.get(CommunicationIds.MASTER).setModo(model.getCurrentMode());
 		updateStatusMasterSections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE1, model);
 		updateStatusSlave1Sections(model);
@@ -727,7 +717,7 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
 		ventanaReports.updateData(model.getCurrentReport());
 		updateConsoles();
-		updateBotonStart();		
+		updateBotonStart();
 		frame.repaint();
 	}
 
@@ -740,7 +730,7 @@ public class interfaz implements ModelListener {
 			masterStatusPanel.setModo(null);
 			robot2StatusPanel.setModo(null);
 		}
-		
+
 	}
 
 	private void updateConsoles() {
@@ -775,12 +765,7 @@ public class interfaz implements ModelListener {
 	}
 
 	private void autoScrollIfNeccesary(JScrollPane scroll, JTextArea area) {
-		// JScrollBar vbar = scroll.getVerticalScrollBar();
-		// boolean autoScroll = ((vbar.getValue() + vbar.getVisibleAmount()) ==
-		// vbar.getMaximum());
-		// if (autoScroll) {
 		area.setCaretPosition(area.getDocument().getLength());
-		// }
 	}
 
 	private void updateStatusSlave1Sections(MasterModel model) {
@@ -808,25 +793,13 @@ public class interfaz implements ModelListener {
 			transferStatusPanel.setModo(null);
 		}
 	}
-	
+
 	//TODO CUANDO ESTÉ LISTO EL ESCLAVO 3, DESCOMENTAR
 	private void updateBotonStart(){
-		if( (master.getModel().isConnected(CommunicationIds.SLAVE1)) && 
-				(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
-			btnStart.setEnabled(true);
-			btnStart.addActionListener(new ActionListener() {		
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					master.feedInput(MasterInput.START, true);
-				}
-			});
-		}
-		if( !(master.getModel().isConnected(CommunicationIds.SLAVE1)) || 
-				!(master.getModel().isConnected(CommunicationIds.SLAVE2)) 
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/ ){
-			btnStart.setEnabled(false);
-		}	
+		btnStart.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
+				(master.getModel().isConnected(CommunicationIds.SLAVE2))
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+		);
 	}
 
 	private void setStatusPanelFor(CommunicationIds commID, MasterModel model) {

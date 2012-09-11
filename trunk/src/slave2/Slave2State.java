@@ -1,6 +1,10 @@
 package slave2;
 
+import master.MasterInput;
 import core.gui.satuspanel.ModeEnum;
+import core.messages.Message;
+import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
@@ -29,9 +33,15 @@ public class Slave2State implements State<Slave2Input> {
 		Idle(ModeEnum.IDLE) {
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				Message message;
 				switch (input) {
-				//TODO
-				// !!!!!!!!!!!!!!!!!!!!!!!!!!! COMPLETAR Y MODIFICAR EL RESTO
+				case WS_EMPTY:
+					return LoadingWeldingStation;
+				case WELDMENT_READY:
+					message = new Message("AS_READY_TO_PICKUP", CommunicationIds.MASTER, false,
+							CommunicationMessageType.COMMAND, MasterInput.AS_READY_TO_PICKUP);
+					currentState.getAutomata().sendMessage(message);
+					return UnloadingWeldment;
 				case NSTOP:
 					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
@@ -40,8 +50,6 @@ public class Slave2State implements State<Slave2Input> {
 					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
 					return IdleStop;
-
-					// Complete
 				default:
 					break;
 				}
@@ -55,6 +63,46 @@ public class Slave2State implements State<Slave2Input> {
 				case RESTART:
 					return Idle;
 
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		}, LoadingWeldingStation(ModeEnum.RUNNING){
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case ASSEMBLED_READY:
+					Message message = new Message("WS_NEEDS_PIECE", CommunicationIds.MASTER, false,
+							CommunicationMessageType.COMMAND, MasterInput.FEED_WS);
+					currentState.getAutomata().sendMessage(message);
+					return WaitingForWeldingToBeLoaded;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		}, WaitingForWeldingToBeLoaded(ModeEnum.RUNNING){
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case WELDING_STATION_LOADED:
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.AssemblyLoaded, false);
+					return Idle;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		}, UnloadingWeldment(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case WELDMENT_REMOVED:
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.WeldmentRemoved, false);
+					return Idle;
 				default:
 					break;
 				}

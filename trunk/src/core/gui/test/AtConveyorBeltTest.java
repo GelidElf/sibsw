@@ -37,7 +37,7 @@ public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObs
 		ConveyorBeltManager manager = new ConveyorBeltManager();
 		manager.configure(10, 2);
 		manager.registerObserver(this);
-		atcb = new ConveyorBeltAutomata(null, manager, null);
+		atcb = new ConveyorBeltAutomata("mico",null, manager, null,null);
 		atcb.startCommand();
 	}
 
@@ -74,7 +74,7 @@ public class AtConveyorBeltTest extends JFrame implements ParallelPortManagerObs
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 }

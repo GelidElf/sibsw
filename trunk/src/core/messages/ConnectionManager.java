@@ -90,8 +90,8 @@ public class ConnectionManager extends Thread {
 		if (message == null) {
 			return;
 		} else {
-			Logger.println("RecibidoMensaje en: " + owner);
-			if (somosDestinatariosDelMensaje(message)) {
+			//Logger.println("RecibidoMensaje en: " + owner);
+			if (somosDestinatariosDelMensaje(message) && noHemosEnviadoElMensaje(message)) {
 				this.inbox.add(message);
 
 			} else {
@@ -101,6 +101,14 @@ public class ConnectionManager extends Thread {
 			}
 		}
 
+	}
+
+	/**
+	 * Comprueba si no somos el enviador del mensaje para evitar ciclos en mensajes de broadcast.
+	 * @return
+	 */
+	private boolean noHemosEnviadoElMensaje(Message message) {
+		return message.getOwner() != owner;
 	}
 
 	/**

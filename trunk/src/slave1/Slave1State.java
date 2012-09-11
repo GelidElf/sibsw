@@ -42,8 +42,10 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch(input){
 				case AS_READY:
-					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAssembledPiece, false);
-					return LOADING_TB;
+					Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
+							CommunicationMessageType.COMMAND, MasterInput.AS_READY);
+					currentState.getAutomata().sendMessage(message);
+					return WAITING_FOR_SPACE_IN_TB;
 				case AS_EMPTY:
 					return LOADING_AS;
 					// OLDCODE
@@ -80,6 +82,20 @@ public class Slave1State implements State<Slave1Input> {
 				return super.executeInternal(currentState, input);
 			}
 		},
+		WAITING_FOR_SPACE_IN_TB(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave1State currentState, Slave1Input input) {
+				switch (input) {
+				case TRANSPORT_READY:
+					currentState.getAutomata().getRobot().feedInput(Robot1Input.DeliverAssembledPiece, false);
+					return LOADING_TB;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
 		LOADING_TB(ModeEnum.RUNNING) {
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
@@ -88,8 +104,7 @@ public class Slave1State implements State<Slave1Input> {
 					Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
 							CommunicationMessageType.COMMAND, MasterInput.AS_IN_TCB);
 					currentState.getAutomata().sendMessage(message);
-					currentState.getAutomata().getAssemblyStation()
-					.feedInput(AssemblyStationInput.ASRemoved, false);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.ASRemoved, false);
 					return Idle;
 
 				default:

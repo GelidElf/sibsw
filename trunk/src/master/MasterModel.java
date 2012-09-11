@@ -102,7 +102,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	@Override
 	public void setAutomata(AutomataContainer<MasterInput, MasterState, ? extends AutomataModel<MasterInput, MasterState>> automata) {
 		currentState = new MasterState((MasterAutomata) automata);
-
+		notifyObservers();
 	}
 
 	public void setRobot2Model(Robot2Model model) {
