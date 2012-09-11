@@ -39,7 +39,8 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 	protected void consume(Message message) {
 		message.consumeMessage();
 		if (message.getType() == CommunicationMessageType.COMMAND) {
-			switch ((MasterInput) message.getInputType()) {
+			MasterInput input = (MasterInput) message.getInputType();
+			switch (input) {
 			case START:
 				sendBroadCastMessage(CommunicationMessageType.START);
 				message.setConsumed(getModel().getState().execute(MasterInput.START));
@@ -59,7 +60,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
 				break;
 			default:
-				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
+				message.setConsumed(getModel().getState().execute(input));
 				break;
 			}
 		} else {
