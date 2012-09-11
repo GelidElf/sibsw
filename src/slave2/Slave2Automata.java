@@ -1,5 +1,6 @@
 package slave2;
 
+import master.MasterInput;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
@@ -73,7 +74,14 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
 			Slave2Input input = (Slave2Input) message.getInputType();
-			message.setConsumed(getModel().getState().execute(input));
+			if (input == Slave2Input.TRANSFER_CLEAR) {
+				message = new Message("EMPTY_TRANSFER_CB", CommunicationIds.MASTER, false,
+						CommunicationMessageType.COMMAND, MasterInput.EMPTY_TRANSFER_CB);
+				sendMessage(message);
+				message.consumeMessage();
+			}else{
+				message.setConsumed(getModel().getState().execute(input));
+			}
 		}
 	}
 
