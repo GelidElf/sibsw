@@ -43,7 +43,6 @@ public class interfaz implements ModelListener {
 
 	private MasterAutomata master;
 
-	private Map<ConfigurationParameters, Integer> map = new HashMap<ConfigurationParameters, Integer>();
 	private ConfigurationParametersClass currentScadaConfiguration;
 
 	private JFrame frame;
@@ -82,14 +81,10 @@ public class interfaz implements ModelListener {
 	 * interface
 	 */
 	private void fillMap(ConfigurationParameters parameter, Integer newValue) {
-		this.map.put(parameter, newValue);
+		currentScadaConfiguration.getMap().put(parameter, newValue);
 		Message message = new Message("ConfigurationParameterChange", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
 		message.addAttribute(parameter.name(), newValue);
 		master.sendMessage(message);
-	}
-
-	public Map<ConfigurationParameters, Integer> getMap(){
-		return map;
 	}
 
 	/**
@@ -663,7 +658,7 @@ public class interfaz implements ModelListener {
 			public void mouseClicked(MouseEvent arg0) {
 				Message mensaje = new Message("Cambio de configuracion", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
 				for(ConfigurationParameters value: ConfigurationParameters.values()){
-					mensaje.addAttribute(value.name(), getMap().get(value));
+					mensaje.addAttribute(value.name(), currentScadaConfiguration.getMap().get(value));
 					master.sendMessage(mensaje);
 				}
 			}
