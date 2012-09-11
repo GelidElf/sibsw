@@ -15,16 +15,18 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	private ConveyorBeltManager manager = null;
 	private ConveyorBeltSimulator simulator;
 	private Enum<?> jobDone;
+	private Enum<?> canAcceptElements;
 
-	public ConveyorBeltAutomata(AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager, Enum<?> jobDone) {
+	public ConveyorBeltAutomata(String name, AutomataContainer<?, ?, ?> father, ConveyorBeltManager manager, Enum<?> jobDone, Enum<?> canAcceptElements) {
 		super(father, new ConveyorBeltModel(), new OfflineCommunicationManager());
-		this.setName("ConveyorBeltAutomata");
+		this.setName(name+"CBAutomata");
 		getModel().setAutomata(this);
 		this.manager = manager;
 		manager.registerObserver(this);
 		simulator = new ConveyorBeltSimulator(this.manager);
 		Logger.println("AT CB Created");
 		this.jobDone = jobDone;
+		this.canAcceptElements = canAcceptElements;
 	}
 
 	public void setupMockParametersFromMessage() {
@@ -63,6 +65,11 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		if (this.manager.getModifiedGroupName().equals(ConveyorBeltManager.SENSOR_UNLOAD)){
 			if (this.manager.isSensorFinish()) {
 				feedInput(ConveyorBeltInput.unloadSensorTrue, false);
+			}
+		}
+		if (this.manager.getModifiedGroupName().equals(ConveyorBeltManager.SENSOR_LOAD)){
+			if (!this.manager.isSensorInitial() && !simulator.getAutoFeed()) {
+				father.feedInputObject(canAcceptElements, false);
 			}
 		}
 	}
@@ -139,6 +146,10 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 
 	public Enum<?> getJobDoneInput() {
 		return jobDone;
+	}
+
+	public Enum<?> getCanAcceptElements() {
+		return canAcceptElements;
 	}
 
 	/*public void setLength(int length) {

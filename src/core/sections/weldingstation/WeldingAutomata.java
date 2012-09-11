@@ -40,12 +40,12 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			reactToInput((WeldingInput) message.getInputType());
+			message.setConsumed(reactToInput((WeldingInput) message.getInputType()));
 		}
 	}
 
-	private void reactToInput(WeldingInput input) {
-		getModel().getState().execute(input);
+	private boolean reactToInput(WeldingInput input) {
+		return getModel().getState().execute(input);
 	}
 
 	private boolean debeReaccionaPorTipoEntrada(Message message) {

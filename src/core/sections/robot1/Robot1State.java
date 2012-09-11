@@ -35,7 +35,6 @@ public class Robot1State implements State<Robot1Input> {
 						currentState.getAutomata().getManager()
 						.setValueByNameAsBoolean(Robot1Manager.DELIVER_AXIS, true);
 					} catch (ParallelPortException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return DeliveringAxis;
@@ -44,7 +43,6 @@ public class Robot1State implements State<Robot1Input> {
 						currentState.getAutomata().getManager()
 						.setValueByNameAsBoolean(Robot1Manager.DELIVER_GEAR, true);
 					} catch (ParallelPortException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return DeliveringGear;
@@ -53,7 +51,6 @@ public class Robot1State implements State<Robot1Input> {
 						currentState.getAutomata().getManager()
 						.setValueByNameAsBoolean(Robot1Manager.DELIVER_ASSEMBLED, true);
 					} catch (ParallelPortException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					return DeliveringAssembled;

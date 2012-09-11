@@ -40,12 +40,12 @@ public class QualityStationAutomata extends AutomataContainer<QualityStationInpu
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			reactToInput((QualityStationInput) message.getInputType());
+			message.setConsumed(reactToInput((QualityStationInput) message.getInputType()));
 		}
 	}
 
-	private void reactToInput(QualityStationInput input) {
-		getModel().getState().execute(input);
+	private boolean reactToInput(QualityStationInput input) {
+		return getModel().getState().execute(input);
 	}
 
 	private boolean debeReaccionaPorTipoEntrada(Message message) {

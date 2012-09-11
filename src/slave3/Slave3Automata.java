@@ -30,21 +30,21 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 
 	public Slave3Automata(Configuration conf) {
 		super(null, new Slave3Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3, conf));
-	
+
 		qualityStation = new QualityStationAutomata(this, new QualityStationModel(), new OfflineCommunicationManager());
 		qualityStation.getModel().addListener(this);
 		getModel().setQualityStationModel(qualityStation.getModel());
-		
+
 		ConveyorBeltManager okManager = new ConveyorBeltManager();
 		okManager.configure(10, 2);
-		okBelt = new ConveyorBeltAutomata(this, okManager, null);
+		okBelt = new ConveyorBeltAutomata("OK",this, okManager, null,null);
 		getModel().setOkBeltModel(okBelt.getModel());
-		
+
 		ConveyorBeltManager notOkManager = new ConveyorBeltManager();
 		notOkManager.configure(10, 2);
-		notOkBelt = new ConveyorBeltAutomata(this, notOkManager, null);
+		notOkBelt = new ConveyorBeltAutomata("NO_OK",this, notOkManager, null,null);
 		getModel().setOkBeltModel(notOkBelt.getModel());
-		
+
 	}
 
 	public void setInitialSettings(String settings) {
@@ -131,7 +131,7 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 	}
 
 	@Override
-	protected void changeConfigurationParameter(Attribute attribute) {	
+	protected void changeConfigurationParameter(Attribute attribute) {
 		ConfigurationParameters parameter = ConfigurationParameters.getEnum(attribute.getName());
 		if (parameter != null) {
 			try {
@@ -161,8 +161,8 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 	public void updateOnModelChange() {
 		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
 	}
-	
-	
+
+
 	private int getPinSpeed(int valorVelocidad){
 		int valorPinesSpeed = (valorVelocidad - 20) / 5;
 		return valorPinesSpeed;

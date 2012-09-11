@@ -29,7 +29,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 		super(null, MasterModel.getInstance(), new MultipleInboxCommunicationManager(CommunicationIds.MASTER, conf,
 				NUMBEROFINBOXES));
 		robot = new Robot2Automata(this, new Robot2Model(), new OfflineCommunicationManager());
-		// robot.getModel().addListener(this);
+		//robot.getModel().addListener(this);
 		getModel().setRobot2Model(robot.getModel());
 		getModel().setAutomata(this);
 		getModel().receiveSignal(ReportValues.SYSTEM_BOOTS);
@@ -37,6 +37,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 
 	@Override
 	protected void consume(Message message) {
+		message.consumeMessage();
 		if (message.getType() == CommunicationMessageType.COMMAND) {
 			switch ((MasterInput) message.getInputType()) {
 			case START:
@@ -58,6 +59,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
 				break;
 			default:
+				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
 				break;
 			}
 		} else {

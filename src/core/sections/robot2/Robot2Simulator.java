@@ -46,20 +46,25 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
 		String modifiedGroup = manager.getModifiedGroupName();
-		if (modifiedGroup.equals(Robot2Manager.DELIVER_ASSEMBLED_PIECE)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P));
-			startJob(manager);
-			return;
+		try{
+			if (modifiedGroup.equals(Robot2Manager.DELIVER_ASSEMBLED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P));
+				startJob(manager);
+				return;
+			}
+			if (modifiedGroup.equals(Robot2Manager.DELIVER_WELDED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_WELDED));
+				startJob(manager);
+				return;
+			}
+			if (modifiedGroup.equals(Robot2Manager.DELIVER_CHECKED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_CB));
+				startJob(manager);
+				return;
+			}
 		}
-		if (modifiedGroup.equals(Robot2Manager.DELIVER_WELDED_PIECE)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_WELDED));
-			startJob(manager);
-			return;
-		}
-		if (modifiedGroup.equals(Robot2Manager.DELIVER_CHECKED_PIECE)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot2Manager.TIME_TO_CB));
-			startJob(manager);
-			return;
+		catch (ParallelPortException e) {
+			e.printStackTrace();
 		}
 	}
 

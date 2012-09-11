@@ -26,7 +26,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	private int quantity = 0;
 
 	private Random rand;
-	private boolean autoFeed = true;
+	private boolean autoFeed = false;
 
 	public ConveyorBeltSimulator(ConveyorBeltManager manager) {
 		this.setName("ConveyorBeltSimulatorThread");
@@ -47,7 +47,9 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		}
 		contents[contents.length - 1] = 0;
 		try {
-			manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD, contents[contents.length - 1]);
+			if (contents[contents.length - 2] == 0){
+				manager.setValueByName(ConveyorBeltManager.SENSOR_LOAD, contents[contents.length - 1]);
+			}
 			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD, contents[0]);
 		} catch (ParallelPortException e) {
 			// TODO Auto-generated catch block
@@ -87,8 +89,10 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 							manager.setRunning(false);
 						}
 					}
+					sleepExecution();
+				}else{
+					sleep(1000);
 				}
-				sleepExecution();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			} catch (ParallelPortException e) {
@@ -105,7 +109,6 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 
 	private void sleepExecution() throws InterruptedException {
 		sleep(new Double(tiempoEsperaEntrePiezas * 1000).longValue());
-
 	}
 
 	private void actualizoElElementoDeLaUltimaPosicionQueYaNoEsta() throws ParallelPortException {
@@ -134,11 +137,11 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	}
 
 	private boolean running() throws ParallelPortException {
-		return manager.getValueByName(ConveyorBeltManager.RUNNING) == 1;
+		return manager.getValueByNameAsBoolean(ConveyorBeltManager.RUNNING);
 	}
 
 	private boolean finalSensorInactive() throws ParallelPortException {
-		return manager.getValueByName(ConveyorBeltManager.SENSOR_UNLOAD) == 0;
+		return !manager.getValueByNameAsBoolean(ConveyorBeltManager.SENSOR_UNLOAD);
 	}
 
 	private boolean positionOccupied(int possition) {
@@ -152,7 +155,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 	}
 
 	private boolean initialSensorActive() throws ParallelPortException {
-		return manager.getValueByName(ConveyorBeltManager.SENSOR_LOAD) == 1;
+		return manager.getValueByNameAsBoolean(ConveyorBeltManager.SENSOR_LOAD);
 	}
 
 	/**
@@ -218,5 +221,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		autoFeed = enable;
 	}
 
+	public boolean getAutoFeed(){
+		return autoFeed;
+	}
 
 }

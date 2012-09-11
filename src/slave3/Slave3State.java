@@ -37,7 +37,7 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case QCS_LOADED:
-					currentState.getAutomata().sendMessage(new Message("ObjetoEnTransfer", CommunicationIds.MASTER, false, CommunicationMessageType.COMMAND, MasterInput.CP_IN_CB));
+					currentState.getAutomata().sendMessage(new Message("ObjetoEnTransfer", CommunicationIds.MASTER, false, CommunicationMessageType.COMMAND, MasterInput.QCS_LOADED));
 					return SOMETHING; //cambiar por un nuevo estado!
 				case NSTOP:
 					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);

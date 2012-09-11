@@ -47,23 +47,27 @@ public class Robot1Simulator extends Thread implements ParallelPortManagerObserv
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
 		String modifiedGroup = manager.getModifiedGroupName();
-		if (modifiedGroup.equals(Robot1Manager.DELIVER_AXIS)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
-			startJob(manager);
-			orden = modifiedGroup;
-			return;
-		}
-		if (modifiedGroup.equals(Robot1Manager.DELIVER_GEAR)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
-			startJob(manager);
-			orden = modifiedGroup;
-			return;
-		}
-		if (modifiedGroup.equals(Robot1Manager.DELIVER_ASSEMBLED)) {
-			setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_TRANSPORT));
-			startJob(manager);
-			orden = modifiedGroup;
-			return;
+		try{
+			if (modifiedGroup.equals(Robot1Manager.DELIVER_AXIS) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
+				startJob(manager);
+				orden = modifiedGroup;
+				return;
+			}
+			if (modifiedGroup.equals(Robot1Manager.DELIVER_GEAR) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
+				startJob(manager);
+				orden = modifiedGroup;
+				return;
+			}
+			if (modifiedGroup.equals(Robot1Manager.DELIVER_ASSEMBLED) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_TRANSPORT));
+				startJob(manager);
+				orden = modifiedGroup;
+				return;
+			}
+		}catch (ParallelPortException e) {
+			e.printStackTrace();
 		}
 	}
 

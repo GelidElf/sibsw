@@ -31,14 +31,13 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 		ConveyorBeltManager transferManager = new ConveyorBeltManager();
 		transferManager.configure(10, 2);
-		transferBelt = new ConveyorBeltAutomata(this, transferManager, Slave2Input.ASSEMBLED_READY);
+		transferBelt = new ConveyorBeltAutomata("TRANSFER",this, transferManager, Slave2Input.ASSEMBLED_READY,Slave2Input.TRANSFER_CLEAR);
 		getModel().setTransferBeltModel(transferBelt.getModel());
 		transferBelt.getModel().addListener(this);
 
 		weldingStation = new WeldingAutomata(this, new WeldingModel(), new OfflineCommunicationManager());
 		weldingStation.getModel().addListener(this);
 		getModel().setWeldingModel(weldingStation.getModel());
-		weldingStation.getModel().addListener(this);
 
 		getModel().setAutomata(this);
 		getModel().addListener(this);
@@ -149,7 +148,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 	public void updateOnModelChange() {
 		sendMessage(new Message("MODEL_UPDATE", CommunicationIds.MASTER, false, CommunicationMessageType.STATUS_UPDATE, null));
 	}
-	
+
 	private int getPinSpeed(int valorVelocidad){
 		int valorPinesSpeed = (valorVelocidad - 20) / 5;
 		return valorPinesSpeed;

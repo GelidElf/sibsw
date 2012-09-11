@@ -40,12 +40,12 @@ public class Robot2Automata extends AutomataContainer<Robot2Input, core.sections
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			reactToInput((Robot2Input) message.getInputType());
+			message.setConsumed(reactToInput((Robot2Input) message.getInputType()));
 		}
 	}
 
-	private void reactToInput(Robot2Input input) {
-		getModel().getState().execute(input);
+	private boolean reactToInput(Robot2Input input) {
+		return getModel().getState().execute(input);
 	}
 
 	private boolean debeReaccionaPorTipoEntrada(Message message) {

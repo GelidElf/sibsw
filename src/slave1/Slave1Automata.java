@@ -36,14 +36,14 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 
 		ConveyorBeltManager gearManager = new ConveyorBeltManager();
 		gearManager.configure(10, 2);
-		gearBelt = new ConveyorBeltAutomata(this, gearManager, Slave1Input.GEAR_READY);
+		gearBelt = new ConveyorBeltAutomata("GEAR",this, gearManager, Slave1Input.GEAR_READY,null);
 		getModel().setGearBeltModel(gearBelt.getModel());
 		gearBelt.enableAutoFeed();
 		gearBelt.getModel().addListener(this);
 
 		ConveyorBeltManager axisManager = new ConveyorBeltManager();
 		axisManager.configure(10, 2);
-		axisBelt = new ConveyorBeltAutomata(this, axisManager, Slave1Input.AXIS_READY);
+		axisBelt = new ConveyorBeltAutomata("AXIS",this, axisManager, Slave1Input.AXIS_READY,null);
 		getModel().setAxisBeltModel(axisBelt.getModel());
 		axisBelt.enableAutoFeed();
 		axisBelt.getModel().addListener(this);
@@ -57,6 +57,7 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		robot = new Robot1Automata(this, new Robot1Model(), new OfflineCommunicationManager());
 		robot.getModel().addListener(this);
 		getModel().setRobot1Model(robot.getModel());
+
 		getModel().setAutomata(this);
 		getModel().addListener(this);
 	}
@@ -147,7 +148,6 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			}
 			break;
 		case HANDSHAKE:
-			message.consumeMessage();
 			break;
 		default:
 			message.didNotConsumeMessage();

@@ -3,20 +3,20 @@ package core.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import core.messages.enums.ReportValues;
 import core.reports.Report;
-
-import javax.swing.SwingConstants;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class ReportWindow extends JDialog {
 
@@ -30,22 +30,22 @@ public class ReportWindow extends JDialog {
 	private JTextField systemBoots;
 	private JTextField systemStops;
 	private JTextField systemEmergencies;
-	
+
 	/**
 	 * Update report data in the report window
 	 */
 	public void updateData(Report report){
 		okPieces.setText(report.getMap().get(ReportValues.OK_PIECES).toString());
 		notOkPieces.setText(report.getMap().get(ReportValues.NOT_OK_PIECES).toString());
-		okPiecesTotal.setText(report.getMapTotales().get(ReportValues.OK_PIECES_TOTAL).toString());
-		notOkPiecesTotal.setText(report.getMapTotales().get(ReportValues.NOT_OK_PIECES_TOTAL).toString());
+		okPiecesTotal.setText(report.getMapTotales().get(ReportValues.OK_PIECES).toString());
+		notOkPiecesTotal.setText(report.getMapTotales().get(ReportValues.NOT_OK_PIECES).toString());
 		systemBoots.setText(report.getMapTotales().get(ReportValues.SYSTEM_BOOTS).toString());
 		systemStops.setText(report.getMapTotales().get(ReportValues.SYSTEM_STOPS).toString());
 		systemEmergencies.setText(report.getMapTotales().get(ReportValues.SYSTEM_EMERGENCIES).toString());
-	       
-	    this.validate();
+
+		this.validate();
 	}
-	
+
 	/**
 	 * Launch the application.
 	 */
