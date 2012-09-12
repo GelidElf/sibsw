@@ -21,7 +21,6 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case START:
-					//FIXME: Make the feed input execute the start command
 					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.START, true);

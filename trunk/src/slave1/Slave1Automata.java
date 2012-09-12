@@ -62,14 +62,6 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 		getModel().addListener(this);
 	}
 
-	public void setInitialSettings(String settings) {
-
-		//TODO: po hacerlo >.<
-		//robot.setSpeed......
-		//gearBelt.setLength,speed, capacity....
-		//AS.setAssemblyDelay....
-
-	}
 
 	public ConveyorBeltAutomata getGearBelt() {
 		return gearBelt;

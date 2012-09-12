@@ -14,9 +14,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * Uses a lock and condition so that the read is blocked until there is
  * something to read
  * 
- * TODO: Sould contain a queue for messages read that where not consumed, so
- * that the communicators don0't have to spam with messages until acted upon
- * 
  * 
  * @author GelidElf
  * 
