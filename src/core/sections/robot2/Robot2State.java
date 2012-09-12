@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
 
@@ -29,10 +30,28 @@ public class Robot2State implements State<Robot2Input> {
 			public AutomataStatesInternalImplementation<Robot2Input, Robot2State> executeInternal(Robot2State currentState, Robot2Input input) {
 				switch (input) {
 				case DeliverAssembledPiece:
+					try {
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_ASSEMBLED_PIECE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringAssembled;
 				case DeliverWeldedPiece:
+					try {
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_ASSEMBLED_PIECE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringWelded;
 				case DeliverCheckedOkPiece:
+					try {
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_ASSEMBLED_PIECE, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return DeliveringChecked;
 				case DeliverCheckedNokPiece:
 					return DeliveringChecked;
@@ -154,7 +173,7 @@ public class Robot2State implements State<Robot2Input> {
 	@Override
 	public boolean execute(Robot2Input input) {
 		states oldState = currentState;
-		currentState.executeInternal(this, input);
+		currentState = (states)currentState.executeInternal(this, input);
 		boolean changedState = oldState != currentState;
 		if (changedState){
 			Logger.println("ChangedState: " + oldState.name() +"->"+ currentState.name());
