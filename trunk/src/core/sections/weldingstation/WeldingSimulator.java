@@ -14,6 +14,7 @@ public class WeldingSimulator extends Thread implements ParallelPortManagerObser
 	public WeldingSimulator(WeldingManager manager) {
 		this.manager = manager;
 		manager.registerObserver(this);
+		this.setName("WSSimulator");
 	}
 
 	public void welding() {

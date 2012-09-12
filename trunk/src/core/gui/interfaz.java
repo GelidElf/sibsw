@@ -653,9 +653,10 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(buttonReports);
 
 		JButton btnNewButton = new JButton("Send conf");
-		btnNewButton.addMouseListener(new MouseAdapter() {
+		
+		btnNewButton.addActionListener(new ActionListener() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {
 				Message mensaje = new Message("Cambio de configuracion", CommunicationIds.BROADCAST, true, CommunicationMessageType.CONFIGURATION, null);
 				for(ConfigurationParameters value: ConfigurationParameters.values()){
 					mensaje.addAttribute(value.name(), currentScadaConfiguration.getMap().get(value));
@@ -663,10 +664,11 @@ public class interfaz implements ModelListener {
 				}
 			}
 		});
+		
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(296, 525, 104, 34);
 		frame.getContentPane().add(btnNewButton);
-
+		
 	}
 
 	private JTabbedPane createConsolePanel() {
@@ -789,7 +791,7 @@ public class interfaz implements ModelListener {
 		}
 	}
 
-	//TODO CUANDO ESTÉ LISTO EL ESCLAVO 3, DESCOMENTAR
+	//TODO CUANDO ESTï¿½ LISTO EL ESCLAVO 3, DESCOMENTAR
 	private void updateBotonStart(){
 		btnStart.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
 				(master.getModel().isConnected(CommunicationIds.SLAVE2))

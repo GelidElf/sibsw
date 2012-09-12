@@ -30,7 +30,7 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 
 	public Slave3Automata(Configuration conf) {
 		super(null, new Slave3Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE3, conf));
-
+		this.setName("Slave3Automata");
 		qualityStation = new QualityStationAutomata(this, new QualityStationModel(), new OfflineCommunicationManager());
 		qualityStation.getModel().addListener(this);
 		getModel().setQualityStationModel(qualityStation.getModel());

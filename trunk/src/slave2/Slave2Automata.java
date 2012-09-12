@@ -30,7 +30,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 	public Slave2Automata(Configuration conf) {
 		super(null, new Slave2Model(), new SingleInboxCommunicationManager(CommunicationIds.SLAVE2, conf));
-		setName("slave1Automata");
+		setName("Slave2Automata");
 		ConveyorBeltManager transferManager = new ConveyorBeltManager();
 		transferManager.configure(10, 2);
 		transferBelt = new ConveyorBeltAutomata("TRANSFER",this, transferManager, Slave2Input.ASSEMBLED_READY_FOR_PICKUP,Slave2Input.TRANSFER_CLEAR);

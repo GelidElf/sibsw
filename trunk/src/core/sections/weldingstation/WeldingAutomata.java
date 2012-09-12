@@ -16,6 +16,7 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 
 	public WeldingAutomata(AutomataContainer<?, ?, ?> father, WeldingModel model, CommunicationManager commManager) {
 		super(father, model, commManager);
+		this.setName("WSAutomata");
 		manager = new WeldingManager();
 		manager.configure(7, 7, 7, 7);
 		manager.registerObserver(this);
