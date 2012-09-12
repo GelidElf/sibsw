@@ -5,6 +5,7 @@ import slave2.Slave2Input;
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
 public class WeldingState implements State<WeldingInput> {
@@ -29,6 +30,11 @@ public class WeldingState implements State<WeldingInput> {
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
 				case AssemblyLoaded:
+					try {
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(WeldingManager.DELIVER_WELDMENT, false);
+					} catch (ParallelPortException e) {
+						e.printStackTrace();
+					}
 					return DeliveringWeldment;
 				case NSTOP:
 					return IdleStop;

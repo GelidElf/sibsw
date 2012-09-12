@@ -18,6 +18,8 @@ public class QualityStationState implements State<QualityStationInput> {
 			public AutomataStatesInternalImplementation<QualityStationInput, QualityStationState> executeInternal(QualityStationState currentState, QualityStationInput input) {
 				switch (input) {
 				case START:
+					Slave3Automata father = (Slave3Automata) currentState.getAutomata().getFather();
+					father.feedInput(Slave3Input.QCS_EMPTY, false);
 					return Idle;
 				default:
 					break;

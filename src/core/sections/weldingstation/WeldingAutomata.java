@@ -56,21 +56,22 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 	private void reaccionaPorTipoDeMensaje(Message message) {
 		switch (message.getType()) {
 		case START:
-			reactToInput(WeldingInput.START);
+			message.setConsumed(reactToInput(WeldingInput.START));
 			break;
 		case NSTOP:
-			reactToInput(WeldingInput.NSTOP);
+			message.setConsumed(reactToInput(WeldingInput.NSTOP));
 			break;
 		case ESTOP:
-			reactToInput(WeldingInput.ESTOP);
+			message.setConsumed(reactToInput(WeldingInput.ESTOP));
 			break;
 		case RESTART:
-			reactToInput(WeldingInput.RESTART);
+			message.setConsumed(reactToInput(WeldingInput.RESTART));
 			break;
 		case CONFIGURATION:
 			for (Attribute attribute : message.getAttributes()) {
 				changeConfigurationParameter(attribute);
 			}
+			message.consumeMessage();
 			break;
 		}
 	}

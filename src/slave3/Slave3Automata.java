@@ -1,5 +1,6 @@
 package slave3;
 
+import slave2.Slave2Input;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
@@ -37,14 +38,20 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 
 		ConveyorBeltManager okManager = new ConveyorBeltManager();
 		okManager.configure(10, 2);
-		okBelt = new ConveyorBeltAutomata("OK",this, okManager, null,null);
+		okBelt = new ConveyorBeltAutomata("OK",this, okManager, null,Slave3Input.OK_CLEAR);
 		getModel().setOkBeltModel(okBelt.getModel());
+		okBelt.disableAutoFeed();
+		okBelt.getModel().addListener(this);
 
 		ConveyorBeltManager notOkManager = new ConveyorBeltManager();
 		notOkManager.configure(10, 2);
-		notOkBelt = new ConveyorBeltAutomata("NO_OK",this, notOkManager, null,null);
-		getModel().setOkBeltModel(notOkBelt.getModel());
+		notOkBelt = new ConveyorBeltAutomata("NO_OK",this, notOkManager, null,Slave3Input.NOT_OK_CLEAR);
+		getModel().setNotOkBeltModel(notOkBelt.getModel());
+		notOkBelt.disableAutoFeed();
+		notOkBelt.getModel().addListener(this);
 
+		getModel().setAutomata(this);
+		getModel().addListener(this);
 	}
 
 	public ConveyorBeltAutomata getOkBelt() {
@@ -76,8 +83,17 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
 			Slave3Input input = (Slave3Input) message.getInputType();
-			// Input is a normal state command, use the state.
-			message.setConsumed(getModel().getState().execute(input));
+			switch (input) {
+			case QCS_EMPTY:
+				sendCommandMessage(CommunicationIds.SLAVE2, Slave2Input.QCS_EMPTY);
+				message.consumeMessage();
+				break;
+
+			default:
+				// Input is a normal state command, use the state.
+				message.setConsumed(getModel().getState().execute(input));
+				break;
+			}
 		}
 	}
 
