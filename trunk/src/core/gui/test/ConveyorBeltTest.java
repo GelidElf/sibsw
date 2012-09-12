@@ -49,7 +49,7 @@ public class ConveyorBeltTest extends JFrame {
 			e.printStackTrace();
 		}
 
-		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator(manager);
+		ConveyorBeltSimulator cbs = new ConveyorBeltSimulator("bleh",manager);
 		cbs.start();
 		Logger.println("ConveyorBelLanzado");
 	}

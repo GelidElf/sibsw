@@ -14,6 +14,7 @@ public class Robot1Simulator extends Thread implements ParallelPortManagerObserv
 
 	public Robot1Simulator(Robot1Manager manager) {
 		this.manager = manager;
+		setName("Robot1Simulator");
 		manager.registerObserver(this);
 	}
 
@@ -49,19 +50,19 @@ public class Robot1Simulator extends Thread implements ParallelPortManagerObserv
 		String modifiedGroup = manager.getModifiedGroupName();
 		try{
 			if (modifiedGroup.equals(Robot1Manager.DELIVER_AXIS) && manager.getValueByNameAsBoolean(modifiedGroup)) {
-				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
+				setTimeToComplete(manager.getValueByName(Robot1Manager.TIME_TO_AXIS_GEAR));
 				startJob(manager);
 				orden = modifiedGroup;
 				return;
 			}
 			if (modifiedGroup.equals(Robot1Manager.DELIVER_GEAR) && manager.getValueByNameAsBoolean(modifiedGroup)) {
-				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR));
+				setTimeToComplete(manager.getValueByName(Robot1Manager.TIME_TO_AXIS_GEAR));
 				startJob(manager);
 				orden = modifiedGroup;
 				return;
 			}
 			if (modifiedGroup.equals(Robot1Manager.DELIVER_ASSEMBLED) && manager.getValueByNameAsBoolean(modifiedGroup)) {
-				setTimeToComplete(manager.getBitGroupValue(Robot1Manager.TIME_TO_TRANSPORT));
+				setTimeToComplete(manager.getValueByName(Robot1Manager.TIME_TO_TRANSPORT));
 				startJob(manager);
 				orden = modifiedGroup;
 				return;

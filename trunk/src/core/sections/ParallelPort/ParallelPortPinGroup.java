@@ -66,7 +66,7 @@ public class ParallelPortPinGroup implements Cloneable {
 	public void setValue(int value) throws ParallelPortException {
 		if (value > Math.pow(2, this.length())) {
 			throw new ParallelPortException(
-					"Tried to set a value to big for the group");
+			"Tried to set a value to big for the group");
 		}
 		if (_manager != null) {
 			String binaryString = Integer.toBinaryString(value);

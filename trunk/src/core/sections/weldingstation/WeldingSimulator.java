@@ -47,7 +47,12 @@ public class WeldingSimulator extends Thread implements ParallelPortManagerObser
 	public void updateFromPortManager(ParallelPortManager manager) {
 		String modifiedGroup = manager.getModifiedGroupName();
 		if (modifiedGroup.equals(WeldingManager.DELIVER_WELDMENT)) {
-			setTimeToComplete(manager.getBitGroupValue(WeldingManager.TIME_TO_WELD) + manager.getBitGroupValue(WeldingManager.TIME_TO_WELD));
+			try {
+				setTimeToComplete(manager.getValueByName(WeldingManager.TIME_TO_WELD) + manager.getValueByName(WeldingManager.TIME_TO_WELD));
+			} catch (ParallelPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			startJob(manager);
 			return;
 		}

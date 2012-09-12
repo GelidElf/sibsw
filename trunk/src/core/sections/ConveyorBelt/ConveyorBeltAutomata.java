@@ -23,7 +23,7 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		getModel().setAutomata(this);
 		this.manager = manager;
 		manager.registerObserver(this);
-		simulator = new ConveyorBeltSimulator(this.manager);
+		simulator = new ConveyorBeltSimulator(name,this.manager);
 		Logger.println("AT CB Created");
 		this.jobDone = jobDone;
 		this.canAcceptElements = canAcceptElements;
@@ -79,8 +79,18 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			boolean stateChanged = reactToInput((ConveyorBeltInput) message.getInputType());
-			message.setConsumed(stateChanged);
+			ConveyorBeltInput input = (ConveyorBeltInput) message.getInputType();
+			if (input == ConveyorBeltInput.loadSensorTrue){
+				try {
+					manager.setValueByNameAsBoolean(ConveyorBeltManager.SENSOR_LOAD, true);
+				} catch (ParallelPortException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}else{
+				boolean stateChanged = reactToInput(input);
+				message.setConsumed(stateChanged);
+			}
 		}
 	}
 

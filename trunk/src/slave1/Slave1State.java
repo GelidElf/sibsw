@@ -1,10 +1,8 @@
 package slave1;
 
-import master.MasterInput;
+import slave2.Slave2Input;
 import core.gui.satuspanel.ModeEnum;
-import core.messages.Message;
 import core.messages.enums.CommunicationIds;
-import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.AssembyStation.AssemblyStationInput;
@@ -42,9 +40,6 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch(input){
 				case AS_READY:
-					Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
-							CommunicationMessageType.COMMAND, MasterInput.AS_READY);
-					currentState.getAutomata().sendMessage(message);
 					return WAITING_FOR_SPACE_IN_TB;
 				case AS_EMPTY:
 					return LOADING_AS;
@@ -101,9 +96,7 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case AS_IN_TRANSPORT:
-					Message message = new Message("AS_IN_TRANSPORT", CommunicationIds.MASTER, false,
-							CommunicationMessageType.COMMAND, MasterInput.AS_IN_TCB);
-					currentState.getAutomata().sendMessage(message);
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.ASSEMBLED_IN_TRANSPORT);
 					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.ASRemoved, false);
 					return Idle;
 
@@ -135,8 +128,7 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case GEAR_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-					.feedInput(AssemblyStationInput.GearFeeded, false);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.GearFeeded, false);
 					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return WAITING_FOR_AXIS;
 
@@ -165,8 +157,7 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case AXIS_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-					.feedInput(AssemblyStationInput.AxisFeeded, false);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.AxisFeeded, false);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return Idle;
 
@@ -181,8 +172,7 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case AXIS_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-					.feedInput(AssemblyStationInput.AxisFeeded, false);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.AxisFeeded, false);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return WAITING_FOR_GEAR;
 
@@ -211,8 +201,7 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case GEAR_IN_AS:
-					currentState.getAutomata().getAssemblyStation()
-					.feedInput(AssemblyStationInput.GearFeeded, false);
+					currentState.getAutomata().getAssemblyStation().feedInput(AssemblyStationInput.GearFeeded, false);
 					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
 					return Idle;
 

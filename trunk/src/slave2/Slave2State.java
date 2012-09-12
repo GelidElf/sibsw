@@ -1,10 +1,9 @@
 package slave2;
 
 import master.MasterInput;
+import slave1.Slave1Input;
 import core.gui.satuspanel.ModeEnum;
-import core.messages.Message;
 import core.messages.enums.CommunicationIds;
-import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
@@ -23,6 +22,7 @@ public class Slave2State implements State<Slave2Input> {
 				case START:
 					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.START, true);
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE1, Slave1Input.TRANSPORT_READY);
 					return Idle;
 				default:
 					break;
@@ -33,23 +33,11 @@ public class Slave2State implements State<Slave2Input> {
 		Idle(ModeEnum.IDLE) {
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
-				Message message;
 				switch (input) {
-				case WS_EMPTY:
-					return LoadingWeldingStation;
-				case WELDMENT_READY:
-					message = new Message("AS_READY_TO_PICKUP", CommunicationIds.MASTER, false,
-							CommunicationMessageType.COMMAND, MasterInput.AS_READY_TO_PICKUP);
-					currentState.getAutomata().sendMessage(message);
-					return UnloadingWeldment;
-				case NSTOP:
-					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
-					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
-					return IdleStop;
-				case ESTOP:
-					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
-					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
-					return IdleStop;
+				case ASSEMBLED_READY_FOR_PICKUP:
+
+					return WaitingForWeldingToBeEmpty;
+
 				default:
 					break;
 				}
@@ -68,44 +56,49 @@ public class Slave2State implements State<Slave2Input> {
 				}
 				return super.executeInternal(currentState, input);
 			}
-		}, LoadingWeldingStation(ModeEnum.RUNNING){
+		},WaitingForWeldingToBeEmpty(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
-				case ASSEMBLED_READY:
-					Message message = new Message("WS_NEEDS_PIECE", CommunicationIds.MASTER, false,
-							CommunicationMessageType.COMMAND, MasterInput.FEED_WS);
-					currentState.getAutomata().sendMessage(message);
-					return WaitingForWeldingToBeLoaded;
+				case WS_EMPTY:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER,MasterInput.MOVE_AS_FROM_TCB_TO_WS);
+					return WaitingForWSToBeLoaded;
 
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		}, WaitingForWeldingToBeLoaded(ModeEnum.RUNNING){
+		},WaitingForWSToBeLoaded(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case WELDING_STATION_LOADED:
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.AssemblyLoaded, false);
-					return Idle;
+					return WaitingForWSToFinish;
 
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		}, UnloadingWeldment(ModeEnum.IDLE){
+		},WaitingForWSToFinish(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
-				case WELDMENT_REMOVED:
-					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.WeldmentRemoved, false);
-					return Idle;
+				case WELDMENT_READY:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_WP_FROM_WS_TO_QCS);
+					return WaitForNOtificationOfWSEmpty;
+
 				default:
 					break;
 				}
+				return super.executeInternal(currentState, input);
+			}
+		},WaitForNOtificationOfWSEmpty(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				// TODO Auto-generated method stub
 				return super.executeInternal(currentState, input);
 			}
 		};

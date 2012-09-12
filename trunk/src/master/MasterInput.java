@@ -2,10 +2,8 @@ package master;
 
 public enum MasterInput {
 	START,
-	AS_READY,
-	EMPTY_TRANSFER_CB,
 	AP_IN_WS, //assembled piece in welding station
-	WP_IN_QS, //welded piece in quality station
+	WP_IN_QS, //welded station finished and piece ready
 	QCS_LOADED, //checked piece in conveyor belt
 	AS_IN_TCB, // Assembled piece in transfer belt (for communication between
 	// slave1 and 2)
@@ -13,12 +11,12 @@ public enum MasterInput {
 	NSTOP,
 	RESUME,
 	FEED_WS,
-	AS_READY_TO_PICKUP,
+	MOVE_AS_FROM_TCB_TO_WS, //Señal para que indique al robot que mueva la pieza
+	MOVE_WP_FROM_WS_TO_QCS, //Señal para que indique al robot que mueva la pieza
 	QCS_EMPTY,
 	PIECE_OK,
 	OK_LOADED,
 	PIECE_NOK,
 	NOK_LOADED,
-	DeliveredChecked,
-	TRANSFER_CLEAR; //shortcut for communication between slave2 and 1
+	DeliveredChecked;
 }
