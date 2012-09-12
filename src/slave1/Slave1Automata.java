@@ -177,34 +177,34 @@ public class Slave1Automata extends AutomataContainer<Slave1Input, Slave1State, 
 			try {
 				switch (parameter) {
 				case CB_AXIS_LENGTH:
-					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					axisBelt.getManager().setValueByName(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_AXIS_CAPACITY:
-					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
+					axisBelt.getManager().setValueByName(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
 					break;
 				case CB_AXIS_SPEED:
-					axisBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
+					axisBelt.getManager().setValueByName(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case CB_GEARS_LENGTH:
-					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					gearBelt.getManager().setValueByName(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_GEARS_CAPACITY:
-					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
+					gearBelt.getManager().setValueByName(ConveyorBeltManager.CAPACITY, getPinCapacity((Integer) attribute.getValue()));
 					break;
 				case CB_GEARS_SPEED:
-					gearBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
+					gearBelt.getManager().setValueByName(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_AS:
-					assemblyStation.getManager().setBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME, (Integer) attribute.getValue());
+					assemblyStation.getManager().setValueByName(AssemblyStationManager.ASSEMBLING_TIME, (Integer) attribute.getValue());
 					break;
 				case PICK_TIME_AXIS_GEAR:
-					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_AXIS_GEAR, (Integer) attribute.getValue());
+					robot.getManager().setValueByName(Robot1Manager.TIME_TO_AXIS_GEAR, (Integer) attribute.getValue());
 					break;
 				case TRANSPORT_PLACE_TIME_AXIS_GEAR:
-					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_ASSEMBLED, (Integer) attribute.getValue());
+					robot.getManager().setValueByName(Robot1Manager.TIME_TO_ASSEMBLED, (Integer) attribute.getValue());
 					break;
 				case TRANSPORT_PLACE_TIME_ASSEMBLED:
-					robot.getManager().setBitGroupValue(Robot1Manager.TIME_TO_TRANSPORT, (Integer) attribute.getValue());
+					robot.getManager().setValueByName(Robot1Manager.TIME_TO_TRANSPORT, (Integer) attribute.getValue());
 					break;
 				default:
 					break;

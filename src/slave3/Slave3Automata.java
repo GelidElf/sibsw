@@ -137,16 +137,16 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 			try {
 				switch (parameter) {
 				case CB_OK_LENGTH:
-					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					okBelt.getManager().setValueByName(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_WRONG_LENGTH:
-					notOkBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					notOkBelt.getManager().setValueByName(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_OK_SPEED:
-					okBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
+					okBelt.getManager().setValueByName(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_QCS:
-					qualityStation.getManager().setBitGroupValue(QualityStationManager.ACTIVATION_TIME, (Integer) attribute.getValue());
+					qualityStation.getManager().setValueByName(QualityStationManager.ACTIVATION_TIME, (Integer) attribute.getValue());
 					break;
 				default:
 					break;

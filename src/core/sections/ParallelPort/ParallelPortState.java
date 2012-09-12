@@ -22,6 +22,9 @@ public class ParallelPortState implements Cloneable {
 	}
 
 	public ParallelPortState() {
+		for (int i = 0; i < 16; i++){
+			connectors[i] = false;
+		}
 	}
 
 	/**
@@ -29,9 +32,8 @@ public class ParallelPortState implements Cloneable {
 	 * instantiated with a constructor;
 	 */
 	private ParallelPortState(ParallelPortState other) {
-		int i = 0;
-		for (Boolean value : other.connectors) {
-			this.connectors[i] = value.booleanValue();
+		for (int i = 0; i < 16; i++){
+			this.connectors[i] = other.connectors[i];
 		}
 	}
 

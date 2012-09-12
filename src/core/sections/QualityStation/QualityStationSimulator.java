@@ -13,13 +13,13 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 	private int result = 2;
 	private int failurePercentage = 0;
 	private long currentJobTime;
-	
+
 	public QualityStationSimulator(QualityStationManager manager) {
 		_random = new Random(System.currentTimeMillis());
 		this.manager = manager;
 		manager.registerObserver(this);
 	}
-	
+
 	@Override
 	public void run() {
 		while(true){
@@ -39,7 +39,7 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	public ParallelPortManager getManager() {
@@ -50,12 +50,17 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 	public void updateFromPortManager(ParallelPortManager manager) {
 		String modifiedGroup = manager.getModifiedGroupName();
 		if (modifiedGroup.equals(QualityStationManager.ENABLED)) {
-			setTimeToComplete(manager.getBitGroupValue(QualityStationManager.ACTIVATION_TIME));
+			try {
+				setTimeToComplete(manager.getValueByName(QualityStationManager.ACTIVATION_TIME));
+			} catch (ParallelPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			startJob(manager);
 			return;
-		}		
+		}
 	}
-	
+
 	private void startJob(ParallelPortManager manager) {
 		try {
 			manager.setValueByNameAsBoolean(QualityStationManager.ENABLED, true);

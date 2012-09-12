@@ -94,15 +94,15 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 			try {
 				switch (parameter) {
 				case PICK_TIME_ASSEMBLED:
-					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_ASSEMBLED_P,
+					robot.getManager().setValueByName(Robot2Manager.TIME_TO_ASSEMBLED_P,
 							(Integer) attribute.getValue());
 					break;
 				case TRANSPORT_PLACE_TIME_ASSEMBLED_IN_WS:
-					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_WELDED,
+					robot.getManager().setValueByName(Robot2Manager.TIME_TO_WELDED,
 							(Integer) attribute.getValue());
 					break;
 				case TRANSPORT_PLACE_TIME_WELDED:
-					robot.getManager().setBitGroupValue(Robot2Manager.TIME_TO_CB, (Integer) attribute.getValue());
+					robot.getManager().setValueByName(Robot2Manager.TIME_TO_CB, (Integer) attribute.getValue());
 					break;
 				default:
 					break;

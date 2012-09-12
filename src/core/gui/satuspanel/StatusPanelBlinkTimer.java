@@ -14,7 +14,7 @@ public class StatusPanelBlinkTimer implements ActionListener {
 	private static List<StatusPanel> statusPanels = null;
 	static {
 		statusPanels = new ArrayList<StatusPanel>();
-		int speed = 300;
+		int speed = 600;
 		timer = new Timer(speed, new StatusPanelBlinkTimer());
 		timer.setRepeats(true);
 		timer.start();

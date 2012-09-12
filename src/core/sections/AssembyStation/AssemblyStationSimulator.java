@@ -14,7 +14,13 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 	}
 
 	private int getAssemblingTime() {
-		return manager.getBitGroupValue(AssemblyStationManager.ASSEMBLING_TIME);
+		try {
+			return manager.getValueByName(AssemblyStationManager.ASSEMBLING_TIME);
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	@Override

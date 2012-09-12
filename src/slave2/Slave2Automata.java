@@ -1,6 +1,6 @@
 package slave2;
 
-import master.MasterInput;
+import slave1.Slave1Input;
 import core.aplication.Configuration;
 import core.messages.Attribute;
 import core.messages.Message;
@@ -12,6 +12,7 @@ import core.messages.enums.ConfigurationParameters;
 import core.model.AutomataContainer;
 import core.model.ModelListener;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
+import core.sections.ConveyorBelt.ConveyorBeltInput;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.weldingstation.WeldingAutomata;
@@ -32,7 +33,7 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 
 		ConveyorBeltManager transferManager = new ConveyorBeltManager();
 		transferManager.configure(10, 2);
-		transferBelt = new ConveyorBeltAutomata("TRANSFER",this, transferManager, Slave2Input.ASSEMBLED_READY,Slave2Input.TRANSFER_CLEAR);
+		transferBelt = new ConveyorBeltAutomata("TRANSFER",this, transferManager, Slave2Input.ASSEMBLED_READY_FOR_PICKUP,Slave2Input.TRANSFER_CLEAR);
 		getModel().setTransferBeltModel(transferBelt.getModel());
 		transferBelt.getModel().addListener(this);
 
@@ -74,13 +75,17 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
 			Slave2Input input = (Slave2Input) message.getInputType();
-			if (input == Slave2Input.TRANSFER_CLEAR) {
-				message = new Message("EMPTY_TRANSFER_CB", CommunicationIds.MASTER, false,
-						CommunicationMessageType.COMMAND, MasterInput.EMPTY_TRANSFER_CB);
-				sendMessage(message);
+			switch (input) {
+			case TRANSFER_CLEAR:
+				sendCommandMessage(CommunicationIds.SLAVE1, Slave1Input.TRANSPORT_READY);
 				message.consumeMessage();
-			}else{
+				break;
+			case ASSEMBLED_IN_TRANSPORT:
+				getTransferBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+				break;
+			default:
 				message.setConsumed(getModel().getState().execute(input));
+				break;
 			}
 		}
 	}
@@ -135,13 +140,13 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 			try {
 				switch (parameter) {
 				case CB_TRANSFER_LENGTH:
-					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
+					transferBelt.getManager().setValueByName(ConveyorBeltManager.LENGTH, getPinLength((Integer) attribute.getValue()));
 					break;
 				case CB_TRANSFER_SPEED:
-					transferBelt.getManager().setBitGroupValue(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
+					transferBelt.getManager().setValueByName(ConveyorBeltManager.SPEED, getPinSpeed((Integer) attribute.getValue()));
 					break;
 				case ACTIVATION_TIME_WS:
-					weldingStation.getManager().setBitGroupValue(WeldingManager.TIME_TO_WELD, (Integer) attribute.getValue());
+					weldingStation.getManager().setValueByName(WeldingManager.TIME_TO_WELD, (Integer) attribute.getValue());
 					break;
 				default:
 					break;

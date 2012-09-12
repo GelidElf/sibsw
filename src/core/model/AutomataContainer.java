@@ -90,6 +90,12 @@ extends Thread {
 		commManager.sendMessage(message);
 	}
 
+	public void sendCommandMessage(CommunicationIds id,Enum<?> input){
+		Message message = new Message(input.name(), id, false,
+				CommunicationMessageType.COMMAND, input);
+		sendMessage(message);
+	}
+
 
 	public void injectMessage(Message message) {
 		if (message == null) {
