@@ -162,15 +162,4 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 		return canAcceptElements;
 	}
 
-	/*public void setLength(int length) {
-		// size of piece is 0.1 m, length comes in meters
-		try {
-			int value = (int) (length / 0.1);
-			manager.setValueByName(ConveyorBeltManager.CAPACITY, value);
-		} catch (ParallelPortException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-
 }

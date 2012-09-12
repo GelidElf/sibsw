@@ -31,7 +31,6 @@ public class QualityStationManager extends ParallelPortManager {
 	public void configure(int activationTime) {
 		try {
 			setValueByName(QualityStationManager.ACTIVATION_TIME, activationTime);
-			//setValueByName(QualityStationManager.FAILURE_PERCENTAGE, failurePercentage); //No es necesario
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}

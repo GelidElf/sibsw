@@ -20,7 +20,6 @@ public class Slave1State implements State<Slave1Input> {
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch (input) {
 				case START:
-					//FIXME: Make the feed input execute the start command
 					currentState.getAutomata().getRobot().feedInput(Robot1Input.START, true);
 					currentState.getAutomata().getGearBelt().feedInput(ConveyorBeltInput.START, true);
 					currentState.getAutomata().getAxisBelt().feedInput(ConveyorBeltInput.START, true);
@@ -33,9 +32,6 @@ public class Slave1State implements State<Slave1Input> {
 			}
 		},
 		Idle(ModeEnum.IDLE) {
-
-			//!!!!!!!!!!!!! FALTA MOVE_ASSEMBLED
-
 			@Override
 			public states executeInternal(Slave1State currentState, Slave1Input input) {
 				switch(input){

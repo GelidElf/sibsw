@@ -122,7 +122,6 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		if (newCapacity != capacity) {
 			capacity = newCapacity;
 			int residualCuantity = changeCapacity(newCapacity);
-			//manager.setValueByName(ConveyorBeltManager.QUANTITY, residualCuantity);
 			quantity = residualCuantity;
 		}
 	}

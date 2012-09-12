@@ -47,15 +47,6 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 
 	}
 
-	public void setInitialSettings(String settings) {
-
-		//TODO: po hacerlo >.<
-		//robot.setSpeed......
-		//gearBelt.setLength,speed, capacity....
-		//AS.setAssemblyDelay....
-
-	}
-
 	public ConveyorBeltAutomata getOkBelt() {
 		return okBelt;
 	}

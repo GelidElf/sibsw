@@ -21,7 +21,6 @@ public class ConveyorBeltManager extends ParallelPortManager {
 	public static final String RUNNING = "RUNNING";
 	public static final String SPEED = "SPEED";
 	public static final String CAPACITY = "CAPACITY";
-	//public static final String QUANTITY = "QUANTITY";
 	public static final String LENGTH = "LENGTH";
 
 	public ConveyorBeltManager() {
@@ -33,7 +32,6 @@ public class ConveyorBeltManager extends ParallelPortManager {
 			this.setBitGroup(ConveyorBeltManager.RUNNING, 2, 2);
 			this.setBitGroup(ConveyorBeltManager.SPEED, 3, 5);
 			this.setBitGroup(ConveyorBeltManager.CAPACITY, 6, 9);
-			//this.setBitGroup(ConveyorBeltManager.QUANTITY, 11, 15);
 			this.setBitGroup(ConveyorBeltManager.LENGTH, 10, 15);
 			// continue
 		} catch (ParallelPortException e) {
@@ -107,12 +105,5 @@ public class ConveyorBeltManager extends ParallelPortManager {
 		return value;
 	}
 
-	/*public Boolean isSensorUnloadMax() {
-		return isSensorFinish() && (getBitGroupValue(CAPACITY) == getBitGroupValue(QUANTITY));
-	}
-
-	public Boolean isEmpty() {
-		return (getBitGroupValue(QUANTITY) == 0);
-	}*/
 
 }
