@@ -28,6 +28,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 	public MasterAutomata(Configuration conf) {
 		super(null, MasterModel.getInstance(), new MultipleInboxCommunicationManager(CommunicationIds.MASTER, conf,
 				NUMBEROFINBOXES));
+		this.setName("MasterAutomata");
 		robot = new Robot2Automata(this, new Robot2Model(), new OfflineCommunicationManager());
 		//robot.getModel().addListener(this);
 		getModel().setRobot2Model(robot.getModel());

@@ -11,6 +11,7 @@ public class AssemblyStationSimulator extends Thread implements ParallelPortMana
 
 	public AssemblyStationSimulator(AssemblyStationManager manager) {
 		this.manager = manager;
+		setName("ASSimulator");
 	}
 
 	private int getAssemblingTime() {

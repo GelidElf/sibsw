@@ -16,6 +16,7 @@ public class QualityStationAutomata extends AutomataContainer<QualityStationInpu
 
 	public QualityStationAutomata(AutomataContainer<?, ?, ?> father, QualityStationModel model, CommunicationManager commManager) {
 		super(father, model, commManager);
+		this.setName("QCSAutomata");
 		manager = new QualityStationManager();
 		manager.configure(5);
 		manager.registerObserver(this);

@@ -18,6 +18,7 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 		_random = new Random(System.currentTimeMillis());
 		this.manager = manager;
 		manager.registerObserver(this);
+		this.setName("QCSSimulator");
 	}
 
 	@Override

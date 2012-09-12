@@ -16,6 +16,7 @@ public class Robot2Automata extends AutomataContainer<Robot2Input, core.sections
 
 	public Robot2Automata(AutomataContainer<?, ?, ?> father, Robot2Model model, CommunicationManager commManager) {
 		super(father, model, commManager);
+		this.setName("Robot2Automata");
 		manager = new Robot2Manager();
 		manager.configure(7, 7, 7);
 		manager.registerObserver(this);
