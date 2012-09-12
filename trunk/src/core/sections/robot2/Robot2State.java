@@ -10,6 +10,9 @@ import core.utilities.log.Logger;
 
 
 public class Robot2State implements State<Robot2Input> {
+
+	private static final long serialVersionUID = 4242177858690525739L;
+
 	private enum states implements AutomataStatesInternalImplementation<Robot2Input, Robot2State> {
 		Started(ModeEnum.READY) {
 			@Override
