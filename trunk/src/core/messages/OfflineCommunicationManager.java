@@ -13,7 +13,7 @@ public class OfflineCommunicationManager implements CommunicationManager {
 	private Inbox inbox;
 
 	public OfflineCommunicationManager() {
-		inbox = new Inbox();
+		inbox = new Inbox("SECTION");
 	}
 
 	@Override

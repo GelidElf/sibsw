@@ -38,6 +38,7 @@ extends Thread {
 				if (message.getConsumed()) {
 					commManager.getInbox().remove(message);
 					model.notifyObservers();
+					//Logger.println("REMOVED" + message.toString());
 				}
 			} catch (InterruptedException e) {
 				Logger.println("error reading messages");

@@ -46,7 +46,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Lo
 	}
 
 	private void initializeVariables() {
-		this.inbox = new Inbox();
+		this.inbox = new Inbox(owner.name());
 		loadConfiguration();
 	}
 

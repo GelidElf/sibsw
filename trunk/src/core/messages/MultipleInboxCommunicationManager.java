@@ -34,7 +34,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager, 
 		this.conf = conf;
 		this.numberOfIncoming = numberOfIncoming;
 		Logger.registerListener(this);
-		inbox = new Inbox();
+		inbox = new Inbox(owner.name());
 		serverPort = this.conf.getServerPortAsInt();
 		createServerSocket();
 	}

@@ -63,7 +63,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		}
 		movement.append ("after :");
 		printContents(movement);
-		Logger.println(movement.toString());
+		//Logger.println(movement.toString());
 	}
 
 	private void printContents(StringBuilder builder) {
