@@ -2,6 +2,7 @@ package core.sections.robot2;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
@@ -49,6 +50,7 @@ public class Robot2Model implements AutomataModel<Robot2Input, core.sections.rob
 	@Override
 	public void setAutomata(AutomataContainer<Robot2Input, Robot2State, ? extends AutomataModel<Robot2Input, Robot2State>> automata) {
 		state = new Robot2State((Robot2Automata) automata);
+		notifyObservers();
 	}
 
 
