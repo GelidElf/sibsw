@@ -10,6 +10,7 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 	private static final long DEFAULT_WAIT_TIME = 2;
 	private long currentJobTime;
 	private Robot2Manager manager;
+	private String orden;
 
 	public Robot2Simulator(Robot2Manager manager) {
 		this.manager = manager;
@@ -18,7 +19,7 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 	}
 
 	public void move() {
-		Logger.println("MOVIENDO ROBOT!!");
+		Logger.println("MOVIENDO ROBOT: " + orden);
 	}
 
 	@Override
@@ -51,16 +52,19 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 			if (modifiedGroup.equals(Robot2Manager.DELIVER_ASSEMBLED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
 				setTimeToComplete(manager.getValueByName(Robot2Manager.TIME_TO_ASSEMBLED_P));
 				startJob(manager);
+				orden = modifiedGroup;
 				return;
 			}
 			if (modifiedGroup.equals(Robot2Manager.DELIVER_WELDED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
 				setTimeToComplete(manager.getValueByName(Robot2Manager.TIME_TO_WELDED));
 				startJob(manager);
+				orden = modifiedGroup;
 				return;
 			}
 			if (modifiedGroup.equals(Robot2Manager.DELIVER_CHECKED_PIECE) && manager.getValueByNameAsBoolean(modifiedGroup)) {
 				setTimeToComplete(manager.getValueByName(Robot2Manager.TIME_TO_CB));
 				startJob(manager);
+				orden = modifiedGroup;
 				return;
 			}
 		}
@@ -80,7 +84,6 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 
 	private void setTimeToComplete(long i) {
 		currentJobTime = i;
-		System.out.println(currentJobTime);
 	}
 
 }

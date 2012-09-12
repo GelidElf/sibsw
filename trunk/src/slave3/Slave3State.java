@@ -2,9 +2,7 @@ package slave3;
 
 import master.MasterInput;
 import core.gui.satuspanel.ModeEnum;
-import core.messages.Message;
 import core.messages.enums.CommunicationIds;
-import core.messages.enums.CommunicationMessageType;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
 import core.sections.ConveyorBelt.ConveyorBeltInput;
@@ -12,6 +10,7 @@ import core.sections.QualityStation.QualityStationInput;
 import core.utilities.log.Logger;
 
 public class Slave3State implements State<Slave3Input> {
+
 
 	private static final long serialVersionUID = 5032185310071082226L;
 
@@ -36,8 +35,8 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case QCS_LOADED:
-					currentState.getAutomata().sendMessage(new Message("ObjetoEnTransfer", CommunicationIds.MASTER, false, CommunicationMessageType.COMMAND, MasterInput.QCS_LOADED));
-					return SOMETHING; //cambiar por un nuevo estado!
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.QCS_LOADED);
+					return WaitingForQCSToFinish; //cambiar por un nuevo estado!
 				case NSTOP:
 					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
 					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
@@ -67,7 +66,51 @@ public class Slave3State implements State<Slave3Input> {
 				return super.executeInternal(currentState, input);
 			}
 		},
-		SOMETHING(ModeEnum.NSTOP);
+		WaitingForQCSToFinish(ModeEnum.RUNNING){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case QCS_FINISHED_OK:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.PIECE_OK);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Empty, false);
+					return WaitintForOkPieceToBeDelivered;
+				case QCS_FINISHED_NOT_OK:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.PIECE_OK);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Empty, false);
+					return WaitintForNotOkPieceToBeDelivered;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},WaitintForOkPieceToBeDelivered(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case OK_LOADED:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+					return Idle;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+
+		},WaitintForNotOkPieceToBeDelivered(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case NOT_OK_LOADED:
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+					return Idle;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		};
 
 		@Override
 		public states executeInternal(Slave3State currentState, Slave3Input input) {

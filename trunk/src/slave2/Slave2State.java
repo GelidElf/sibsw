@@ -88,6 +88,18 @@ public class Slave2State implements State<Slave2Input> {
 				switch (input) {
 				case WELDMENT_READY:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_WP_FROM_WS_TO_QCS);
+					return WaitingForQCSToBeEmpty;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},WaitingForQCSToBeEmpty(ModeEnum.IDLE){
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case QCS_EMPTY:
 					return WaitForNOtificationOfWSEmpty;
 
 				default:
@@ -98,7 +110,14 @@ public class Slave2State implements State<Slave2Input> {
 		},WaitForNOtificationOfWSEmpty(ModeEnum.IDLE){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
-				// TODO Auto-generated method stub
+				switch (input) {
+				case WELDMENT_REMOVED:
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.WeldmentRemoved, false);
+					return Idle;
+
+				default:
+					break;
+				}
 				return super.executeInternal(currentState, input);
 			}
 		};

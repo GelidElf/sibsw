@@ -73,6 +73,11 @@ public class Slave2Automata extends AutomataContainer<Slave2Input, Slave2State, 
 				break;
 			case ASSEMBLED_IN_TRANSPORT:
 				getTransferBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+				message.consumeMessage();
+				break;
+			case ASSEMBLED_REMOVED_FROM_TCB:
+				getTransferBelt().feedInput(ConveyorBeltInput.unloadSensorTrue, false);
+				message.consumeMessage();
 				break;
 			default:
 				message.setConsumed(getModel().getState().execute(input));

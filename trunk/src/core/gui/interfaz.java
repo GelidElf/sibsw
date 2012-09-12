@@ -29,6 +29,7 @@ import master.MasterInput;
 import master.MasterModel;
 import slave1.Slave1Model;
 import slave2.Slave2Model;
+import slave3.Slave3Model;
 import core.configurationParameters.ConfigurationParametersClass;
 import core.file.ConfigurationFileReader;
 import core.gui.mainview.MainView;
@@ -53,7 +54,8 @@ public class interfaz implements ModelListener {
 	private StatusPanel gearStatusPanel;
 	private StatusPanel assemblyStatusPanel;
 	private StatusPanel transferStatusPanel;
-	private StatusPanel finisedStatusPanel;
+	private StatusPanel okStatusPanel;
+	private StatusPanel notOkStatusPanel;
 	private StatusPanel robot2StatusPanel;
 	private StatusPanel qualityStatusPanel;
 	private StatusPanel weldingStatusPanel;
@@ -139,7 +141,8 @@ public class interfaz implements ModelListener {
 		gearStatusPanel = new StatusPanel();
 		assemblyStatusPanel = new StatusPanel();
 		transferStatusPanel = new StatusPanel();
-		finisedStatusPanel = new StatusPanel();
+		okStatusPanel = new StatusPanel();
+		notOkStatusPanel = new StatusPanel();
 		robot2StatusPanel = new StatusPanel();
 		qualityStatusPanel = new StatusPanel();
 		weldingStatusPanel = new StatusPanel();
@@ -158,8 +161,11 @@ public class interfaz implements ModelListener {
 		transferStatusPanel.setBounds(468, 254, 14, 10);
 		mainView.add(transferStatusPanel);
 
-		finisedStatusPanel.setBounds(223, 444, 14, 10);
-		mainView.add(finisedStatusPanel);
+		okStatusPanel.setBounds(223, 444, 14, 10);
+		mainView.add(okStatusPanel);
+
+		notOkStatusPanel.setBounds(468, 464, 14, 10);
+		mainView.add(notOkStatusPanel);
 
 		robot2StatusPanel.setBounds(303, 390, 14, 10);
 		mainView.add(robot2StatusPanel);
@@ -712,11 +718,13 @@ public class interfaz implements ModelListener {
 		setStatusPanelFor(CommunicationIds.SLAVE2, model);
 		updateStatusSlave2Sections(model);
 		setStatusPanelFor(CommunicationIds.SLAVE3, model);
+		updateStatusSlave3Sections(model);
 		ventanaReports.updateData(model.getCurrentReport());
 		updateConsoles();
 		updateBotonStart();
 		frame.repaint();
 	}
+
 
 	private void updateStatusMasterSections(MasterModel masterModel) {
 		if (masterModel != null){
@@ -787,6 +795,21 @@ public class interfaz implements ModelListener {
 			weldingStatusPanel.setModo(null);
 			transferStatusPanel.setModo(null);
 		}
+	}
+
+
+	private void updateStatusSlave3Sections(MasterModel model) {
+		Slave3Model slave3Model = (Slave3Model) model.getModel().get(CommunicationIds.SLAVE3);
+		if ((slave3Model != null) && model.isConnected(CommunicationIds.SLAVE3)) {
+			okStatusPanel.setModo (slave3Model.getOkBeltModel().getCurrentMode());
+			notOkStatusPanel.setModo (slave3Model.getNotOkBeltModel().getCurrentMode());
+			qualityStatusPanel.setModo (slave3Model.getQualityStationModel().getCurrentMode());
+		}else{
+			okStatusPanel.setModo (null);
+			notOkStatusPanel.setModo (null);
+			qualityStatusPanel.setModo (null);
+		}
+
 	}
 
 	//TODO CUANDO EST� LISTO EL ESCLAVO 3, DESCOMENTAR

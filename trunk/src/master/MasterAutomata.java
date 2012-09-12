@@ -19,7 +19,7 @@ import core.sections.robot2.Robot2Model;
 
 public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, MasterModel> implements ModelListener{
 
-	private static final int NUMBEROFINBOXES = 2;
+	private static final int NUMBEROFINBOXES = 3;
 	private Robot2Automata robot;
 
 	public MasterState getCurrentState() {

@@ -80,6 +80,7 @@ public class Slave3Model implements AutomataModel<Slave3Input, Slave3State> {
 	@Override
 	public void setAutomata(AutomataContainer<Slave3Input, Slave3State, ? extends AutomataModel<Slave3Input, Slave3State>> automata) {
 		currentState = new Slave3State((Slave3Automata) automata);
+		notifyObservers();
 	}
 
 }

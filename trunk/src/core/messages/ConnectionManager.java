@@ -120,7 +120,7 @@ public class ConnectionManager extends Thread {
 	 *            the message to resend
 	 */
 	private void reenviamos(Message message) {
-		Logger.println(String.format("Reenviando mensaje ID:%s desde %s", message.getID(), owner));
+		Logger.println(String.format("Reenviando mensaje ID:%s a %s", message.getID(), message.getDestination()));
 		commManager.sendMessage(message);
 	}
 

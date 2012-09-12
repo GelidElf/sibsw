@@ -1,6 +1,7 @@
 package master;
 
 import slave2.Slave2Input;
+import slave3.Slave3Input;
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataStatesInternalImplementation;
@@ -33,8 +34,12 @@ public class MasterState implements State<MasterInput> {
 			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
 				switch (input) {
 				case MOVE_AS_FROM_TCB_TO_WS:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.ASSEMBLED_REMOVED_FROM_TCB);
 					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverAssembledPiece, false);
 					return MovingASToWS;
+				case MOVE_WP_FROM_WS_TO_QCS:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WS_EMPTY);
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverWeldedPiece, false);
 				default:
 					break;
 				}
@@ -47,6 +52,20 @@ public class MasterState implements State<MasterInput> {
 				switch (input) {
 				case AP_IN_WS:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WELDING_STATION_LOADED);
+					return Idle;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingWPToQCS(ModeEnum.RUNNING){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case WP_IN_QS:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.QCS_LOADED);
 					return Idle;
 
 				default:
