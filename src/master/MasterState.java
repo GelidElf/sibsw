@@ -5,6 +5,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.sections.robot2.Robot2Input;
 import core.utilities.log.Logger;
 
 public class MasterState implements State<MasterInput> {
@@ -30,6 +31,22 @@ public class MasterState implements State<MasterInput> {
 			@Override
 			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
 				switch (input) {
+				case MOVE_AS_FROM_TCB_TO_WS:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverAssembledPiece, false);
+					return MovingASToWS;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingASToWS(ModeEnum.RUNNING){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case AP_IN_WS:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WELDING_STATION_LOADED);
+					return Idle;
 
 				default:
 					break;
