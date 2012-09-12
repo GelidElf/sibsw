@@ -7,6 +7,7 @@ import java.util.Map;
 
 import core.configurationParameters.ConfigurationParametersClass;
 import core.file.ConfigurationParametersFileReader;
+import core.file.ReportFileReader;
 import core.file.ReportFileWriter;
 import core.gui.satuspanel.ModeEnum;
 import core.messages.enums.CommunicationIds;
@@ -50,7 +51,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		}
 		robot2Model = new Robot2Model();
 		// TODO: must read the file of reports to restore old values
-		currentReport = new Report();
+		currentReport = new ReportFileReader("reports.txt").readConfiguration();
 		currentScadaConfiguration = new ConfigurationParametersFileReader("ConfigurationParameters.ini").readConfiguration();
 	}
 
