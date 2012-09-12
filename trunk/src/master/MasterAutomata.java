@@ -86,6 +86,7 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 	@Override
 	public void startCommand() {
 		this.start();
+		getRobot().startCommand();
 		getCommunicationManager().initialize();
 	}
 

@@ -718,16 +718,14 @@ public class interfaz implements ModelListener {
 		frame.repaint();
 	}
 
-	private void updateStatusMasterSections(MasterModel model) {
-		MasterModel masterModel = (MasterModel) model.getModel().get(CommunicationIds.MASTER);
-		if ((masterModel != null) && model.isConnected(CommunicationIds.MASTER)) {
-			masterStatusPanel.setModo(MasterModel.getInstance().getCurrentMode());
+	private void updateStatusMasterSections(MasterModel masterModel) {
+		if (masterModel != null){
+			masterStatusPanel.setModo(masterModel.getCurrentMode());
 			robot2StatusPanel.setModo(masterModel.getRobo2Model().getCurrentMode());
-		} else {
+		}else{
 			masterStatusPanel.setModo(null);
 			robot2StatusPanel.setModo(null);
 		}
-
 	}
 
 	private void updateConsoles() {

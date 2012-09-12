@@ -80,6 +80,7 @@ public class Robot2Simulator extends Thread implements ParallelPortManagerObserv
 
 	private void setTimeToComplete(long i) {
 		currentJobTime = i;
+		System.out.println(currentJobTime);
 	}
 
 }

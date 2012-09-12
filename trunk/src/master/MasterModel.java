@@ -18,7 +18,7 @@ import core.model.ModelListener;
 import core.reports.Report;
 import core.sections.robot2.Robot2Model;
 
-public class MasterModel implements AutomataModel<MasterInput, MasterState> {
+public class MasterModel implements AutomataModel<MasterInput, MasterState>, ModelListener{
 
 	private static final long serialVersionUID = -4132746104951198451L;
 
@@ -49,7 +49,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		for (CommunicationIds id : CommunicationIds.values()) {
 			connected.put(id, false);
 		}
-		robot2Model = new Robot2Model();
+		setRobot2Model( new Robot2Model());
 		currentReport = new ReportFileReader("reports.txt").readConfiguration();
 		currentScadaConfiguration = new ConfigurationParametersFileReader("ConfigurationParameters.ini").readConfiguration();
 	}
@@ -107,6 +107,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 
 	public void setRobot2Model(Robot2Model model) {
 		robot2Model = model;
+		robot2Model.addListener(this);
 	}
 
 	public Robot2Model getRobo2Model() {
@@ -167,6 +168,11 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 	 */
 	public ConfigurationParametersClass getCurrentScadaConfiguration() {
 		return currentScadaConfiguration;
+	}
+
+	@Override
+	public void updateOnModelChange() {
+		notifyObservers();
 	}
 
 }

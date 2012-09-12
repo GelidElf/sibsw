@@ -13,7 +13,7 @@ public class Robot2Model implements AutomataModel<Robot2Input, core.sections.rob
 
 	private static final long serialVersionUID = 1258560192891249135L;
 
-	private List<ModelListener> listeners;
+	private transient List<ModelListener> listeners;
 	private Robot2State state;
 
 	public Robot2Model() {
