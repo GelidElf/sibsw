@@ -27,12 +27,12 @@ public class AssemblyStationAutomata extends AutomataContainer<AssemblyStationIn
 	protected void consume(Message message) {
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
-			reactToInput((AssemblyStationInput) message.getInputType());
+			message.setConsumed(reactToInput((AssemblyStationInput) message.getInputType()));
 		}
 	}
 
-	private void reactToInput(AssemblyStationInput input) {
-		getModel().getState().execute(input);
+	private boolean reactToInput(AssemblyStationInput input) {
+		return getModel().getState().execute(input);
 	}
 
 	private boolean debeReaccionaPorTipoEntrada(Message message) {

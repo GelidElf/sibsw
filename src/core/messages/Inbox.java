@@ -28,8 +28,10 @@ public class Inbox {
 	private final LinkedList<Message> remainders = new LinkedList<Message>();
 	private Lock lock = new ReentrantLock();
 	private Condition notEmpty = lock.newCondition();
+	private String owner;
 
-	public Inbox() {
+	public Inbox(String owner) {
+		this.owner = owner;
 	}
 
 	/**
@@ -39,6 +41,7 @@ public class Inbox {
 	 * param message the message to add
 	 */
 	public void add(Message message) {
+		//Logger.println(owner + "->" + message.toString());
 		lock.lock();
 		try {
 			if (message.isUrgent()) {
@@ -76,7 +79,8 @@ public class Inbox {
 				remainders.add(message);
 			} else {
 				if (remainders.size() > 0) {
-					message = remainders.getFirst();
+					message = remainders.removeFirst();
+					remainders.addLast(message);
 				}
 			}
 			return message;
