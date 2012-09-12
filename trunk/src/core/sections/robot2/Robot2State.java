@@ -163,6 +163,7 @@ public class Robot2State implements State<Robot2Input> {
 	}
 
 	public Robot2State(Robot2Automata automata) {
+		currentState = states.Started;
 		this.automata = automata;
 	}
 

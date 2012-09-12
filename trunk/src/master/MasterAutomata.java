@@ -11,12 +11,13 @@ import core.messages.enums.ConfigurationParameters;
 import core.messages.enums.ReportValues;
 import core.model.AutomataContainer;
 import core.model.AutomataModel;
+import core.model.ModelListener;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.robot2.Robot2Automata;
 import core.sections.robot2.Robot2Manager;
 import core.sections.robot2.Robot2Model;
 
-public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, MasterModel> {
+public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, MasterModel> implements ModelListener{
 
 	private static final int NUMBEROFINBOXES = 2;
 	private Robot2Automata robot;
@@ -30,8 +31,8 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 				NUMBEROFINBOXES));
 		this.setName("MasterAutomata");
 		robot = new Robot2Automata(this, new Robot2Model(), new OfflineCommunicationManager());
-		//robot.getModel().addListener(this);
 		getModel().setRobot2Model(robot.getModel());
+		robot.getModel().addListener(this);
 		getModel().setAutomata(this);
 		getModel().receiveSignal(ReportValues.SYSTEM_BOOTS);
 	}
@@ -126,6 +127,11 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 
 	public Robot2Automata getRobot() {
 		return robot;
+	}
+
+	@Override
+	public void updateOnModelChange() {
+		MasterModel.getInstance().notifyObservers();
 	}
 
 }

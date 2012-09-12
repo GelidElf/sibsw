@@ -653,7 +653,7 @@ public class interfaz implements ModelListener {
 		frame.getContentPane().add(buttonReports);
 
 		JButton btnNewButton = new JButton("Send conf");
-		
+
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -664,11 +664,11 @@ public class interfaz implements ModelListener {
 				}
 			}
 		});
-		
+
 		btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 14));
 		btnNewButton.setBounds(296, 525, 104, 34);
 		frame.getContentPane().add(btnNewButton);
-		
+
 	}
 
 	private JTabbedPane createConsolePanel() {
@@ -722,7 +722,7 @@ public class interfaz implements ModelListener {
 		MasterModel masterModel = (MasterModel) model.getModel().get(CommunicationIds.MASTER);
 		if ((masterModel != null) && model.isConnected(CommunicationIds.MASTER)) {
 			masterStatusPanel.setModo(MasterModel.getInstance().getCurrentMode());
-			robot2StatusPanel.setModo(masterModel.getRobo1Model().getCurrentMode());
+			robot2StatusPanel.setModo(masterModel.getRobo2Model().getCurrentMode());
 		} else {
 			masterStatusPanel.setModo(null);
 			robot2StatusPanel.setModo(null);

@@ -19,6 +19,7 @@ public class MasterState implements State<MasterInput> {
 					MasterState currentState, MasterInput input) {
 				switch (input) {
 				case START:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.START, true);
 					return Idle;
 
 				default:

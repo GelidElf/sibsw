@@ -50,7 +50,6 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 			connected.put(id, false);
 		}
 		robot2Model = new Robot2Model();
-		// TODO: must read the file of reports to restore old values
 		currentReport = new ReportFileReader("reports.txt").readConfiguration();
 		currentScadaConfiguration = new ConfigurationParametersFileReader("ConfigurationParameters.ini").readConfiguration();
 	}
@@ -110,7 +109,7 @@ public class MasterModel implements AutomataModel<MasterInput, MasterState> {
 		robot2Model = model;
 	}
 
-	public Robot2Model getRobo1Model() {
+	public Robot2Model getRobo2Model() {
 		return robot2Model;
 	}
 
