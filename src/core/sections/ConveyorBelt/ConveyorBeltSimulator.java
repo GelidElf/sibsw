@@ -84,6 +84,7 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 							move();
 						} else {
 							Logger.println("Paramos la cinta!");
+							manager.setValueByNameAsBoolean(ConveyorBeltManager.SENSOR_UNLOAD, true);
 							manager.setRunning(false);
 						}
 					}
