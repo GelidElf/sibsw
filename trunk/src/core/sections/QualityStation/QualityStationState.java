@@ -6,6 +6,7 @@ import core.gui.satuspanel.ModeEnum;
 import core.model.AutomataContainer;
 import core.model.AutomataStatesInternalImplementation;
 import core.model.State;
+import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.utilities.log.Logger;
 
 public class QualityStationState implements State<QualityStationInput> {
@@ -36,10 +37,13 @@ public class QualityStationState implements State<QualityStationInput> {
 				case ESTOP:
 					return IdleStop;
 				case Load:
+					try {
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(QualityStationManager.ENABLED, true);
+					} catch (ParallelPortException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return WeldedLoaded;
-
-					// TODO: AQUI FALTAN MOVIDAS
-
 				default:
 					break;
 				}

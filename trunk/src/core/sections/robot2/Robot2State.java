@@ -39,7 +39,7 @@ public class Robot2State implements State<Robot2Input> {
 					return DeliveringAssembled;
 				case DeliverWeldedPiece:
 					try {
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_ASSEMBLED_PIECE, true);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_WELDED_PIECE, true);
 					} catch (ParallelPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -47,7 +47,7 @@ public class Robot2State implements State<Robot2Input> {
 					return DeliveringWelded;
 				case DeliverCheckedOkPiece:
 					try {
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_ASSEMBLED_PIECE, true);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(Robot2Manager.DELIVER_CHECKED_PIECE, true);
 					} catch (ParallelPortException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

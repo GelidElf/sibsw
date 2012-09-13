@@ -28,10 +28,12 @@ public class QualityStationSimulator  extends Thread implements ParallelPortMana
 				failurePercentage = manager.getValueByName(QualityStationManager.FAILURE_PERCENTAGE);
 				if (manager.getValueByName(QualityStationManager.ENABLED) == 1){
 					result = (_random.nextInt(100)>=failurePercentage)?1:0;
-					sleep(manager.getValueByName(manager.ACTIVATION_TIME)*1000);
+					sleep(currentJobTime*1000);
+					manager.setValueByName(QualityStationManager.RESULT,result);
+					manager.setValueByName(QualityStationManager.ENABLED,0);
+				}else{
+					sleep(2000);
 				}
-				manager.setValueByName(QualityStationManager.RESULT,result);
-				manager.setValueByName(QualityStationManager.ENABLED,0);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
