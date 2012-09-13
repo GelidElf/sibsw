@@ -89,7 +89,7 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case OK_LOADED:
-					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, true);
 					return Idle;
 
 				default:
@@ -103,7 +103,7 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case NOT_OK_LOADED:
-					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, false);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, true);
 					return Idle;
 
 				default:

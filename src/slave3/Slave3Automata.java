@@ -9,9 +9,11 @@ import core.messages.SingleInboxCommunicationManager;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.messages.enums.ConfigurationParameters;
+import core.messages.enums.ReportValues;
 import core.model.AutomataContainer;
 import core.model.ModelListener;
 import core.sections.ConveyorBelt.ConveyorBeltAutomata;
+import core.sections.ConveyorBelt.ConveyorBeltInput;
 import core.sections.ConveyorBelt.ConveyorBeltManager;
 import core.sections.ParallelPort.Utils.ParallelPortException;
 import core.sections.QualityStation.QualityStationAutomata;
@@ -38,14 +40,14 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 
 		ConveyorBeltManager okManager = new ConveyorBeltManager();
 		okManager.configure(10, 2);
-		okBelt = new ConveyorBeltAutomata("OK",this, okManager, null,Slave3Input.OK_CLEAR);
+		okBelt = new ConveyorBeltAutomata("OK",this, okManager, Slave3Input.OK_DELIVERED,Slave3Input.OK_CLEAR);
 		getModel().setOkBeltModel(okBelt.getModel());
 		okBelt.disableAutoFeed();
 		okBelt.getModel().addListener(this);
 
 		ConveyorBeltManager notOkManager = new ConveyorBeltManager();
 		notOkManager.configure(10, 2);
-		notOkBelt = new ConveyorBeltAutomata("NO_OK",this, notOkManager, null,Slave3Input.NOT_OK_CLEAR);
+		notOkBelt = new ConveyorBeltAutomata("NO_OK",this, notOkManager, Slave3Input.NOT_OK_DELIVERED,Slave3Input.NOT_OK_CLEAR);
 		getModel().setNotOkBeltModel(notOkBelt.getModel());
 		notOkBelt.disableAutoFeed();
 		notOkBelt.getModel().addListener(this);
@@ -83,12 +85,26 @@ public class Slave3Automata extends AutomataContainer<Slave3Input, Slave3State, 
 		reaccionaPorTipoDeMensaje(message);
 		if (debeReaccionaPorTipoEntrada(message)) {
 			Slave3Input input = (Slave3Input) message.getInputType();
+			Message reportMessage;
 			switch (input) {
 			case QCS_EMPTY:
 				sendCommandMessage(CommunicationIds.SLAVE2, Slave2Input.QCS_EMPTY);
 				message.consumeMessage();
 				break;
-
+			case OK_DELIVERED:
+				getOkBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+				message.consumeMessage();
+				reportMessage = new Message(input.name(), CommunicationIds.MASTER, false, CommunicationMessageType.REPORT, null);
+				reportMessage.addAttribute(ReportValues.OK_PIECES.name(),1);
+				sendMessage(reportMessage);
+				break;
+			case NOT_OK_DELIVERED:
+				getOkBelt().feedInput(ConveyorBeltInput.unloadSensorFalse, false);
+				message.consumeMessage();
+				reportMessage = new Message(input.name(), CommunicationIds.MASTER, false, CommunicationMessageType.REPORT, null);
+				reportMessage.addAttribute(ReportValues.NOT_OK_PIECES.name(),1);
+				sendMessage(reportMessage);
+				break;
 			default:
 				// Input is a normal state command, use the state.
 				message.setConsumed(getModel().getState().execute(input));
