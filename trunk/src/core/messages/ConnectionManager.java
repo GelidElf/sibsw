@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketException;
 
 import core.messages.enums.CommunicationIds;
+import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
 
 /**
@@ -23,6 +24,7 @@ import core.utilities.log.Logger;
  */
 public class ConnectionManager extends Thread {
 
+	private static final String CLOSE_MESSAGE_ID = "CLOSE_COMMUNICATION: ";
 	private Socket socket = null;
 	private ObjectOutputStream oos = null;
 	private ObjectInputStream ois = null;
@@ -90,13 +92,19 @@ public class ConnectionManager extends Thread {
 		if (message == null) {
 			return;
 		} else {
-			//Logger.println("RecibidoMensaje en: " + owner);
-			if (somosDestinatariosDelMensaje(message) && noHemosEnviadoElMensaje(message)) {
-				this.inbox.add(message);
+			if (isClosingMessage(message)){
+				terminateConnection();
+				Logger.println(message.getID());
+				System.exit(1);
+			}else{
+				//Logger.println("RecibidoMensaje en: " + owner);
+				if (somosDestinatariosDelMensaje(message) && noHemosEnviadoElMensaje(message)) {
+					this.inbox.add(message);
 
-			} else {
-				if (somosElMaster()) {
-					reenviamos(message);
+				} else {
+					if (somosElMaster()) {
+						reenviamos(message);
+					}
 				}
 			}
 		}
@@ -262,6 +270,31 @@ public class ConnectionManager extends Thread {
 	 */
 	public void setPeer(CommunicationIds peer) {
 		this.peer = peer;
+	}
+
+	public void close(String motive){
+		sendCloseMessage(motive);
+		terminateConnection();
+	}
+
+	private void terminateConnection() {
+		Logger.unregisterListener(commManager);
+		try {
+			oos.close();
+			ois.close();
+			socket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void sendCloseMessage(String motive) {
+		Message message = new Message(CLOSE_MESSAGE_ID+motive, peer, true, CommunicationMessageType.HANDSHAKE, null);
+		writeMessage(message);
+	}
+
+	private boolean isClosingMessage(Message message){
+		return (message.getType() == CommunicationMessageType.HANDSHAKE) && message.getID().startsWith(CLOSE_MESSAGE_ID);
 	}
 
 }

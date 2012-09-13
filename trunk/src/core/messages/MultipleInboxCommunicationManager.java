@@ -16,9 +16,8 @@ import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
-import core.utilities.log.LoggerListener;
 
-public class MultipleInboxCommunicationManager implements CommunicationManager, LoggerListener{
+public class MultipleInboxCommunicationManager implements CommunicationManager{
 
 	private HashMap<CommunicationIds, ConnectionManager> connections = new HashMap<CommunicationIds, ConnectionManager>();
 	private int numberOfIncoming;
@@ -83,11 +82,8 @@ public class MultipleInboxCommunicationManager implements CommunicationManager, 
 	 * @throws IOException
 	 */
 	private void connectClient() throws IOException {
-		Logger.println(String.format("Waiting for connection n1 %d", connections.size()));
+		Logger.println(String.format("Waiting for connection %d/%d", connections.size()+1,numberOfIncoming));
 		Socket socket = serverSocket.accept();
-		serverSocket.close();
-		serverSocket = new ServerSocket();
-		serverSocket.bind(new InetSocketAddress(serverPort));
 		Logger.println("new connection established");
 		manageNewSocketReceived(socket);
 	}
@@ -101,10 +97,14 @@ public class MultipleInboxCommunicationManager implements CommunicationManager, 
 	private void manageNewSocketReceived(Socket socket) {
 		ConnectionManager c = new ConnectionManager(socket, this, inbox);
 		CommunicationIds s = c.waitTilMessageReceivedAndReturnPeer();
-		connections.put(s, c);
-		Logger.println(String.format("%s connected", s));
-		startConnection(c);
-		sendConfigurationParameters(s);
+		if (connections.get(s)== null){
+			connections.put(s, c);
+			Logger.println(String.format("%s connected", s));
+			startConnection(c);
+			sendConfigurationParameters(s);
+		}else{
+			c.close("Client Already Connected");
+		}
 	}
 
 	private void sendConfigurationParameters(CommunicationIds id) {
@@ -239,6 +239,11 @@ public class MultipleInboxCommunicationManager implements CommunicationManager, 
 	@Override
 	public void println(String text) {
 		MasterModel.getInstance().putTextInBuffer(CommunicationIds.MASTER, text+"\n");
+	}
+
+	@Override
+	public void setDisconnectInProgress(boolean disconnectInProgress) {
+		// No disconnection for master
 	}
 
 }
