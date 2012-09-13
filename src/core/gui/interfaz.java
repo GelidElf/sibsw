@@ -80,7 +80,7 @@ public class interfaz implements ModelListener {
 	JButton btnStart = new JButton("Start");
 	JButton btnStop = new JButton("Stop");
 	JButton btnEmergencyStop = new JButton("Emergency Stop");
-	
+
 	boolean oneClick = false;
 
 	/**
@@ -243,7 +243,7 @@ public class interfaz implements ModelListener {
 		lblMaster.setBounds(10, 37, 46, 14);
 		panel.add(lblMaster);
 
-		
+
 		btnEmergencyStop.setBounds(944, 279, 152, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
@@ -261,11 +261,11 @@ public class interfaz implements ModelListener {
 					btnStop.setText("Stop");
 					oneClick = false;
 				}
-				
+
 			}
 		});
 
-		
+
 		btnStop.setBounds(961, 234, 104, 34);
 		btnStop.setEnabled(false); //Al principio no se ha conectado ninguno, nos esperamos que el update normal cambie el estado cuando toque
 		btnStop.addActionListener(new ActionListener() {
@@ -286,7 +286,7 @@ public class interfaz implements ModelListener {
 		btnStop.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnStop);
 
-		
+
 		btnStart.setBounds(971, 188, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -339,7 +339,7 @@ public class interfaz implements ModelListener {
 		time_to_pick_ass.setBounds(307, 56, 42, 20);
 		Master.add(time_to_pick_ass);
 		JFormattedTextField tf = ((JSpinner.DefaultEditor) time_to_pick_ass.getEditor()).getTextField();
-	    tf.setEditable(false);
+		tf.setEditable(false);
 
 
 		final JSpinner t_trans_place_ass = new JSpinner();
@@ -352,7 +352,7 @@ public class interfaz implements ModelListener {
 		t_trans_place_ass.setBounds(307, 95, 42, 20);
 		Master.add(t_trans_place_ass);
 		JFormattedTextField tf2 = ((JSpinner.DefaultEditor) t_trans_place_ass.getEditor()).getTextField();
-	    tf2.setEditable(false);
+		tf2.setEditable(false);
 
 		final JSpinner t_trans_place_wel = new JSpinner();
 		t_trans_place_wel.addChangeListener(new ChangeListener() {
@@ -364,7 +364,7 @@ public class interfaz implements ModelListener {
 		t_trans_place_wel.setBounds(307, 134, 42, 20);
 		Master.add(t_trans_place_wel);
 		JFormattedTextField tf3 = ((JSpinner.DefaultEditor) t_trans_place_wel.getEditor()).getTextField();
-	    tf3.setEditable(false);
+		tf3.setEditable(false);
 
 		JPanel Slave1 = new JPanel();
 		configuration.addTab("Slave 1", null, Slave1, null);
@@ -403,7 +403,7 @@ public class interfaz implements ModelListener {
 		t_pick_axis_gear.setBounds(315, 37, 41, 20);
 		Robot1.add(t_pick_axis_gear);
 		JFormattedTextField tf4 = ((JSpinner.DefaultEditor) t_pick_axis_gear.getEditor()).getTextField();
-	    tf4.setEditable(false);
+		tf4.setEditable(false);
 
 		final JSpinner t_trans_place_axis_gear = new JSpinner();
 		t_trans_place_axis_gear.addChangeListener(new ChangeListener() {
@@ -415,7 +415,7 @@ public class interfaz implements ModelListener {
 		t_trans_place_axis_gear.setBounds(315, 69, 41, 20);
 		Robot1.add(t_trans_place_axis_gear);
 		JFormattedTextField tf5 = ((JSpinner.DefaultEditor) t_trans_place_axis_gear.getEditor()).getTextField();
-	    tf5.setEditable(false);
+		tf5.setEditable(false);
 
 		final JSpinner t_trans_place_ass_p = new JSpinner();
 		t_trans_place_ass_p.addChangeListener(new ChangeListener() {
@@ -427,7 +427,7 @@ public class interfaz implements ModelListener {
 		t_trans_place_ass_p.setBounds(315, 107, 41, 20);
 		Robot1.add(t_trans_place_ass_p);
 		JFormattedTextField tf6 = ((JSpinner.DefaultEditor) t_trans_place_ass_p.getEditor()).getTextField();
-	    tf6.setEditable(false);
+		tf6.setEditable(false);
 
 		JPanel CBAxis = new JPanel();
 		tabbedPane_1.addTab("CB Axis", null, CBAxis, null);
@@ -458,7 +458,7 @@ public class interfaz implements ModelListener {
 		cb_axis_length.setBounds(199, 30, 43, 20);
 		CBAxis.add(cb_axis_length);
 		JFormattedTextField tf7 = ((JSpinner.DefaultEditor) cb_axis_length.getEditor()).getTextField();
-	    tf7.setEditable(false);
+		tf7.setEditable(false);
 
 		final JSpinner cb_axis_speed = new JSpinner();
 		cb_axis_speed.addChangeListener(new ChangeListener() {
@@ -470,7 +470,7 @@ public class interfaz implements ModelListener {
 		cb_axis_speed.setBounds(199, 63, 43, 20);
 		CBAxis.add(cb_axis_speed);
 		JFormattedTextField tf8 = ((JSpinner.DefaultEditor) cb_axis_speed.getEditor()).getTextField();
-	    tf8.setEditable(false);
+		tf8.setEditable(false);
 
 		final JSpinner cb_axis_capa = new JSpinner();
 		cb_axis_capa.addChangeListener(new ChangeListener() {
@@ -482,7 +482,7 @@ public class interfaz implements ModelListener {
 		cb_axis_capa.setBounds(199, 96, 43, 20);
 		CBAxis.add(cb_axis_capa);
 		JFormattedTextField tf9 = ((JSpinner.DefaultEditor) cb_axis_capa.getEditor()).getTextField();
-	    tf9.setEditable(false);
+		tf9.setEditable(false);
 
 		JPanel CBGears = new JPanel();
 		tabbedPane_1.addTab("CB Gears", null, CBGears, null);
@@ -513,7 +513,7 @@ public class interfaz implements ModelListener {
 		cb_gears_length.setBounds(196, 36, 45, 20);
 		CBGears.add(cb_gears_length);
 		JFormattedTextField tf10 = ((JSpinner.DefaultEditor) cb_gears_length.getEditor()).getTextField();
-	    tf10.setEditable(false);
+		tf10.setEditable(false);
 
 		final JSpinner cb_gears_speed = new JSpinner();
 		cb_gears_speed.addChangeListener(new ChangeListener() {
@@ -525,7 +525,7 @@ public class interfaz implements ModelListener {
 		cb_gears_speed.setBounds(196, 70, 45, 20);
 		CBGears.add(cb_gears_speed);
 		JFormattedTextField tf11 = ((JSpinner.DefaultEditor) cb_gears_speed.getEditor()).getTextField();
-	    tf11.setEditable(false);
+		tf11.setEditable(false);
 
 		final JSpinner cb_gears_capa = new JSpinner();
 		cb_gears_capa.addChangeListener(new ChangeListener() {
@@ -537,7 +537,7 @@ public class interfaz implements ModelListener {
 		cb_gears_capa.setBounds(196, 98, 45, 20);
 		CBGears.add(cb_gears_capa);
 		JFormattedTextField tf12 = ((JSpinner.DefaultEditor) cb_gears_capa.getEditor()).getTextField();
-	    tf12.setEditable(false);
+		tf12.setEditable(false);
 
 		JPanel AssemblingStation = new JPanel();
 		AssemblingStation.setLayout(null);
@@ -558,7 +558,7 @@ public class interfaz implements ModelListener {
 		act_t_ass.setBounds(326, 20, 42, 20);
 		AssemblingStation.add(act_t_ass);
 		JFormattedTextField tf20 = ((JSpinner.DefaultEditor) act_t_ass.getEditor()).getTextField();
-	    tf20.setEditable(false);
+		tf20.setEditable(false);
 
 		JPanel Slave2 = new JPanel();
 		configuration.addTab("Slave 2", null, Slave2, null);
@@ -589,7 +589,7 @@ public class interfaz implements ModelListener {
 		cb_trans_length.setBounds(254, 38, 44, 20);
 		Slave2.add(cb_trans_length);
 		JFormattedTextField tf13 = ((JSpinner.DefaultEditor) cb_trans_length.getEditor()).getTextField();
-	    tf13.setEditable(false);
+		tf13.setEditable(false);
 
 		final JSpinner cb_trans_speed = new JSpinner();
 		cb_trans_speed.addChangeListener(new ChangeListener() {
@@ -601,7 +601,7 @@ public class interfaz implements ModelListener {
 		cb_trans_speed.setBounds(254, 76, 44, 20);
 		Slave2.add(cb_trans_speed);
 		JFormattedTextField tf14 = ((JSpinner.DefaultEditor) cb_trans_speed.getEditor()).getTextField();
-	    tf14.setEditable(false);
+		tf14.setEditable(false);
 
 		final JSpinner act_t_welding = new JSpinner();
 		act_t_welding.addChangeListener(new ChangeListener() {
@@ -613,7 +613,7 @@ public class interfaz implements ModelListener {
 		act_t_welding.setBounds(254, 113, 44, 20);
 		Slave2.add(act_t_welding);
 		JFormattedTextField tf15 = ((JSpinner.DefaultEditor) act_t_welding.getEditor()).getTextField();
-	    tf15.setEditable(false);
+		tf15.setEditable(false);
 
 		JPanel Slave3 = new JPanel();
 		configuration.addTab("Slave 3", null, Slave3, null);
@@ -643,7 +643,7 @@ public class interfaz implements ModelListener {
 		act_t_qcs.setBounds(298, 24, 49, 20);
 		QCS.add(act_t_qcs);
 		JFormattedTextField tf16 = ((JSpinner.DefaultEditor) act_t_qcs.getEditor()).getTextField();
-	    tf16.setEditable(false);
+		tf16.setEditable(false);
 
 		JPanel CBOk = new JPanel();
 		tabbedPane_3.addTab("CB Ok", null, CBOk, null);
@@ -670,7 +670,7 @@ public class interfaz implements ModelListener {
 		cb_ok_speed.setBounds(200, 22, 42, 20);
 		CBOk.add(cb_ok_speed);
 		JFormattedTextField tf17 = ((JSpinner.DefaultEditor) cb_ok_speed.getEditor()).getTextField();
-	    tf17.setEditable(false);
+		tf17.setEditable(false);
 
 		final JSpinner cb_ok_length = new JSpinner();
 		cb_ok_length.addChangeListener(new ChangeListener() {
@@ -682,7 +682,7 @@ public class interfaz implements ModelListener {
 		cb_ok_length.setBounds(200, 50, 42, 20);
 		CBOk.add(cb_ok_length);
 		JFormattedTextField tf18 = ((JSpinner.DefaultEditor) cb_ok_length.getEditor()).getTextField();
-	    tf18.setEditable(false);
+		tf18.setEditable(false);
 
 		JPanel CBWrong = new JPanel();
 		tabbedPane_3.addTab("CB Wrong", null, CBWrong, null);
@@ -704,7 +704,7 @@ public class interfaz implements ModelListener {
 		cb_wrong_length.setBounds(151, 22, 49, 20);
 		CBWrong.add(cb_wrong_length);
 		JFormattedTextField tf19 = ((JSpinner.DefaultEditor) cb_wrong_length.getEditor()).getTextField();
-	    tf19.setEditable(false);
+		tf19.setEditable(false);
 
 		frame.getContentPane().add(createConsolePanel());
 
@@ -882,21 +882,21 @@ public class interfaz implements ModelListener {
 	private void updateBotonStart(){
 		btnStart.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
 				(master.getModel().isConnected(CommunicationIds.SLAVE2))
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+				&& (master.getModel().isConnected(CommunicationIds.SLAVE3))
 		);
 	}
-	
+
 	private void updateBotonStop(){
 		btnStop.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
 				(master.getModel().isConnected(CommunicationIds.SLAVE2))
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+				&& (master.getModel().isConnected(CommunicationIds.SLAVE3))
 		);
 	}
-	
+
 	private void updateBotonEStop(){
 		btnEmergencyStop.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
 				(master.getModel().isConnected(CommunicationIds.SLAVE2))
-				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+				&& (master.getModel().isConnected(CommunicationIds.SLAVE3))
 		);
 	}
 

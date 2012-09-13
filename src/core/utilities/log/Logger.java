@@ -1,7 +1,6 @@
 package core.utilities.log;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Helper class to register several loggers (file, standar output)
@@ -10,9 +9,9 @@ import java.util.List;
  */
 public class Logger {
 
-	public static List<LoggerListener> listeners;
+	public static CopyOnWriteArrayList<LoggerListener> listeners;
 	static {
-		listeners = new ArrayList<LoggerListener>();
+		listeners = new CopyOnWriteArrayList<LoggerListener>();
 		listeners.add(new StandardOutputLoggerListener());
 	}
 
