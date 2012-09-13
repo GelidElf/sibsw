@@ -87,6 +87,10 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.AXIS_IN_AS, false);
 					}
 					return Idle;
+				case NSTOP:
+					return DeliveringAxisStop;
+				case ESTOP:
+					return DeliveringAxisStop;
 				default:
 					break;
 				}
@@ -116,6 +120,10 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.GEAR_IN_AS, false);
 					}
 					return Idle;
+				case NSTOP:
+					return DeliveringGearStop;
+				case ESTOP:
+					return DeliveringGearStop;
 				default:
 					break;
 				}
@@ -145,6 +153,10 @@ public class Robot1State implements State<Robot1Input> {
 						slave1.feedInput(Slave1Input.AS_IN_TRANSPORT, false);
 					}
 					return Idle;
+				case NSTOP:
+					return DeliveringAssembledStop;
+				case ESTOP:
+					return DeliveringAssembledStop;
 				default:
 					break;
 				}

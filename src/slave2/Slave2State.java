@@ -37,7 +37,14 @@ public class Slave2State implements State<Slave2Input> {
 				case ASSEMBLED_READY_FOR_PICKUP:
 
 					return WaitingForWeldingToBeEmpty;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return IdleStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return IdleStop;
 				default:
 					break;
 				}
@@ -49,72 +56,183 @@ public class Slave2State implements State<Slave2Input> {
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
 					return Idle;
-
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitingForWeldingToBeEmpty(ModeEnum.RUNNING){
+		},
+		WaitingForWeldingToBeEmpty(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case WS_EMPTY:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER,MasterInput.MOVE_AS_FROM_TCB_TO_WS);
 					return WaitingForWSToBeLoaded;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return WaitingForWeldingToBeEmptyStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return WaitingForWeldingToBeEmptyStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitingForWSToBeLoaded(ModeEnum.RUNNING){
+		},
+		WaitingForWeldingToBeEmptyStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
+					return WaitingForWeldingToBeEmpty;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForWSToBeLoaded(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case WELDING_STATION_LOADED:
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.AssemblyLoaded, false);
 					return WaitingForWSToFinish;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return WaitingForWSToBeLoadedStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return WaitingForWSToBeLoadedStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitingForWSToFinish(ModeEnum.RUNNING){
+		},
+		WaitingForWSToBeLoadedStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
+					return WaitingForWSToBeLoaded;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForWSToFinish(ModeEnum.RUNNING){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case WELDMENT_READY:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_WP_FROM_WS_TO_QCS);
 					return WaitingForQCSToBeEmpty;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return WaitingForWSToFinishStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return WaitingForWSToFinishStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitingForQCSToBeEmpty(ModeEnum.IDLE){
+		},
+		WaitingForWSToFinishStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
+					return WaitingForWSToFinish;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitingForQCSToBeEmpty(ModeEnum.IDLE){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case QCS_EMPTY:
 					return WaitForNOtificationOfWSEmpty;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return WaitingForQCSToBeEmptyStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return WaitingForQCSToBeEmptyStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitForNOtificationOfWSEmpty(ModeEnum.IDLE){
+		},
+		WaitingForQCSToBeEmptyStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
+					return WaitingForQCSToBeEmpty;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitForNOtificationOfWSEmpty(ModeEnum.IDLE){
 			@Override
 			public states executeInternal(Slave2State currentState, Slave2Input input) {
 				switch (input) {
 				case WELDMENT_REMOVED:
 					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.WeldmentRemoved, false);
 					return Idle;
-
+				case NSTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.NSTOP, true);
+					return WaitForNOtificationOfWSEmptyStop;
+				case ESTOP:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.ESTOP, true);
+					return WaitForNOtificationOfWSEmptyStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitForNOtificationOfWSEmptyStop(ModeEnum.NSTOP) {
+			@Override
+			public states executeInternal(Slave2State currentState, Slave2Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getTransferBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getWeldingStation().feedInput(WeldingInput.RESTART, true);
+					return WaitForNOtificationOfWSEmpty;
 				default:
 					break;
 				}

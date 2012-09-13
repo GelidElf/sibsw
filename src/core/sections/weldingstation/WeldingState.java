@@ -21,6 +21,8 @@ public class WeldingState implements State<WeldingInput> {
 					Slave2Automata father = (Slave2Automata) currentState.getAutomata().getFather();
 					father.feedInput(Slave2Input.WS_EMPTY, false);
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -40,6 +42,8 @@ public class WeldingState implements State<WeldingInput> {
 					return IdleStop;
 				case ESTOP:
 					return IdleStop;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -50,6 +54,8 @@ public class WeldingState implements State<WeldingInput> {
 				switch (input) {
 				case RESTART:
 					return Idle;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -66,6 +72,8 @@ public class WeldingState implements State<WeldingInput> {
 					return DeliveringWeldmentStop;
 				case ESTOP:
 					return DeliveringWeldmentStop;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -76,6 +84,8 @@ public class WeldingState implements State<WeldingInput> {
 				switch (input) {
 				case RESTART:
 					return DeliveringWeldment;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -92,6 +102,8 @@ public class WeldingState implements State<WeldingInput> {
 					return WaitingForWeldmentToBeRemovedStop;
 				case ESTOP:
 					return WaitingForWeldmentToBeRemovedStop;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
@@ -101,6 +113,8 @@ public class WeldingState implements State<WeldingInput> {
 				switch (input) {
 				case RESTART:
 					return WaitingForWeldmentToBeRemoved;
+				default:
+					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
