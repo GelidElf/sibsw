@@ -9,7 +9,7 @@ public enum MasterInput {
 	// slave1 and 2)
 	ESTOP,
 	NSTOP,
-	RESUME,
+	RESTART,
 	FEED_WS,
 	MOVE_AS_FROM_TCB_TO_WS, //Señal para que indique al robot que mueva la pieza
 	MOVE_WP_FROM_WS_TO_QCS, //Señal para que indique al robot que mueva la pieza

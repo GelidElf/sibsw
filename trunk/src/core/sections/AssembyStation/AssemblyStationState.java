@@ -36,7 +36,22 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 				case GearFeeded:
 					currentState.getAutomata().putGear();
 					return WithGear;
-
+				case NSTOP:
+					return IdleStop;
+				case ESTOP:
+					return IdleStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		IdleStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case RESTART:
+					return Idle;
 				default:
 					break;
 				}
@@ -50,11 +65,26 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 				case AxisFeeded:
 					currentState.getAutomata().putAxis();
 					return Working;
-
+				case NSTOP:
+					return WithGearStop;
+				case ESTOP:
+					return WithGearStop;
 				default:
 					break;
 				}
 
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WithGearStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case RESTART:
+					return WithGear;
+				default:
+					break;
+				}
 				return super.executeInternal(currentState, input);
 			}
 		},
@@ -65,7 +95,22 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 				case GearFeeded:
 					currentState.getAutomata().putGear();
 					return Working;
-
+				case NSTOP:
+					return WithAxisStop;
+				case ESTOP:
+					return WithAxisStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WithAxisStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case RESTART:
+					return WithAxis;
 				default:
 					break;
 				}
@@ -80,7 +125,22 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 					Slave1Automata father = (Slave1Automata) currentState.getAutomata().getFather();
 					father.feedInput(Slave1Input.AS_READY, false);
 					return IdleLoaded;
-
+				case NSTOP:
+					return WorkingStop;
+				case ESTOP:
+					return WorkingStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WorkingStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case RESTART:
+					return Working;
 				default:
 					break;
 				}
@@ -95,7 +155,22 @@ public class AssemblyStationState implements State<AssemblyStationInput> {
 					Slave1Automata father = (Slave1Automata) currentState.getAutomata().getFather();
 					father.feedInput(Slave1Input.AS_EMPTY, false);
 					return Idle;
-
+				case NSTOP:
+					return IdleLoadedStop;
+				case ESTOP:
+					return IdleLoadedStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		IdleLoadedStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<AssemblyStationInput, AssemblyStationState> executeInternal(AssemblyStationState currentState, AssemblyStationInput input) {
+				switch (input) {
+				case RESTART:
+					return IdleLoaded;
 				default:
 					break;
 				}

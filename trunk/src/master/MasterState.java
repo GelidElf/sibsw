@@ -1,5 +1,6 @@
 package master;
 
+
 import slave2.Slave2Input;
 import slave3.Slave3Input;
 import core.gui.satuspanel.ModeEnum;
@@ -40,6 +41,25 @@ public class MasterState implements State<MasterInput> {
 				case MOVE_WP_FROM_WS_TO_QCS:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WS_EMPTY);
 					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverWeldedPiece, false);
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
+					return IdleStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.ESTOP, true);
+					return IdleStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		IdleStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
+					return Idle;
 				default:
 					break;
 				}
@@ -53,7 +73,25 @@ public class MasterState implements State<MasterInput> {
 				case AP_IN_WS:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WELDING_STATION_LOADED);
 					return Idle;
-
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
+					return MovingASToWSStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.ESTOP, true);
+					return MovingASToWSStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingASToWSStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
+					return MovingASToWS;
 				default:
 					break;
 				}
@@ -67,7 +105,25 @@ public class MasterState implements State<MasterInput> {
 				case WP_IN_QS:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.QCS_LOADED);
 					return Idle;
-
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
+					return MovingWPToQCSStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.ESTOP, true);
+					return MovingWPToQCSStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingWPToQCSStop(ModeEnum.NSTOP) {
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
+					return MovingWPToQCS;
 				default:
 					break;
 				}

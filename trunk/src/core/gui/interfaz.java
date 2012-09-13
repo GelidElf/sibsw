@@ -77,6 +77,10 @@ public class interfaz implements ModelListener {
 	private ReportWindow ventanaReports;
 
 	JButton btnStart = new JButton("Start");
+	JButton btnStop = new JButton("Stop");
+	JButton btnEmergencyStop = new JButton("Emergency Stop");
+	
+	boolean oneClick = false;
 
 	/**
 	 * Fill the map with the configuration parameter and its value from the
@@ -130,6 +134,7 @@ public class interfaz implements ModelListener {
 		frame.setBounds(100, 100, 1122, 802);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
+		frame.setResizable(false);
 
 		mainView = new MainView();
 		mainView.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
@@ -237,30 +242,50 @@ public class interfaz implements ModelListener {
 		lblMaster.setBounds(10, 37, 46, 14);
 		panel.add(lblMaster);
 
-		JButton btnEmergencyStop = new JButton("Emergency Stop");
+		
 		btnEmergencyStop.setBounds(944, 279, 152, 51);
 		frame.getContentPane().add(btnEmergencyStop);
 		btnEmergencyStop.setForeground(Color.RED);
 		btnEmergencyStop.setFont(new Font("Tahoma", Font.BOLD, 14));
+		btnEmergencyStop.setEnabled(false); //Al principio no se ha conectado ninguno, nos esperamos que el update normal cambie el estado cuando toque
 		btnEmergencyStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(MasterInput.ESTOP, true);
+				if(oneClick == false){
+					master.feedInput(MasterInput.ESTOP, true);
+					btnStop.setText("Restart");
+					oneClick = true;
+				}else{
+					master.feedInput(MasterInput.RESTART, true);
+					btnStop.setText("Stop");
+					oneClick = false;
+				}
+				
 			}
 		});
 
-		JButton btnStop = new JButton("Stop");
-		btnStop.setBounds(971, 233, 86, 34);
+		
+		btnStop.setBounds(961, 234, 104, 34);
+		btnStop.setEnabled(false); //Al principio no se ha conectado ninguno, nos esperamos que el update normal cambie el estado cuando toque
 		btnStop.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				master.feedInput(MasterInput.NSTOP, true);
+				if(oneClick == false){
+					master.feedInput(MasterInput.NSTOP, true);
+					btnStop.setText("Restart");
+					oneClick = true;
+				}else{
+					master.feedInput(MasterInput.RESTART, true);
+					btnStop.setText("Stop");
+					oneClick = false;
+				}
 			}
 		});
 		btnStop.setForeground(Color.RED);
 		btnStop.setFont(new Font("Tahoma", Font.BOLD, 14));
 		frame.getContentPane().add(btnStop);
 
+		
 		btnStart.setBounds(971, 188, 86, 34);
 		btnStart.setForeground(new Color(0, 128, 0));
 		btnStart.setFont(new Font("Tahoma", Font.BOLD, 14));
@@ -722,6 +747,8 @@ public class interfaz implements ModelListener {
 		ventanaReports.updateData(model.getCurrentReport());
 		updateConsoles();
 		updateBotonStart();
+		updateBotonStop();
+		updateBotonEStop();
 		frame.repaint();
 	}
 
@@ -815,6 +842,20 @@ public class interfaz implements ModelListener {
 	//TODO CUANDO EST� LISTO EL ESCLAVO 3, DESCOMENTAR
 	private void updateBotonStart(){
 		btnStart.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
+				(master.getModel().isConnected(CommunicationIds.SLAVE2))
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+		);
+	}
+	
+	private void updateBotonStop(){
+		btnStop.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
+				(master.getModel().isConnected(CommunicationIds.SLAVE2))
+				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
+		);
+	}
+	
+	private void updateBotonEStop(){
+		btnEmergencyStop.setEnabled((master.getModel().isConnected(CommunicationIds.SLAVE1)) &&
 				(master.getModel().isConnected(CommunicationIds.SLAVE2))
 				/*&& !(master.getModel().isConnected(CommunicationIds.SLAVE3))*/
 		);

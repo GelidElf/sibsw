@@ -57,9 +57,9 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 				sendBroadCastMessage(CommunicationMessageType.ESTOP);
 				message.setConsumed(getModel().getState().execute(MasterInput.ESTOP));
 				break;
-			case RESUME:
+			case RESTART:
 				sendBroadCastMessage(CommunicationMessageType.RESTART);
-				message.setConsumed(getModel().getState().execute(MasterInput.RESUME));
+				message.setConsumed(getModel().getState().execute(MasterInput.RESTART));
 				break;
 			default:
 				message.setConsumed(getModel().getState().execute(input));
