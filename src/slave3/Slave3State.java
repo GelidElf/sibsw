@@ -59,6 +59,9 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case RESTART:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.RESTART, true);
 					return Idle;
 
 				default:
@@ -79,32 +82,107 @@ public class Slave3State implements State<Slave3Input> {
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_NO_OK_FROM_QCS_TO_NO_OKB);
 					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Empty, false);
 					return WaitintForNotOkPieceToBeDelivered;
+				case NSTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.NSTOP, true);
+					return WaitingForQCSToFinishStop;
+				case ESTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.ESTOP, true);
+					return WaitingForQCSToFinishStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
-		},WaitintForOkPieceToBeDelivered(ModeEnum.IDLE){
+		},
+		WaitingForQCSToFinishStop(ModeEnum.NSTOP){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case RESTART:
+					return WaitingForQCSToFinish;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitintForOkPieceToBeDelivered(ModeEnum.IDLE){
 			@Override
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case OK_LOADED:
 					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, true);
 					return Idle;
-
+				case NSTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.NSTOP, true);
+					return WaitintForOkPieceToBeDeliveredStop;
+				case ESTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.ESTOP, true);
+					return WaitintForOkPieceToBeDeliveredStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 
-		},WaitintForNotOkPieceToBeDelivered(ModeEnum.IDLE){
+		},
+		WaitintForOkPieceToBeDeliveredStop(ModeEnum.NSTOP){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.RESTART, true);
+					return WaitintForOkPieceToBeDelivered;
+
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitintForNotOkPieceToBeDelivered(ModeEnum.IDLE){
 			@Override
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case NOT_OK_LOADED:
 					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.loadSensorTrue, true);
 					return Idle;
+				case NSTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.NSTOP, true);
+					return WaitintForNotOkPieceToBeDeliveredStop;
+				case ESTOP:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.ESTOP, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.ESTOP, true);
+					return WaitintForNotOkPieceToBeDeliveredStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		WaitintForNotOkPieceToBeDeliveredStop(ModeEnum.NSTOP){
+			@Override
+			public states executeInternal(Slave3State currentState, Slave3Input input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getNotOkBelt().feedInput(ConveyorBeltInput.RESTART, true);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.RESTART, true);
+					return WaitintForNotOkPieceToBeDelivered;
 
 				default:
 					break;
