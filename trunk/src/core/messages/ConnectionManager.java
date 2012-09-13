@@ -78,6 +78,8 @@ public class ConnectionManager extends Thread {
 			Message message = readMessageFromStream();
 			trataMensajeRecibido(message);
 		}
+		terminateConnection();
+		Logger.println("Terminated ConnectionManager");
 	}
 
 	/**
@@ -199,7 +201,6 @@ public class ConnectionManager extends Thread {
 		} catch (IOException e) {
 			if ((e instanceof EOFException) || (e instanceof SocketException)) {
 				commManager.clientDisconnected(getPeer());
-				Logger.println("Client has disconnected. Awaiting for reconnection");
 			} else {
 				e.printStackTrace();
 			}
@@ -207,7 +208,6 @@ public class ConnectionManager extends Thread {
 			e.printStackTrace();
 		} catch (NullPointerException e) {
 			commManager.clientDisconnected(getPeer());
-			Logger.println("Client has disconnected. Awaiting for reconnection");
 		}
 		return null;
 	}

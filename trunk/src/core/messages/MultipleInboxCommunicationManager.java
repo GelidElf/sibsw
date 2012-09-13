@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
+import master.MasterInput;
 import master.MasterModel;
 import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
@@ -27,6 +28,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	private ServerSocket serverSocket;
 	private Inbox inbox;
 	private ConnectionManager connection;
+	private boolean emergencyStopDetected = false;
 
 	public MultipleInboxCommunicationManager(CommunicationIds owner, Configuration conf, int numberOfIncoming) {
 		this.owner = owner;
@@ -102,6 +104,13 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 			Logger.println(String.format("%s connected", s));
 			startConnection(c);
 			sendConfigurationParameters(s);
+			if (emergencyStopDetected && (connections.size() == numberOfIncoming)){
+				emergencyStopDetected = false;
+				getInbox().add(new Message("ResumeFromDistonnectionEStop", CommunicationIds.MASTER, true,
+						CommunicationMessageType.COMMAND, MasterInput.RESTART));
+				sendMessage(new Message("StartDisconnectedClient", s, true,
+						CommunicationMessageType.START, null));
+			}
 		}else{
 			c.close("Client Already Connected");
 		}
@@ -124,6 +133,7 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	 */
 	private void reconnectClient(CommunicationIds commId) {
 		ExecutorService executor = Executors.newFixedThreadPool(1);
+		Logger.println("Atemtpting to reconnect with "+ commId.name());
 
 		FutureTask<Socket> future = new FutureTask<Socket>(new Callable<Socket>() {
 
@@ -153,11 +163,13 @@ public class MultipleInboxCommunicationManager implements CommunicationManager{
 	 */
 	@Override
 	public void clientDisconnected(CommunicationIds commId) {
+		Logger.println(commId.name() + "- disconnected");
 		connections.get(commId).disable();
+		connections.remove(commId);
 		MasterModel.getInstance().setModel(commId, null);
-		getInbox().add(
-				new Message("EmergencyFromDisconnection", CommunicationIds.BROADCAST, true,
-						CommunicationMessageType.ESTOP, null));
+		emergencyStopDetected = true;
+		getInbox().add(	new Message("EmergencyFromDisconnection", CommunicationIds.MASTER, true,
+				CommunicationMessageType.COMMAND, MasterInput.ESTOP));
 		reconnectClient(commId);
 	}
 

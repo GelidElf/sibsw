@@ -29,6 +29,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 	private boolean connected = false;
 	private int numberOfAttempts = 0;
 	private boolean disconnectInProgress = false;
+	private boolean disconnectionOcurred = false;
 
 	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf) {
 		this.owner = owner;
@@ -59,9 +60,13 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 		while (!disconnectInProgress && !connected) {
 			if (tryToConnectToServer()) {
 				Logger.registerListener(this);
+				Logger.println("Connection achieved");
+				if (disconnectionOcurred){
+					disconnectionOcurred = false;
+					inbox.add(new Message("RECOONECTION_RESUME",owner,true,CommunicationMessageType.RESTART,null));
+				}
 				connection.setPeer(CommunicationIds.MASTER);
 				connection.start();
-				Logger.println("Connection achieved");
 			} else {
 				Logger.println("Unable to connect to server, retrying");
 				numberOfAttempts = 0;
@@ -76,8 +81,8 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 		while (!disconnectInProgress && keepTryingToConnect()) {
 			try {
 				socket = new Socket(address, serverPort);
-				weHaveConnection();
 				socket.setTcpNoDelay(true);
+				weHaveConnection();
 				connection = new ConnectionManager(socket, this, inbox);
 				connection.enable();
 				connection.writeMessage(new Message("CONNECT", CommunicationIds.MASTER, false, CommunicationMessageType.HANDSHAKE, null));
@@ -132,7 +137,11 @@ public class SingleInboxCommunicationManager implements CommunicationManager{
 	@Override
 	public void clientDisconnected(CommunicationIds commId) {
 		connected = false;
+		connection.disable();
 		Logger.unregisterListener(this);
+		Logger.println("Client has disconnected.");
+		disconnectionOcurred  = true;
+		inbox.add(new Message("DISCONNECTED_EMERGENCY_STOP",owner,true,CommunicationMessageType.ESTOP,null));
 		connectAndStartThread();
 	}
 
