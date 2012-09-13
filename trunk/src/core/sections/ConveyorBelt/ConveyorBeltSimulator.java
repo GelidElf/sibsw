@@ -48,16 +48,17 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		movement.append ("Movement DEBUG \nbefore:");
 		printContents(movement);
 		movement.append ("\n");
+		if (contents[0] == 1){
+			quantity--;
+		}
 		for (int i = 1; i < contents.length; i++) {
 			contents[i - 1] = contents[i];
 		}
 		contents[contents.length - 1] = 0;
-		try {
-			if (contents[contents.length - 2] == 1){
-				manager.resetBitGroupValue(ConveyorBeltManager.SENSOR_LOAD);
-			}
-			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD, contents[0]);
 
+		try {
+			manager.resetBitGroupValue(ConveyorBeltManager.SENSOR_LOAD);
+			manager.setValueByName(ConveyorBeltManager.SENSOR_UNLOAD, contents[0]);
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
 		}
@@ -80,11 +81,10 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 				if (running()) {
 					setElementInInitialPositionInContents();
 					if (beltHasElements()) {
-						if (finalSensorInactive()) {
+						if (!finalSensorActive()) {
 							move();
 						} else {
 							Logger.println("Paramos la cinta!");
-							manager.setValueByNameAsBoolean(ConveyorBeltManager.SENSOR_UNLOAD, true);
 							manager.setRunning(false);
 						}
 					}
@@ -131,8 +131,8 @@ public class ConveyorBeltSimulator extends Thread implements ParallelPortManager
 		return manager.getValueByNameAsBoolean(ConveyorBeltManager.RUNNING);
 	}
 
-	private boolean finalSensorInactive(){
-		return contents[0] == 0;
+	private boolean finalSensorActive() throws ParallelPortException{
+		return manager.getValueByNameAsBoolean(ConveyorBeltManager.SENSOR_UNLOAD);
 	}
 
 	/**

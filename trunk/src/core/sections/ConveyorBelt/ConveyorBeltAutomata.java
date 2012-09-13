@@ -82,6 +82,7 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				message.consumeMessage();
 			}else{
 				boolean stateChanged = reactToInput(input);
 				message.setConsumed(stateChanged);

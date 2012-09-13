@@ -67,7 +67,12 @@ public class MasterAutomata extends AutomataContainer<MasterInput, MasterState, 
 			}
 		} else {
 			if (message.getType() == CommunicationMessageType.REPORT) {
-
+				for (Attribute attribute: message.getAttributes()){
+					ReportValues report = ReportValues.getEnum(attribute.getName());
+					if (report != null){
+						getModel().receiveSignal(report);
+					}
+				}
 				message.setConsumed(true);
 			}
 			if (message.getType() == CommunicationMessageType.LOG_MESSAGE) {
