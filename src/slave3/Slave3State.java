@@ -36,6 +36,7 @@ public class Slave3State implements State<Slave3Input> {
 				switch (input) {
 				case QCS_LOADED:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.QCS_LOADED);
+					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Load, true);
 					return WaitingForQCSToFinish; //cambiar por un nuevo estado!
 				case NSTOP:
 					currentState.getAutomata().getOkBelt().feedInput(ConveyorBeltInput.NSTOP, true);
@@ -71,11 +72,11 @@ public class Slave3State implements State<Slave3Input> {
 			public states executeInternal(Slave3State currentState, Slave3Input input) {
 				switch (input) {
 				case QCS_FINISHED_OK:
-					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.PIECE_OK);
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_OK_FROM_QCS_TO_OKB);
 					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Empty, false);
 					return WaitintForOkPieceToBeDelivered;
 				case QCS_FINISHED_NOT_OK:
-					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.PIECE_OK);
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.MASTER, MasterInput.MOVE_NO_OK_FROM_QCS_TO_NO_OKB);
 					currentState.getAutomata().getQualityStation().feedInput(QualityStationInput.Empty, false);
 					return WaitintForNotOkPieceToBeDelivered;
 				default:

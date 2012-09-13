@@ -13,8 +13,8 @@ public class WeldingSimulator extends Thread implements ParallelPortManagerObser
 
 	public WeldingSimulator(WeldingManager manager) {
 		this.manager = manager;
-		manager.registerObserver(this);
 		this.setName("WSSimulator");
+		manager.registerObserver(this);
 	}
 
 	public void welding() {
@@ -48,7 +48,7 @@ public class WeldingSimulator extends Thread implements ParallelPortManagerObser
 	public void updateFromPortManager(ParallelPortManager manager) {
 		String modifiedGroup = manager.getModifiedGroupName();
 		try {
-			if (modifiedGroup.equals(WeldingManager.DELIVER_WELDMENT) && manager.getValueByNameAsBoolean(modifiedGroup)) {
+			if (modifiedGroup.equals(WeldingManager.CREATE_WELDMENT) && manager.getValueByNameAsBoolean(modifiedGroup)) {
 				try {
 					setTimeToComplete(manager.getValueByName(WeldingManager.TIME_TO_WELD) + manager.getValueByName(WeldingManager.TIME_TO_WELD));
 				} catch (ParallelPortException e) {

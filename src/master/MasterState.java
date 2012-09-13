@@ -41,6 +41,15 @@ public class MasterState implements State<MasterInput> {
 				case MOVE_WP_FROM_WS_TO_QCS:
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WS_EMPTY);
 					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverWeldedPiece, false);
+					return MovingWPToQCS;
+				case MOVE_OK_FROM_QCS_TO_OKB:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.QCS_EMPTY);
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverCheckedOkPiece, false);
+					return MovingOk;
+				case MOVE_NO_OK_FROM_QCS_TO_NO_OKB:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.QCS_EMPTY);
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.DeliverCheckedNokPiece, false);
+					return MovingNoOk;
 				case NSTOP:
 					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
 					return IdleStop;
@@ -103,6 +112,7 @@ public class MasterState implements State<MasterInput> {
 			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
 				switch (input) {
 				case WP_IN_QS:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE2,Slave2Input.WELDMENT_REMOVED);
 					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.QCS_LOADED);
 					return Idle;
 				case NSTOP:
@@ -124,6 +134,68 @@ public class MasterState implements State<MasterInput> {
 				case RESTART:
 					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
 					return MovingWPToQCS;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		}, MovingOk(ModeEnum.RUNNING){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case DeliveredChecked:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.OK_LOADED);
+					return Idle;
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
+					return MovingOkStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.ESTOP, true);
+					return MovingOkStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		}, MovingOkStop(ModeEnum.NSTOP){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
+					return MovingOk;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingNoOk(ModeEnum.RUNNING){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case DeliveredChecked:
+					currentState.getAutomata().sendCommandMessage(CommunicationIds.SLAVE3,Slave3Input.NOT_OK_LOADED);
+					return Idle;
+				case NSTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.NSTOP, true);
+					return MovingOkStop;
+				case ESTOP:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.ESTOP, true);
+					return MovingOkStop;
+				default:
+					break;
+				}
+				return super.executeInternal(currentState, input);
+			}
+		},
+		MovingNoOkStop(ModeEnum.NSTOP){
+			@Override
+			public AutomataStatesInternalImplementation<MasterInput, MasterState> executeInternal(MasterState currentState, MasterInput input) {
+				switch (input) {
+				case RESTART:
+					currentState.getAutomata().getRobot().feedInput(Robot2Input.RESTART, true);
+					return MovingOk;
 				default:
 					break;
 				}

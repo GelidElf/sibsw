@@ -13,10 +13,10 @@ public enum MasterInput {
 	FEED_WS,
 	MOVE_AS_FROM_TCB_TO_WS, //Señal para que indique al robot que mueva la pieza
 	MOVE_WP_FROM_WS_TO_QCS, //Señal para que indique al robot que mueva la pieza
+	MOVE_NO_OK_FROM_QCS_TO_NO_OKB,
+	MOVE_OK_FROM_QCS_TO_OKB,
 	QCS_EMPTY,
-	PIECE_OK,
 	OK_LOADED,
-	PIECE_NOK,
 	NOK_LOADED,
 	DeliveredChecked;
 }

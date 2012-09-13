@@ -33,11 +33,11 @@ public class WeldingState implements State<WeldingInput> {
 				switch (input) {
 				case AssemblyLoaded:
 					try {
-						currentState.getAutomata().getManager().setValueByNameAsBoolean(WeldingManager.DELIVER_WELDMENT, false);
+						currentState.getAutomata().getManager().setValueByNameAsBoolean(WeldingManager.CREATE_WELDMENT, true);
 					} catch (ParallelPortException e) {
 						e.printStackTrace();
 					}
-					return DeliveringWeldment;
+					return Working;
 				case NSTOP:
 					return IdleStop;
 				case ESTOP:
@@ -60,7 +60,7 @@ public class WeldingState implements State<WeldingInput> {
 				return super.executeInternal(currentState, input);
 			}
 		},
-		DeliveringWeldment(ModeEnum.RUNNING) {
+		Working(ModeEnum.RUNNING) {
 			@Override
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
@@ -69,21 +69,21 @@ public class WeldingState implements State<WeldingInput> {
 					father.feedInput(Slave2Input.WELDMENT_READY, false);
 					return Idle;
 				case NSTOP:
-					return DeliveringWeldmentStop;
+					return WorkingStop;
 				case ESTOP:
-					return DeliveringWeldmentStop;
+					return WorkingStop;
 				default:
 					break;
 				}
 				return super.executeInternal(currentState, input);
 			}
 		},
-		DeliveringWeldmentStop(ModeEnum.NSTOP) {
+		WorkingStop(ModeEnum.NSTOP) {
 			@Override
 			public AutomataStatesInternalImplementation<WeldingInput, WeldingState> executeInternal(WeldingState currentState, WeldingInput input) {
 				switch (input) {
 				case RESTART:
-					return DeliveringWeldment;
+					return Working;
 				default:
 					break;
 				}

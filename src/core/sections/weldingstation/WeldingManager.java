@@ -8,7 +8,7 @@ public class WeldingManager extends ParallelPortManager {
 
 	// We create the names for the groups and pins, so that we can access the
 	// values later from other objects.
-	public static final String DELIVER_WELDMENT = "DELIVER_WELDMENT";
+	public static final String CREATE_WELDMENT = "DELIVER_WELDMENT";
 	public static final String ENABLE = "BUSY";
 	public static final String TIME_TO_WELD = "TIME_TO_WELD";
 
@@ -16,7 +16,7 @@ public class WeldingManager extends ParallelPortManager {
 		super();
 		// We should set a name for all the pins, just in case
 		try {
-			this.setBitGroup(WeldingManager.DELIVER_WELDMENT, 0, 0);
+			this.setBitGroup(WeldingManager.CREATE_WELDMENT, 0, 0);
 			this.setBitGroup(WeldingManager.ENABLE, 1, 1);
 			this.setBitGroup(WeldingManager.TIME_TO_WELD, 2, 7);
 			// continue
@@ -26,9 +26,9 @@ public class WeldingManager extends ParallelPortManager {
 		}
 	}
 
-	public void configure(int speed, int timeToAxisGear, int timeToTransport, int timeToAssembled) {
+	public void configure(int timeToWeld) {
 		try {
-			setValueByName(WeldingManager.TIME_TO_WELD, timeToAssembled);
+			setValueByName(WeldingManager.TIME_TO_WELD, timeToWeld);
 			clearJobTypes();
 		} catch (ParallelPortException e) {
 			e.printStackTrace();
@@ -46,7 +46,7 @@ public class WeldingManager extends ParallelPortManager {
 	}
 
 	private void clearJobTypes() throws ParallelPortException {
-		setValueByNameAsBoolean(WeldingManager.DELIVER_WELDMENT, false);
+		setValueByNameAsBoolean(WeldingManager.CREATE_WELDMENT, false);
 	}
 
 	public boolean jobToBeDone() {

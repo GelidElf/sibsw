@@ -67,11 +67,6 @@ public class ConveyorBeltAutomata extends AutomataContainer<ConveyorBeltInput, C
 				feedInput(ConveyorBeltInput.unloadSensorTrue, false);
 			}
 		}
-		if (this.manager.getModifiedGroupName().equals(ConveyorBeltManager.SENSOR_LOAD)){
-			if (!this.manager.isSensorInitial() && !simulator.getAutoFeed()) {
-				father.feedInputObject(canAcceptElements, false);
-			}
-		}
 	}
 
 

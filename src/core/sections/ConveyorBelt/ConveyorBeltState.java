@@ -16,6 +16,10 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 					ConveyorBeltState currentState, ConveyorBeltInput input) {
 				switch (input) {
 				case START:
+					Enum<?> canAcceptElements = currentState.getAutomata().getCanAcceptElements();
+					if (canAcceptElements != null){
+						currentState.getAutomata().getFather().feedInputObject(canAcceptElements, false);
+					}
 					currentState.getAutomata().getManager().setRunning(true);
 					return Running;
 				default:
@@ -36,7 +40,9 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 				case unloadSensorTrue:
 					currentState.getAutomata().getManager().setRunning(false);
 					Enum<?> jobDoneInput = currentState.getAutomata().getJobDoneInput();
-					currentState.getAutomata().getFather().feedInputObject(jobDoneInput, false);
+					if (jobDoneInput != null){
+						currentState.getAutomata().getFather().feedInputObject(jobDoneInput, false);
+					}
 					return WaitingForPickup;
 				default:
 					break;
@@ -65,6 +71,10 @@ public class ConveyorBeltState implements State<ConveyorBeltInput> {
 				case unloadSensorFalse:
 					currentState.getAutomata().getManager().setSensorFinish(false);
 					currentState.getAutomata().getManager().setRunning(true);
+					Enum<?> canAcceptElements = currentState.getAutomata().getCanAcceptElements();
+					if (canAcceptElements != null){
+						currentState.getAutomata().getFather().feedInputObject(canAcceptElements, false);
+					}
 					return Running;
 				case NSTOP:
 					return WaitingForPickupStop;

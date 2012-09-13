@@ -18,7 +18,7 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 		super(father, model, commManager);
 		this.setName("WSAutomata");
 		manager = new WeldingManager();
-		manager.configure(7, 7, 7, 7);
+		manager.configure(7);
 		manager.registerObserver(this);
 		simulator = new WeldingSimulator(manager);
 		getModel().setAutomata(this);
@@ -84,8 +84,13 @@ public class WeldingAutomata extends AutomataContainer<WeldingInput, WeldingStat
 
 	@Override
 	public void updateFromPortManager(ParallelPortManager manager) {
-		if (manager.getModifiedGroupName().equals(WeldingManager.ENABLE) && !((WeldingManager) manager).jobToBeDone()) {
-			feedInput(WeldingInput.JobDone, false);
+		try {
+			if (manager.getModifiedGroupName().equals(WeldingManager.ENABLE) && !manager.getValueByNameAsBoolean(WeldingManager.ENABLE)) {
+				feedInput(WeldingInput.JobDone, false);
+			}
+		} catch (ParallelPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}
