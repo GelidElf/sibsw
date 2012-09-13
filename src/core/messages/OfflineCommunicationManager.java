@@ -49,4 +49,22 @@ public class OfflineCommunicationManager implements CommunicationManager {
 	public void clientDisconnected(CommunicationIds commId) {
 	}
 
+	@Override
+	public void setDisconnectInProgress(boolean disconnectInProgress) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void print(String string) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void println(String text) {
+		// TODO Auto-generated method stub
+
+	}
+
 }

@@ -6,7 +6,6 @@ import core.aplication.Configuration;
 import core.messages.enums.CommunicationIds;
 import core.messages.enums.CommunicationMessageType;
 import core.utilities.log.Logger;
-import core.utilities.log.LoggerListener;
 
 /**
  * Client communication manager, created for all the slaves
@@ -17,7 +16,7 @@ import core.utilities.log.LoggerListener;
  * @author GelidElf
  * 
  */
-public class SingleInboxCommunicationManager implements CommunicationManager, LoggerListener{
+public class SingleInboxCommunicationManager implements CommunicationManager{
 
 	private static final int MAX_NUMBER_OF_CONNECTION_ATTEMPTS = 3;
 	private CommunicationIds owner;
@@ -29,6 +28,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Lo
 	private Inbox inbox;
 	private boolean connected = false;
 	private int numberOfAttempts = 0;
+	private boolean disconnectInProgress = false;
 
 	public SingleInboxCommunicationManager(CommunicationIds owner, Configuration conf) {
 		this.owner = owner;
@@ -56,7 +56,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Lo
 	}
 
 	private void connectAndStartThread() {
-		while (!connected) {
+		while (!disconnectInProgress && !connected) {
 			if (tryToConnectToServer()) {
 				Logger.registerListener(this);
 				connection.setPeer(CommunicationIds.MASTER);
@@ -73,7 +73,7 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Lo
 	private boolean tryToConnectToServer() {
 		Logger.println("Trying to connect to server");
 		numberOfAttempts = 0;
-		while (keepTryingToConnect()) {
+		while (!disconnectInProgress && keepTryingToConnect()) {
 			try {
 				socket = new Socket(address, serverPort);
 				weHaveConnection();
@@ -149,6 +149,14 @@ public class SingleInboxCommunicationManager implements CommunicationManager, Lo
 		Message message = new Message("Logger", CommunicationIds.MASTER, false, CommunicationMessageType.LOG_MESSAGE, null);
 		message.addAttribute("MESSAGE",text+"\n");
 		sendMessage(message);
+	}
+
+	public void setDisconnectInProgress(boolean disconnectInProgress) {
+		this.disconnectInProgress = disconnectInProgress;
+	}
+
+	public boolean isDisconnectInProgress() {
+		return disconnectInProgress;
 	}
 
 }

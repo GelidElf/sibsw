@@ -1,6 +1,7 @@
 package core.messages;
 
 import core.messages.enums.CommunicationIds;
+import core.utilities.log.LoggerListener;
 
 /**
  * This interface has the public accesible methods that all implementations of
@@ -12,7 +13,7 @@ import core.messages.enums.CommunicationIds;
  * @author GelidElf
  * 
  */
-public interface CommunicationManager {
+public interface CommunicationManager extends LoggerListener{
 
 	/**
 	 * This method sends the message to the destination specified on the message
@@ -74,4 +75,10 @@ public interface CommunicationManager {
 	 */
 	public void clientDisconnected(CommunicationIds commId);
 
+	/**
+	 * Informs this communicationManager that the disconection proces has started
+	 * Used in the loops to connect or reconnect
+	 * @param disconnectInProgress
+	 */
+	public void setDisconnectInProgress(boolean disconnectInProgress);
 }
